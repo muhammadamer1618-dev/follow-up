@@ -26,14 +26,9 @@
     input,textarea{width:100%;padding:7px;margin-top:4px;border:1px solid #cfcfcf;border-radius:6px;box-sizing:border-box}
     textarea{height:64px}
 
-    .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-    .tab{background:#e3f2fd;border:1px solid #90caf9;color:#0d47a1;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px}
-    .tab.active{background:#1976d2;color:#fff;border-color:#1976d2}
-
-    .section{display:none}
-    .section.active{display:block}
-
-    .domain-title{margin:0 0 8px;color:#0d47a1;font-size:16px}
+    .domain{border:1px solid #90caf9;border-radius:10px;margin-bottom:12px;overflow:hidden}
+    .domain-head{background:#e3f2fd;padding:10px;font-weight:bold;color:#0d47a1}
+    .domain-body{padding:10px;background:#fff}
 
     table{width:100%;border-collapse:collapse;font-size:13px}
     th,td{border:1px solid #000;padding:6px;vertical-align:top}
@@ -55,11 +50,12 @@
 
     @media print{
       body{background:#fff;padding:0}
-      .top,.tabs,.btn{display:none !important}
-      .section{display:block !important}
+      .top,.btn{display:none !important}
       .box{border:1px solid #000}
       .summary{border:1px solid #000}
       .page-break{page-break-before:always}
+      .domain{border:1px solid #000}
+      .domain-head{background:#e3f2fd !important}
     }
   </style>
 </head>
@@ -96,8 +92,7 @@
     </div>
 
     <div class="box eval">
-      <div class="tabs" id="tabs"></div>
-      <div id="sections"></div>
+      <div id="domains"></div>
 
       <div class="summary">
         <div><b>المجموع:</b> <span id="rawTotal">0</span> / <span id="rawMax">0</span></div>
@@ -126,105 +121,62 @@
 
   <script>
     const rubric = [
-      {
-        id: "vision",
-        title: "الرؤية",
-        items: [
-          { label: "القيمة التربوية", best: "مناسب", mid: "إلى حد ما", worst: "غير مناسب" }
-        ]
-      },
-      {
-        id: "planning",
-        title: "التخطيط للدرس",
-        items: [
-          { label: "التحضير المسبق للدرس", best: "مكتمل", mid: "غير مكتمل", worst: "غير موجود" },
-          { label: "خطة الدرس", best: "مكتملة ومفصلة", mid: "غير مكتملة", worst: "غير موجودة" },
-          { label: "أهداف الدرس", best: "واضحة وقابلة للقياس", mid: "أهداف عامة", worst: "غير موجودة" },
-          { label: "المفاهيم والمصطلحات العلمية", best: "محددة وواضحة", mid: "غير محددة بدقة", worst: "غير موجودة" },
-          { label: "تسلسل خطوات الدرس", best: "متسلسلة ومصممة جيدًا", mid: "بعض الشواهد", worst: "لا توجد شواهد" },
-          { label: "إعدادات الفروق الفردية", best: "موجود بقوة", mid: "بعض الشواهد", worst: "لا توجد شواهد" }
-        ]
-      },
-      {
-        id: "management",
-        title: "إدارة الصف",
-        items: [
-          { label: "تنظيم المقاعد", best: "مجموعات", mid: "خطوط", worst: "مزعج" },
-          { label: "نظافة الفصل", best: "اهتمام عال", mid: "اهتمام مناسب", worst: "لا يوجد اهتمام" },
-          { label: "البيئة الصفية", best: "معززة وإيجابية", mid: "مناسبة", worst: "غير مناسبة" },
-          { label: "تنظيم مشاركة الطلاب", best: "منظم", mid: "إلى حد ما", worst: "غير منظم" },
-          { label: "الإدارة الصفية", best: "جيدة وفعالة", mid: "متوسطة", worst: "ضعيفة" },
-          { label: "تفعيل القوانين الصفية", best: "مفعلة وفعالة", mid: "مفعلة إلى حد ما", worst: "لا مفعلة" }
-        ]
-      },
-      {
-        id: "behavior",
-        title: "دعم السلوك",
-        items: [
-          { label: "تفاعل المعلم", best: "ممتاز", mid: "مقبول", worst: "ضعيف" },
-          { label: "سلوك الطلاب", best: "ممتاز", mid: "مقبول", worst: "ضعيف" },
-          { label: "تفاعل الطلاب", best: "ممتاز وقوي", mid: "إلى حد ما", worst: "ضعيف" },
-          { label: "صور/تحفيز المعلم وإلهامه للطلاب", best: "فعال عال المستوى", mid: "متوسط", worst: "محدود" }
-        ]
-      },
-      {
-        id: "strategies",
-        title: "استراتيجيات التدريس",
-        items: [
-          { label: "خصائص الأسئلة حسب المنظومة", best: "مطابقة", mid: "إلى حد ما", worst: "غير مطابقة" },
-          { label: "تنفيذ استراتيجيات التدريس", best: "ينفذ", mid: "إلى حد ما", worst: "لا ينفذ" },
-          { label: "ممارسة التفكير", best: "ممارسة ممتازة", mid: "ممارسة متوسطة", worst: "ممارسة غير مناسبة" },
-          { label: "أهداف الدرس (معلنة/مدونة)", best: "معلنة وتناقش", mid: "إما مدونة أو تناقش", worst: "لا مدونة ولا تناقش" }
-        ]
-      },
-      {
-        id: "tools",
-        title: "أدوات مساندة للتعلم",
-        items: [
-          { label: "الوسيلة التعليمية", best: "مستخدمة", mid: "محدودة", worst: "غير مستخدمة" },
-          { label: "تفعيل السبورة", best: "مناسب جدًا", mid: "محدود", worst: "لا يوجد تفعيل" },
-          { label: "تطبيق ما تم التدريب عليه", best: "مستوى عال", mid: "مستوى مناسب", worst: "مستوى ضعيف" }
-        ]
-      },
-      {
-        id: "final",
-        title: "التقويم الختامي",
-        items: [
-          { label: "ملخص الدرس", best: "خلاصة جيدة وواضحة", mid: "خلاصة محدودة", worst: "لا توجد خلاصة" }
-        ]
-      }
+      { title: "الرؤية", items: [
+        { label: "القيمة التربوية", best: "مناسب", mid: "إلى حد ما", worst: "غير مناسب" }
+      ]},
+      { title: "التخطيط للدرس", items: [
+        { label: "التحضير المسبق للدرس", best: "مكتمل", mid: "غير مكتمل", worst: "غير موجود" },
+        { label: "خطة الدرس", best: "مكتملة ومفصلة", mid: "غير مكتملة", worst: "غير موجودة" },
+        { label: "أهداف الدرس", best: "واضحة وقابلة للقياس", mid: "أهداف عامة", worst: "غير موجودة" },
+        { label: "المفاهيم والمصطلحات العلمية", best: "محددة وواضحة", mid: "غير محددة بدقة", worst: "غير موجودة" },
+        { label: "تسلسل خطوات الدرس", best: "متسلسلة ومصممة جيدًا", mid: "بعض الشواهد", worst: "لا توجد شواهد" },
+        { label: "إعدادات الفروق الفردية", best: "موجود بقوة", mid: "بعض الشواهد", worst: "لا توجد شواهد" }
+      ]},
+      { title: "إدارة الصف", items: [
+        { label: "تنظيم المقاعد", best: "مجموعات", mid: "خطوط", worst: "مزعج" },
+        { label: "نظافة الفصل", best: "اهتمام عال", mid: "اهتمام مناسب", worst: "لا يوجد اهتمام" },
+        { label: "البيئة الصفية", best: "معززة وإيجابية", mid: "مناسبة", worst: "غير مناسبة" },
+        { label: "تنظيم مشاركة الطلاب", best: "منظم", mid: "إلى حد ما", worst: "غير منظم" },
+        { label: "الإدارة الصفية", best: "جيدة وفعالة", mid: "متوسطة", worst: "ضعيفة" },
+        { label: "تفعيل القوانين الصفية", best: "مفعلة وفعالة", mid: "مفعلة إلى حد ما", worst: "لا مفعلة" }
+      ]},
+      { title: "دعم السلوك", items: [
+        { label: "تفاعل المعلم", best: "ممتاز", mid: "مقبول", worst: "ضعيف" },
+        { label: "سلوك الطلاب", best: "ممتاز", mid: "مقبول", worst: "ضعيف" },
+        { label: "تفاعل الطلاب", best: "ممتاز وقوي", mid: "إلى حد ما", worst: "ضعيف" },
+        { label: "صور/تحفيز المعلم وإلهامه للطلاب", best: "فعال عال المستوى", mid: "متوسط", worst: "محدود" }
+      ]},
+      { title: "استراتيجيات التدريس", items: [
+        { label: "خصائص الأسئلة حسب المنظومة", best: "مطابقة", mid: "إلى حد ما", worst: "غير مطابقة" },
+        { label: "تنفيذ استراتيجيات التدريس", best: "ينفذ", mid: "إلى حد ما", worst: "لا ينفذ" },
+        { label: "ممارسة التفكير", best: "ممارسة ممتازة", mid: "ممارسة متوسطة", worst: "ممارسة غير مناسبة" },
+        { label: "أهداف الدرس (معلنة/مدونة)", best: "معلنة وتناقش", mid: "إما مدونة أو تناقش", worst: "لا مدونة ولا تناقش" }
+      ]},
+      { title: "أدوات مساندة للتعلم", items: [
+        { label: "الوسيلة التعليمية", best: "مستخدمة", mid: "محدودة", worst: "غير مستخدمة" },
+        { label: "تفعيل السبورة", best: "مناسب جدًا", mid: "محدود", worst: "لا يوجد تفعيل" },
+        { label: "تطبيق ما تم التدريب عليه", best: "مستوى عال", mid: "مستوى مناسب", worst: "مستوى ضعيف" }
+      ]},
+      { title: "التقويم الختامي", items: [
+        { label: "ملخص الدرس", best: "خلاصة جيدة وواضحة", mid: "خلاصة محدودة", worst: "لا توجد خلاصة" }
+      ]}
     ];
 
-    const tabsEl = document.getElementById("tabs");
-    const sectionsEl = document.getElementById("sections");
-
-    let qCounter = 0;
+    const domainsEl = document.getElementById("domains");
     const questionMeta = [];
+    let qCounter = 0;
 
-    function showSection(domainId, tabBtn){
-      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-      document.getElementById("sec_" + domainId).classList.add("active");
-      document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
-      tabBtn.classList.add("active");
-    }
+    function buildDomains(){
+      rubric.forEach(domain => {
+        const wrap = document.createElement("div");
+        wrap.className = "domain";
 
-    function buildUI(){
-      rubric.forEach((domain, idx) => {
-        const tab = document.createElement("button");
-        tab.type = "button";
-        tab.className = "tab" + (idx === 0 ? " active" : "");
-        tab.textContent = domain.title;
-        tab.addEventListener("click", () => showSection(domain.id, tab));
-        tabsEl.appendChild(tab);
+        const head = document.createElement("div");
+        head.className = "domain-head";
+        head.textContent = domain.title;
 
-        const sec = document.createElement("div");
-        sec.className = "section" + (idx === 0 ? " active" : "");
-        sec.id = "sec_" + domain.id;
-
-        const h = document.createElement("h3");
-        h.className = "domain-title";
-        h.textContent = domain.title;
-        sec.appendChild(h);
+        const body = document.createElement("div");
+        body.className = "domain-body";
 
         const table = document.createElement("table");
         table.innerHTML = `
@@ -260,8 +212,10 @@
           tbody.appendChild(tr);
         });
 
-        sec.appendChild(table);
-        sectionsEl.appendChild(sec);
+        body.appendChild(table);
+        wrap.appendChild(head);
+        wrap.appendChild(body);
+        domainsEl.appendChild(wrap);
       });
     }
 
@@ -294,9 +248,9 @@
 
     function buildSignTableHtml(){
       return `
-        <table class="sign-table">
-          <tr><td>اسم المعلم</td><td>اسم المشرف</td></tr>
-          <tr><td class="sign-line"></td><td class="sign-line"></td></tr>
+        <table style="width:100%;border-collapse:collapse;margin-top:14px;">
+          <tr><td style="border:1px solid #000;padding:10px;text-align:center;font-weight:bold;">اسم المعلم</td><td style="border:1px solid #000;padding:10px;text-align:center;font-weight:bold;">اسم المشرف</td></tr>
+          <tr><td style="border:1px solid #000;height:60px;"></td><td style="border:1px solid #000;height:60px;"></td></tr>
         </table>
       `;
     }
@@ -304,14 +258,8 @@
     function buildWrittenWorkPrintPage(){
       let rows = "";
       for (let i = 0; i < 18; i++) {
-        rows += `
-          <tr>
-            <td style="height:28px;"></td>
-            <td></td><td></td><td></td>
-          </tr>
-        `;
+        rows += `<tr><td style="height:28px;border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`;
       }
-
       return `
         <div class="page-break"></div>
         <h2 style="margin:0 0 10px;color:#0d47a1;text-align:center;">متابعة الأعمال التحريرية للطلاب</h2>
@@ -329,8 +277,16 @@
     }
 
     function printTwoPages(){
-      // نجمع كل المجالات للطباعة
-      const allSections = [...document.querySelectorAll(".section")];
+      const domainBlocks = [...document.querySelectorAll(".domain")].map(dom => {
+        const title = dom.querySelector(".domain-head").textContent;
+        const table = dom.querySelector("table").outerHTML;
+        return `
+          <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">
+            <h2 style="margin:0 0 8px;color:#0d47a1;font-size:16px;">${escHtml(title)}</h2>
+            ${table}
+          </div>
+        `;
+      }).join("");
 
       const headerTable = `
         <table style="width:100%;border-collapse:collapse;font-size:13px;">
@@ -354,17 +310,6 @@
           </tr>
         </table>
       `;
-
-      const sectionsHtml = allSections.map(sec => {
-        const title = sec.querySelector(".domain-title") ? sec.querySelector(".domain-title").textContent : "";
-        const table = sec.querySelector("table") ? sec.querySelector("table").outerHTML : "";
-        return `
-          <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">
-            <h2 style="margin:0 0 8px;color:#0d47a1;font-size:16px;">${escHtml(title)}</h2>
-            ${table}
-          </div>
-        `;
-      }).join("");
 
       const summaryHtml = `
         <div style="border:1px solid #000;border-radius:8px;padding:8px;font-weight:bold;">
@@ -399,15 +344,12 @@
             th,td{border:1px solid #000;padding:6px;vertical-align:top}
             th{background:#e3f2fd;text-align:center}
             .page-break{page-break-before:always}
-            .sign-table{width:100%;border-collapse:collapse;margin-top:14px}
-            .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:bold}
-            .sign-line{height:60px}
           </style>
         </head>
         <body>
           <h1 style="text-align:center;color:#0d47a1;margin:0 0 10px;">استمارة متابعة معلم</h1>
           <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">${headerTable}</div>
-          ${sectionsHtml}
+          ${domainBlocks}
           ${summaryHtml}
           ${notesHtml}
           ${buildWrittenWorkPrintPage()}
@@ -422,7 +364,7 @@
       w.document.close();
     }
 
-    buildUI();
+    buildDomains();
     calcAll();
 
     document.addEventListener("change", (e) => {
