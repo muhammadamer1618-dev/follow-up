@@ -1,288 +1,294 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>استمارة متابعة معلم</title>
+<meta charset="UTF-8">
+<title>استمارة متابعة معلم</title>
 
-  <style>
-    @page {
-      size: A4;
-      margin: 15mm;
-    }
+<style>
+@page { size: A4; margin: 15mm; }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f8fc;
-      margin: 0;
-      padding: 10px;
-      color: #000;
-    }
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f8fc;
+  margin: 0;
+  padding: 10px;
+}
 
-    h1 {
-      text-align: center;
-      color: #0d47a1;
-      margin: 10px 0 20px;
-    }
+h1 {
+  text-align: center;
+  color: #0d47a1;
+}
 
-    .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    .back {
-      background: #607d8b;
-      color: #fff;
-      padding: 6px 14px;
-      text-decoration: none;
-      border-radius: 4px;
-      font-size: 14px;
-    }
+.back {
+  background: #607d8b;
+  color: #fff;
+  padding: 6px 14px;
+  text-decoration: none;
+  border-radius: 4px;
+}
 
-    .layout {
-      display: flex;
-      gap: 15px;
-      align-items: flex-start;
-    }
+.layout {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
 
-    .box {
-      background: #fff;
-      border: 1px solid #bbdefb;
-      border-radius: 6px;
-      padding: 15px;
-      box-sizing: border-box;
-    }
+.box {
+  background: #fff;
+  border: 1px solid #bbdefb;
+  border-radius: 6px;
+  padding: 15px;
+}
 
-    .info {
-      width: 30%;
-    }
+.info { width: 30%; }
+.eval { width: 70%; }
 
-    .evaluation {
-      width: 70%;
-    }
+label {
+  font-weight: bold;
+  margin-top: 8px;
+  display: block;
+}
 
-    label {
-      font-weight: bold;
-      margin-top: 8px;
-      display: block;
-    }
+input, textarea {
+  width: 100%;
+  padding: 6px;
+  margin-top: 4px;
+}
 
-    input, textarea {
-      width: 100%;
-      padding: 6px;
-      margin-top: 4px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-    }
+textarea { height: 55px; }
 
-    textarea {
-      height: 55px;
-    }
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
 
-    .tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
+.tabs button {
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  padding: 5px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
 
-    .tabs button {
-      background: #e3f2fd;
-      border: 1px solid #90caf9;
-      padding: 5px 12px;
-      cursor: pointer;
-      border-radius: 4px;
-      font-size: 13px;
-    }
+.tabs button.active {
+  background: #1976d2;
+  color: #fff;
+}
 
-    .tabs button.active {
-      background: #1976d2;
-      color: #fff;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
+th, td {
+  border: 1px solid #000;
+  padding: 6px;
+  vertical-align: top;
+}
 
-    th, td {
-      border: 1px solid #000;
-      padding: 6px;
-      vertical-align: top;
-    }
+th {
+  background: #e3f2fd;
+  text-align: center;
+}
 
-    th {
-      background: #e3f2fd;
-      text-align: center;
-    }
+.score {
+  text-align: center;
+  font-weight: bold;
+}
 
-    .score {
-      text-align: center;
-      font-weight: bold;
-    }
+.section { display: none; }
+.section.active { display: block; }
 
-    .section {
-      display: none;
-    }
+.results {
+  margin-top: 10px;
+  font-weight: bold;
+}
 
-    .section.active {
-      display: block;
-    }
+.sign-table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
 
-    .results {
-      margin-top: 10px;
-      font-weight: bold;
-    }
+.sign-table td {
+  width: 50%;
+  text-align: center;
+  font-weight: bold;
+  padding-top: 10px;
+}
 
-    .signatures {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
-    }
+.sign-line {
+  height: 60px;
+  border-bottom: 1px solid #000;
+}
 
-    .sign-box {
-      width: 45%;
-      border-top: 1px solid #000;
-      padding-top: 5px;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .save-btn {
-      margin-top: 15px;
-      padding: 10px 30px;
-      background: #1976d2;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      font-size: 15px;
-      cursor: pointer;
-    }
-
-    @media print {
-      .tabs, .back, .save-btn {
-        display: none;
-      }
-      .section {
-        display: block !important;
-      }
-      body {
-        background: #fff;
-      }
-    }
-  </style>
+@media print {
+  .tabs, .back {
+    display: none;
+  }
+  .section {
+    display: block !important;
+  }
+  body {
+    background: #fff;
+  }
+}
+</style>
 </head>
+
 <body>
 
 <div class="top">
   <h1>استمارة متابعة معلم</h1>
-  <a href="index.html" class="back">الرجوع للرئيسية</a>
+  <a href="index.html" class="back">رجوع</a>
 </div>
 
 <div class="layout">
 
-  <!-- بيانات الزيارة -->
-  <div class="box info">
-    <label>اسم المعلم</label>
-    <input id="teacherName">
+<!-- بيانات -->
+<div class="box info">
+  <label>اسم المعلم</label><input>
+  <label>المادة</label><input>
+  <label>الصف</label><input>
+  <label>التاريخ</label><input type="date">
+  <label>رقم الزيارة</label><input type="number">
+  <label>اسم المشرف</label><input>
+</div>
 
-    <label>المادة</label>
-    <input id="subject">
+<!-- التقييم -->
+<div class="box eval">
 
-    <label>الصف</label>
-    <input id="grade">
+<div class="tabs">
+  <button class="active" onclick="show('vision',this)">الرؤية</button>
+  <button onclick="show('planning',this)">التخطيط</button>
+  <button onclick="show('management',this)">إدارة الصف</button>
+  <button onclick="show('behavior',this)">دعم السلوك</button>
+  <button onclick="show('strategies',this)">استراتيجيات التدريس</button>
+  <button onclick="show('tools',this)">أدوات التعلم</button>
+  <button onclick="show('final',this)">التقويم الختامي</button>
+</div>
 
-    <label>التاريخ</label>
-    <input type="date" id="visitDate">
+<!-- الرؤية -->
+<div class="section active" id="vision">
+<table>
+<tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
+<tr>
+<td>القيمة التربوية</td>
+<td>
+<label><input type="radio"> مناسب</label>
+<label><input type="radio"> إلى حد ما</label>
+<label><input type="radio"> غير مناسب</label>
+</td>
+<td class="score">4</td>
+</tr>
+</table>
+</div>
 
-    <label>رقم الزيارة</label>
-    <input type="number" id="visitNumber">
+<!-- التخطيط -->
+<div class="section" id="planning">
+<table>
+<tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
+<tr><td>التحضير المسبق</td><td></td><td></td></tr>
+<tr><td>أهداف الدرس</td><td></td><td></td></tr>
+<tr><td>التسلسل المنطقي</td><td></td><td></td></tr>
+<tr><td>خطوات الدرس</td><td></td><td></td></tr>
+<tr><td>مراعاة الفروق الفردية</td><td></td><td></td></tr>
+</table>
+</div>
 
-    <label>اسم المشرف</label>
-    <input id="supervisorName">
-  </div>
+<!-- إدارة الصف -->
+<div class="section" id="management">
+<table>
+<tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
+<tr><td>تنظيم المقاعد</td><td></td><td></td></tr>
+<tr><td>نظافة الفصل</td><td></td><td></td></tr>
+<tr><td>البيئة الصفية</td><td></td><td></td></tr>
+<tr><td>مشاركة الطلاب</td><td></td><td></td></tr>
+<tr><td>الإدارة الصفية</td><td></td><td></td></tr>
+<tr><td>تفعيل القوانين</td><td></td><td></td></tr>
+</table>
+</div>
 
-  <!-- التقييم -->
-  <div class="box evaluation">
-    <div class="tabs">
-      <button class="active" onclick="showSection('vision', this)">الرؤية</button>
-      <button onclick="showSection('planning', this)">التخطيط</button>
-      <button onclick="showSection('management', this)">إدارة الصف</button>
-      <button onclick="showSection('behavior', this)">دعم السلوك</button>
-      <button onclick="showSection('strategies', this)">استراتيجيات التدريس</button>
-      <button onclick="showSection('tools', this)">أدوات التعلم</button>
-      <button onclick="showSection('final', this)">التقويم الختامي</button>
-    </div>
+<!-- دعم السلوك -->
+<div class="section" id="behavior">
+<table>
+<tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
+<tr><td>تفاعل المعلم</td><td></td><td></td></tr>
+<tr><td>سلوك الطلاب</td><td></td><td></td></tr>
+<tr><td>تفاعل الطلاب</td><td></td><td></td></tr>
+<tr><td>مراعاة الفروق</td><td></td><td></td></tr>
+</table>
+</div>
 
-    <!-- سيتم تكرار نفس نمط الجداول لكل مجال -->
-    <!-- مثال واحد مكتمل (الرؤية) والباقي بنفس الصيغة -->
+<!-- استراتيجيات -->
+<div class="section" id="strategies">
+<table>
+<tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
+<tr><td>خصائص الأسئلة</td><td></td><td></td></tr>
+<tr><td>تنفيذ الاستراتيجيات</td><td></td><td></td></tr>
+<tr><td>ممارسة التفكير</td><td></td><td></td></tr>
+<tr><td>وضوح الأهداف</td><td></td><td></td></tr>
+</table>
+</div>
 
-    <div class="section active" id="vision">
-      <table>
-        <tr>
-          <th>العنصر</th>
-          <th>التقييم</th>
-          <th>الدرجة</th>
-        </tr>
-        <tr>
-          <td>القيمة التربوية</td>
-          <td>
-            <label><input type="radio" name="q1" value="4"> مناسب</label>
-            <label><input type="radio" name="q1" value="3"> إلى حد ما</label>
-            <label><input type="radio" name="q1" value="1"> غير مناسب</label>
-          </td>
-          <td class="score" id="s1">0</td>
-        </tr>
-      </table>
-    </div>
+<!-- أدوات -->
+<div class="section" id="tools">
+<table>
+<tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
+<tr><td>الوسائل التعليمية</td><td></td><td></td></tr>
+<tr><td>السبورة</td><td></td><td></td></tr>
+<tr><td>التطبيق</td><td></td><td></td></tr>
+</table>
+</div>
 
-    <!-- بقية المجالات (كاملة بنفس الورقة) سيتم إضافتها بنفس النمط -->
-    <!-- (التخطيط – إدارة الصف – دعم السلوك – استراتيجيات – أدوات – تقويم) -->
+<!-- تقويم -->
+<div class="section" id="final">
+<table>
+<tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
+<tr><td>ملخص الدرس</td><td></td><td></td></tr>
+</table>
+</div>
 
-    <div class="results">
-      المجموع: <span id="total">0</span> /
-      النسبة: <span id="percentage">0%</span>
-    </div>
+<div class="results">
+المجموع: ___ / النسبة: ___ %
+</div>
 
-    <label>إيجابيات الحصة</label>
-    <textarea id="positives"></textarea>
+<label>إيجابيات الحصة</label>
+<textarea></textarea>
 
-    <label>التوصيات والتوجيهات</label>
-    <textarea id="recommendations"></textarea>
+<label>التوصيات والتوجيهات</label>
+<textarea></textarea>
 
-    <div class="signatures">
-      <div class="sign-box">اسم وتوقيع المعلم</div>
-      <div class="sign-box">اسم وتوقيع المشرف</div>
-    </div>
+<table class="sign-table">
+<tr>
+<td>اسم المعلم</td>
+<td>اسم المشرف</td>
+</tr>
+<tr>
+<td class="sign-line"></td>
+<td class="sign-line"></td>
+</tr>
+</table>
 
-    <button class="save-btn">حفظ الاستمارة</button>
-
-  </div>
+</div>
 </div>
 
 <script>
-  function showSection(id, btn) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  }
-
-  function calculate() {
-    let total = 0;
-    document.querySelectorAll('input[type=radio]:checked').forEach(r => {
-      total += Number(r.value);
-      document.getElementById('s' + r.name.substring(1)).innerText = r.value;
-    });
-    document.getElementById('total').innerText = total;
-    document.getElementById('percentage').innerText =
-      Math.round((total / 100) * 100) + '%';
-  }
-
-  document.querySelectorAll('input[type=radio]').forEach(r =>
-    r.addEventListener('change', calculate)
-  );
+function show(id, btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
 </script>
 
 </body>
