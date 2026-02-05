@@ -5,89 +5,80 @@
   <title>متابعة الأعمال التحريرية</title>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f8fc;
-      padding: 20px;
-    }
+    @page { size: A4; margin: 12mm; }
 
-    h2 {
-      text-align: center;
-      color: #0d47a1;
-    }
+    body{font-family:Arial,sans-serif;background:#f4f8fc;margin:0;padding:12px;color:#000}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+    h1{margin:0;color:#0d47a1;font-size:22px}
+    .btn{border:0;border-radius:8px;padding:9px 14px;font-size:14px;cursor:pointer}
+    .btn.back{background:#607d8b;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
+    .btn.print{background:#1976d2;color:#fff}
+    .box{background:#fff;border:1px solid #bbdefb;border-radius:10px;padding:12px}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
+    table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+    th,td{border:1px solid #000;padding:6px;text-align:center}
+    th{background:#e3f2fd}
+    .rowh{height:28px}
 
-    th, td {
-      border: 1px solid #000;
-      padding: 8px;
-      text-align: center;
-    }
+    .sign-table{width:100%;border-collapse:collapse;margin-top:14px}
+    .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:bold}
+    .sign-line{height:60px}
 
-    th {
-      background: #e3f2fd;
-    }
-
-    @media print {
-      body {
-        background: #fff;
-      }
+    @media print{
+      .top a,.top button{display:none !important}
+      body{background:#fff;padding:0}
+      .box{border:1px solid #000}
     }
   </style>
 </head>
+
 <body>
+  <div class="top">
+    <h1>متابعة الأعمال التحريرية للطلاب</h1>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <a class="btn back" href="index.html">الرجوع للرئيسية</a>
+      <button class="btn print" onclick="window.print()">طباعة</button>
+    </div>
+  </div>
 
-<h2>متابعة الأعمال التحريرية للطلاب</h2>
+  <div class="box">
+    <table>
+      <tr>
+        <th>اسم الطالب</th>
+        <th>مصحح</th>
+        <th>غير مكتمل</th>
+        <th>غير مصحح</th>
+      </tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+      <tr><td class="rowh"></td><td></td><td></td><td></td></tr>
+    </table>
 
-<table>
-  <tr>
-    <th>اسم الطالب</th>
-    <th>مصحح</th>
-    <th>غير مكتمل</th>
-    <th>غير مصحح</th>
-  </tr>
-
-  <!-- صف مكرر -->
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
-
-<br><br>
-
-<table style="width:100%; border-collapse:collapse;">
-  <tr>
-    <td style="width:50%; text-align:center; font-weight:bold;">
-      اسم المعلم
-    </td>
-    <td style="width:50%; text-align:center; font-weight:bold;">
-      اسم المشرف
-    </td>
-  </tr>
-  <tr>
-    <td style="height:60px; border-bottom:1px solid #000;"></td>
-    <td style="height:60px; border-bottom:1px solid #000;"></td>
-  </tr>
-</table>
-
+    <table class="sign-table">
+      <tr>
+        <td>اسم المعلم</td>
+        <td>اسم المشرف</td>
+      </tr>
+      <tr>
+        <td class="sign-line"></td>
+        <td class="sign-line"></td>
+      </tr>
+    </table>
+  </div>
 </body>
 </html>
