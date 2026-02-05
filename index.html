@@ -3,11 +3,127 @@
 <head>
   <meta charset="UTF-8">
   <title>نظام متابعة المعلمين</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #0d47a1;
+      color: #fff;
+      padding: 30px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 10px 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .container {
+      padding: 30px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .section {
+      background: #ffffff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .section h2 {
+      margin-top: 0;
+      color: #0d47a1;
+      font-size: 20px;
+    }
+
+    ul {
+      padding-right: 20px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .buttons a {
+      text-decoration: none;
+      background: #1976d2;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 4px;
+      font-size: 15px;
+    }
+
+    .buttons a:hover {
+      background: #125aa3;
+    }
+
+    footer {
+      background: #e0e0e0;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
 
-<h1>نظام متابعة المعلمين</h1>
-<p>المشروع بدأ صح 👍</p>
+<header>
+  <h1>نظام متابعة المعلمين</h1>
+  <p>نظام إلكتروني لمتابعة أداء المعلمين وتوثيق الزيارات الإشرافية</p>
+</header>
+
+<div class="container">
+
+  <div class="section">
+    <h2>عن النظام</h2>
+    <p>
+      يهدف هذا النظام إلى تنظيم عملية متابعة المعلمين داخل المدرسة،
+      وتوثيق الزيارات الصفية، وتقييم الأداء التعليمي بشكل منظم ودقيق،
+      مع إمكانية الرجوع إلى السجلات وطباعتها في أي وقت.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>مكونات النظام</h2>
+    <ul>
+      <li>إضافة بيانات المعلمين مع كود خاص لكل معلم</li>
+      <li>استمارة متابعة صفية مطابقة للنموذج الورقي</li>
+      <li>تقييم الأداء بثلاث مستويات ودرجات محددة</li>
+      <li>متابعة الأعمال التحريرية للطلاب</li>
+      <li>إمكانية طباعة التقارير بشكل منسق</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>الدخول إلى النظام</h2>
+    <div class="buttons">
+      <a href="add-teacher.html">إضافة معلم</a>
+      <a href="evaluation-form.html">استمارة متابعة معلم</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  إعداد محمد عامر أحمد
+</footer>
 
 </body>
 </html>
