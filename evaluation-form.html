@@ -13,19 +13,18 @@
     }
 
     h1 {
-      text-align: center;
+      margin: 0;
       color: #0d47a1;
-      margin-bottom: 20px;
     }
 
-    .top-bar {
+    .top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 15px;
     }
 
-    .top-bar a {
+    .top a {
       text-decoration: none;
       background: #555;
       color: #fff;
@@ -47,12 +46,12 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
-    .info-box {
-      width: 35%;
+    .info {
+      width: 30%;
     }
 
-    .eval-box {
-      width: 65%;
+    .evaluation {
+      width: 70%;
     }
 
     label {
@@ -69,13 +68,33 @@
     }
 
     textarea {
-      height: 70px;
+      height: 60px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tabs button {
+      padding: 6px 14px;
+      border: none;
+      background: #e0e0e0;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .tabs button.active {
+      background: #1976d2;
+      color: #fff;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
       font-size: 14px;
     }
 
@@ -95,6 +114,14 @@
       font-weight: bold;
     }
 
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
     .bottom {
       margin-top: 20px;
       display: flex;
@@ -102,24 +129,32 @@
       align-items: center;
     }
 
-    button {
-      padding: 10px 25px;
+    .save-btn {
+      padding: 10px 30px;
       background: #1976d2;
       color: #fff;
       border: none;
       border-radius: 4px;
-      font-size: 15px;
+      font-size: 16px;
       cursor: pointer;
     }
 
-    button:hover {
-      background: #125aa3;
+    @media print {
+      .tabs, .top a, .save-btn {
+        display: none;
+      }
+      .section {
+        display: block !important;
+      }
+      body {
+        background: #fff;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="top-bar">
+<div class="top">
   <h1>استمارة متابعة معلم</h1>
   <a href="index.html">الرجوع للصفحة الرئيسية</a>
 </div>
@@ -127,11 +162,8 @@
 <div class="layout">
 
   <!-- بيانات الزيارة -->
-  <div class="box info-box">
+  <div class="box info">
     <h3>بيانات الزيارة</h3>
-
-    <label>كود المعلم</label>
-    <input id="teacherCode">
 
     <label>اسم المعلم</label>
     <input id="teacherName">
@@ -153,22 +185,26 @@
   </div>
 
   <!-- التقييم -->
-  <div class="box eval-box">
+  <div class="box evaluation">
     <h3>التقييم</h3>
 
-    <table>
-      <thead>
-        <tr>
-          <th>المجال</th>
-          <th>العنصر</th>
-          <th>التقييم</th>
-          <th>الدرجة</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div class="tabs">
+      <button class="active" onclick="show('vision')">الرؤية</button>
+      <button onclick="show('planning')">التخطيط</button>
+      <button onclick="show('management')">إدارة الصف</button>
+      <button onclick="show('behavior')">دعم السلوك</button>
+      <button onclick="show('strategies')">استراتيجيات التدريس</button>
+      <button onclick="show('tools')">أدوات التعلم</button>
+      <button onclick="show('final')">التقويم الختامي</button>
+    </div>
 
+    <!-- الرؤية -->
+    <div class="section active" id="vision">
+      <table>
         <tr>
-          <td>الرؤية</td>
+          <th>العنصر</th><th>التقييم</th><th>الدرجة</th>
+        </tr>
+        <tr>
           <td>القيمة التربوية</td>
           <td>
             <label><input type="radio" name="q1" value="4"> مناسب</label>
@@ -177,10 +213,15 @@
           </td>
           <td class="score" id="s1">0</td>
         </tr>
+      </table>
+    </div>
 
+    <!-- التخطيط -->
+    <div class="section" id="planning">
+      <table>
+        <tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
         <tr>
-          <td rowspan="5">التخطيط للدرس</td>
-          <td>التحضير المسبق للدرس</td>
+          <td>التحضير المسبق</td>
           <td>
             <label><input type="radio" name="q2" value="4"> مكتمل</label>
             <label><input type="radio" name="q2" value="3"> غير مكتمل</label>
@@ -188,49 +229,88 @@
           </td>
           <td class="score" id="s2">0</td>
         </tr>
+      </table>
+    </div>
 
+    <!-- إدارة الصف -->
+    <div class="section" id="management">
+      <table>
+        <tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
         <tr>
-          <td>أهداف الدرس</td>
+          <td>إدارة الصف</td>
           <td>
-            <label><input type="radio" name="q3" value="4"> واضحة وقابلة للقياس</label>
-            <label><input type="radio" name="q3" value="3"> أهداف عامة</label>
-            <label><input type="radio" name="q3" value="1"> غير موجودة</label>
+            <label><input type="radio" name="q3" value="4"> فعالة</label>
+            <label><input type="radio" name="q3" value="3"> متوسطة</label>
+            <label><input type="radio" name="q3" value="1"> ضعيفة</label>
           </td>
           <td class="score" id="s3">0</td>
         </tr>
+      </table>
+    </div>
 
+    <!-- دعم السلوك -->
+    <div class="section" id="behavior">
+      <table>
+        <tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
         <tr>
-          <td>تسلسل المحتوى</td>
+          <td>سلوك الطلاب</td>
           <td>
-            <label><input type="radio" name="q4" value="4"> مترابط</label>
-            <label><input type="radio" name="q4" value="3"> إلى حد ما</label>
-            <label><input type="radio" name="q4" value="1"> غير مترابط</label>
+            <label><input type="radio" name="q4" value="4"> منضبط</label>
+            <label><input type="radio" name="q4" value="3"> مقبول</label>
+            <label><input type="radio" name="q4" value="1"> غير منضبط</label>
           </td>
           <td class="score" id="s4">0</td>
         </tr>
+      </table>
+    </div>
 
+    <!-- استراتيجيات -->
+    <div class="section" id="strategies">
+      <table>
+        <tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
         <tr>
-          <td>خطوات الدرس</td>
+          <td>تنوع الاستراتيجيات</td>
           <td>
-            <label><input type="radio" name="q5" value="4"> واضحة</label>
-            <label><input type="radio" name="q5" value="3"> غير دقيقة</label>
-            <label><input type="radio" name="q5" value="1"> غير موجودة</label>
+            <label><input type="radio" name="q5" value="4"> عالي</label>
+            <label><input type="radio" name="q5" value="3"> متوسط</label>
+            <label><input type="radio" name="q5" value="1"> ضعيف</label>
           </td>
           <td class="score" id="s5">0</td>
         </tr>
+      </table>
+    </div>
 
+    <!-- أدوات التعلم -->
+    <div class="section" id="tools">
+      <table>
+        <tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
         <tr>
-          <td>مراعاة الفروق الفردية</td>
+          <td>الوسائل التعليمية</td>
           <td>
-            <label><input type="radio" name="q6" value="4"> موجودة</label>
+            <label><input type="radio" name="q6" value="4"> مستخدمة</label>
             <label><input type="radio" name="q6" value="3"> محدودة</label>
-            <label><input type="radio" name="q6" value="1"> غير موجودة</label>
+            <label><input type="radio" name="q6" value="1"> غير مستخدمة</label>
           </td>
           <td class="score" id="s6">0</td>
         </tr>
+      </table>
+    </div>
 
-      </tbody>
-    </table>
+    <!-- تقويم ختامي -->
+    <div class="section" id="final">
+      <table>
+        <tr><th>العنصر</th><th>التقييم</th><th>الدرجة</th></tr>
+        <tr>
+          <td>ملخص الدرس</td>
+          <td>
+            <label><input type="radio" name="q7" value="4"> واضح</label>
+            <label><input type="radio" name="q7" value="3"> محدود</label>
+            <label><input type="radio" name="q7" value="1"> غير موجود</label>
+          </td>
+          <td class="score" id="s7">0</td>
+        </tr>
+      </table>
+    </div>
 
     <p><strong>المجموع:</strong> <span id="total">0</span></p>
 
@@ -244,49 +324,30 @@
 </div>
 
 <div class="bottom">
-  <button id="save">حفظ الاستمارة</button>
+  <button class="save-btn" onclick="alert('جاهز للحفظ النهائي')">حفظ الاستمارة</button>
 </div>
 
-<script type="module">
-  import { db } from "./firebase.js";
-  import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+<script>
+  function show(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
 
-  const questions = ["q1","q2","q3","q4","q5","q6"];
-  const scores = ["s1","s2","s3","s4","s5","s6"];
-
-  function calculate() {
-    let total = 0;
-    questions.forEach((q, i) => {
-      const sel = document.querySelector(`input[name="${q}"]:checked`);
-      const val = sel ? Number(sel.value) : 0;
-      document.getElementById(scores[i]).innerText = val;
-      total += val;
-    });
-    document.getElementById("total").innerText = total;
-    return total;
+    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
   }
 
-  document.querySelectorAll("input[type=radio]").forEach(r =>
-    r.addEventListener("change", calculate)
-  );
-
-  document.getElementById("save").onclick = async () => {
-    await addDoc(collection(db, "visits"), {
-      teacherCode: teacherCode.value,
-      teacherName: teacherName.value,
-      subject: subject.value,
-      grade: grade.value,
-      visitDate: visitDate.value,
-      visitNumber: visitNumber.value,
-      supervisorName: supervisorName.value,
-      totalScore: calculate(),
-      positives: positives.value,
-      recommendations: recommendations.value,
-      createdAt: new Date().toISOString()
+  function calc() {
+    let total = 0;
+    document.querySelectorAll('input[type=radio]:checked').forEach(r => {
+      total += Number(r.value);
+      document.getElementById('s' + r.name.substring(1)).innerText = r.value;
     });
+    document.getElementById('total').innerText = total;
+  }
 
-    alert("تم حفظ الاستمارة بنجاح");
-  };
+  document.querySelectorAll('input[type=radio]').forEach(r => {
+    r.addEventListener('change', calc);
+  });
 </script>
 
 </body>
