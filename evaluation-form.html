@@ -18,12 +18,41 @@
       margin-bottom: 20px;
     }
 
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .top-bar a {
+      text-decoration: none;
+      background: #555;
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .layout {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
     .box {
       background: #fff;
       padding: 20px;
-      margin-bottom: 20px;
       border-radius: 6px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .info-box {
+      width: 35%;
+    }
+
+    .eval-box {
+      width: 65%;
     }
 
     label {
@@ -34,22 +63,26 @@
 
     input, textarea {
       width: 100%;
-      padding: 8px;
+      padding: 7px;
       margin-top: 5px;
       box-sizing: border-box;
+    }
+
+    textarea {
+      height: 70px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
+      margin-top: 10px;
+      font-size: 14px;
     }
 
     th, td {
       border: 1px solid #000;
-      padding: 8px;
+      padding: 6px;
       vertical-align: top;
-      font-size: 14px;
     }
 
     th {
@@ -62,13 +95,20 @@
       font-weight: bold;
     }
 
+    .bottom {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     button {
-      padding: 12px 25px;
+      padding: 10px 25px;
       background: #1976d2;
       color: #fff;
       border: none;
       border-radius: 4px;
-      font-size: 16px;
+      font-size: 15px;
       cursor: pointer;
     }
 
@@ -79,126 +119,133 @@
 </head>
 <body>
 
-<h1>استمارة متابعة معلم</h1>
-
-<div class="box">
-  <h3>بيانات الزيارة</h3>
-
-  <label>كود المعلم</label>
-  <input id="teacherCode">
-
-  <label>اسم المعلم</label>
-  <input id="teacherName">
-
-  <label>المادة</label>
-  <input id="subject">
-
-  <label>الصف</label>
-  <input id="grade">
-
-  <label>التاريخ</label>
-  <input type="date" id="visitDate">
-
-  <label>رقم الزيارة</label>
-  <input type="number" id="visitNumber">
-
-  <label>اسم المشرف</label>
-  <input id="supervisorName">
+<div class="top-bar">
+  <h1>استمارة متابعة معلم</h1>
+  <a href="index.html">الرجوع للصفحة الرئيسية</a>
 </div>
 
-<div class="box">
-  <h3>التقييم</h3>
+<div class="layout">
 
-  <table>
-    <thead>
-      <tr>
-        <th>المجال</th>
-        <th>العنصر</th>
-        <th>التقييم</th>
-        <th>الدرجة</th>
-      </tr>
-    </thead>
-    <tbody>
+  <!-- بيانات الزيارة -->
+  <div class="box info-box">
+    <h3>بيانات الزيارة</h3>
 
-      <!-- الرؤية -->
-      <tr>
-        <td rowspan="1">الرؤية</td>
-        <td>القيمة التربوية</td>
-        <td>
-          <label><input type="radio" name="q1" value="4"> مناسب</label><br>
-          <label><input type="radio" name="q1" value="3"> إلى حد ما</label><br>
-          <label><input type="radio" name="q1" value="1"> غير مناسب</label>
-        </td>
-        <td class="score" id="s1">0</td>
-      </tr>
+    <label>كود المعلم</label>
+    <input id="teacherCode">
 
-      <!-- التخطيط -->
-      <tr>
-        <td rowspan="5">التخطيط للدرس</td>
-        <td>التحضير المسبق للدرس</td>
-        <td>
-          <label><input type="radio" name="q2" value="4"> مكتمل</label><br>
-          <label><input type="radio" name="q2" value="3"> غير مكتمل</label><br>
-          <label><input type="radio" name="q2" value="1"> غير موجود</label>
-        </td>
-        <td class="score" id="s2">0</td>
-      </tr>
+    <label>اسم المعلم</label>
+    <input id="teacherName">
 
-      <tr>
-        <td>أهداف الدرس</td>
-        <td>
-          <label><input type="radio" name="q3" value="4"> واضحة وقابلة للقياس</label><br>
-          <label><input type="radio" name="q3" value="3"> أهداف عامة</label><br>
-          <label><input type="radio" name="q3" value="1"> غير موجودة</label>
-        </td>
-        <td class="score" id="s3">0</td>
-      </tr>
+    <label>المادة</label>
+    <input id="subject">
 
-      <tr>
-        <td>تسلسل المحتوى</td>
-        <td>
-          <label><input type="radio" name="q4" value="4"> مترابط وواضح</label><br>
-          <label><input type="radio" name="q4" value="3"> إلى حد ما</label><br>
-          <label><input type="radio" name="q4" value="1"> غير مترابط</label>
-        </td>
-        <td class="score" id="s4">0</td>
-      </tr>
+    <label>الصف</label>
+    <input id="grade">
 
-      <tr>
-        <td>خطوات الدرس</td>
-        <td>
-          <label><input type="radio" name="q5" value="4"> واضحة</label><br>
-          <label><input type="radio" name="q5" value="3"> غير دقيقة</label><br>
-          <label><input type="radio" name="q5" value="1"> غير موجودة</label>
-        </td>
-        <td class="score" id="s5">0</td>
-      </tr>
+    <label>التاريخ</label>
+    <input type="date" id="visitDate">
 
-      <tr>
-        <td>مراعاة الفروق الفردية</td>
-        <td>
-          <label><input type="radio" name="q6" value="4"> موجودة بوضوح</label><br>
-          <label><input type="radio" name="q6" value="3"> محدودة</label><br>
-          <label><input type="radio" name="q6" value="1"> غير موجودة</label>
-        </td>
-        <td class="score" id="s6">0</td>
-      </tr>
+    <label>رقم الزيارة</label>
+    <input type="number" id="visitNumber">
 
-    </tbody>
-  </table>
+    <label>اسم المشرف</label>
+    <input id="supervisorName">
+  </div>
 
-  <p><strong>المجموع:</strong> <span id="total">0</span></p>
+  <!-- التقييم -->
+  <div class="box eval-box">
+    <h3>التقييم</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>المجال</th>
+          <th>العنصر</th>
+          <th>التقييم</th>
+          <th>الدرجة</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td>الرؤية</td>
+          <td>القيمة التربوية</td>
+          <td>
+            <label><input type="radio" name="q1" value="4"> مناسب</label>
+            <label><input type="radio" name="q1" value="3"> إلى حد ما</label>
+            <label><input type="radio" name="q1" value="1"> غير مناسب</label>
+          </td>
+          <td class="score" id="s1">0</td>
+        </tr>
+
+        <tr>
+          <td rowspan="5">التخطيط للدرس</td>
+          <td>التحضير المسبق للدرس</td>
+          <td>
+            <label><input type="radio" name="q2" value="4"> مكتمل</label>
+            <label><input type="radio" name="q2" value="3"> غير مكتمل</label>
+            <label><input type="radio" name="q2" value="1"> غير موجود</label>
+          </td>
+          <td class="score" id="s2">0</td>
+        </tr>
+
+        <tr>
+          <td>أهداف الدرس</td>
+          <td>
+            <label><input type="radio" name="q3" value="4"> واضحة وقابلة للقياس</label>
+            <label><input type="radio" name="q3" value="3"> أهداف عامة</label>
+            <label><input type="radio" name="q3" value="1"> غير موجودة</label>
+          </td>
+          <td class="score" id="s3">0</td>
+        </tr>
+
+        <tr>
+          <td>تسلسل المحتوى</td>
+          <td>
+            <label><input type="radio" name="q4" value="4"> مترابط</label>
+            <label><input type="radio" name="q4" value="3"> إلى حد ما</label>
+            <label><input type="radio" name="q4" value="1"> غير مترابط</label>
+          </td>
+          <td class="score" id="s4">0</td>
+        </tr>
+
+        <tr>
+          <td>خطوات الدرس</td>
+          <td>
+            <label><input type="radio" name="q5" value="4"> واضحة</label>
+            <label><input type="radio" name="q5" value="3"> غير دقيقة</label>
+            <label><input type="radio" name="q5" value="1"> غير موجودة</label>
+          </td>
+          <td class="score" id="s5">0</td>
+        </tr>
+
+        <tr>
+          <td>مراعاة الفروق الفردية</td>
+          <td>
+            <label><input type="radio" name="q6" value="4"> موجودة</label>
+            <label><input type="radio" name="q6" value="3"> محدودة</label>
+            <label><input type="radio" name="q6" value="1"> غير موجودة</label>
+          </td>
+          <td class="score" id="s6">0</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <p><strong>المجموع:</strong> <span id="total">0</span></p>
+
+    <label>إيجابيات الحصة</label>
+    <textarea id="positives"></textarea>
+
+    <label>التوصيات والتوجيهات</label>
+    <textarea id="recommendations"></textarea>
+
+  </div>
 </div>
 
-<div class="box">
-  <label>إيجابيات الحصة</label>
-  <textarea id="positives"></textarea>
-
-  <label>التوصيات والتوجيهات</label>
-  <textarea id="recommendations"></textarea>
+<div class="bottom">
+  <button id="save">حفظ الاستمارة</button>
 </div>
-
-<button id="save">حفظ الاستمارة</button>
 
 <script type="module">
   import { db } from "./firebase.js";
@@ -232,7 +279,7 @@
       visitDate: visitDate.value,
       visitNumber: visitNumber.value,
       supervisorName: supervisorName.value,
-      scores: calculate(),
+      totalScore: calculate(),
       positives: positives.value,
       recommendations: recommendations.value,
       createdAt: new Date().toISOString()
