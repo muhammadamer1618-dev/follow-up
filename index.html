@@ -3,101 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <title>نظام متابعة المعلمين</title>
-
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f8fc;
-      color: #000;
-    }
-
-    header {
-      background: #1976d2;
-      color: #fff;
-      padding: 35px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 30px;
-    }
-
-    header p {
-      margin-top: 10px;
-      font-size: 16px;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 30px;
-    }
-
-    .card {
-      background: #fff;
-      border: 1px solid #bbdefb;
-      border-radius: 6px;
-      padding: 25px;
-      margin-bottom: 25px;
-    }
-
-    .card h2 {
-      color: #0d47a1;
-      margin-top: 0;
-    }
-
-    .actions a {
-      display: inline-block;
-      margin-top: 15px;
-      text-decoration: none;
-      background: #1976d2;
-      color: #fff;
-      padding: 14px 26px;
-      border-radius: 4px;
-      font-size: 17px;
-    }
-
-    footer {
-      background: #e3f2fd;
-      text-align: center;
-      padding: 15px;
-      font-size: 14px;
-      color: #000;
-    }
+    body{margin:0;font-family:Arial,sans-serif;background:#f4f8fc;color:#0b0b0b}
+    header{background:#1976d2;color:#fff;padding:34px 18px;text-align:center}
+    header h1{margin:0;font-size:30px}
+    header p{margin:10px 0 0;font-size:16px;opacity:.95}
+    .wrap{max-width:980px;margin:auto;padding:26px}
+    .card{background:#fff;border:1px solid #bbdefb;border-radius:10px;padding:22px;margin-bottom:18px}
+    .card h2{margin:0 0 10px;color:#0d47a1}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+    .btn{display:inline-block;text-decoration:none;background:#1976d2;color:#fff;padding:12px 18px;border-radius:8px;font-size:16px}
+    .btn.secondary{background:#0d47a1}
+    footer{background:#e3f2fd;text-align:center;padding:14px;font-size:14px}
   </style>
 </head>
 <body>
+  <header>
+    <h1>نظام متابعة المعلمين</h1>
+    <p>نظام إلكتروني لمتابعة الأداء الصفي وتوثيق الزيارات الإشرافية</p>
+  </header>
 
-<header>
-  <h1>نظام متابعة المعلمين</h1>
-  <p>نظام إلكتروني لمتابعة الأداء الصفي وتوثيق الزيارات الإشرافية</p>
-</header>
+  <div class="wrap">
+    <div class="card">
+      <h2>الدخول</h2>
+      <div class="actions">
+        <a class="btn" href="evaluation-form.html">استمارة متابعة معلم</a>
+        <a class="btn secondary" href="written-work.html">متابعة الأعمال التحريرية</a>
+      </div>
+    </div>
 
-<div class="container">
-
-  <div class="card">
-    <h2>عن النظام</h2>
-    <p>
-      يهدف هذا النظام إلى متابعة أداء المعلمين داخل الفصول الدراسية
-      باستخدام استمارة تقييم معتمدة، مع إمكانية حفظ وطباعة التقارير
-      بشكل منظم ورسمي.
-    </p>
+    <div class="card">
+      <h2>ملاحظات</h2>
+      <p>الاستمارة تحسب المجموع والنسبة والدرجة النهائية (من 100) تلقائيًا، وزر الطباعة يطبع صفحتين (الاستمارة + الأعمال التحريرية).</p>
+    </div>
   </div>
 
-  <div class="card actions">
-    <h2>الدخول إلى النظام</h2>
-    <a href="evaluation-form.html">استمارة متابعة معلم</a>
-    <br><br>
-    <a href="written-work.html">متابعة الأعمال التحريرية</a>
-  </div>
-
-</div>
-
-<footer>
-  إعداد محمد عامر أحمد
-</footer>
-
+  <footer>إعداد محمد عامر أحمد</footer>
 </body>
 </html>
