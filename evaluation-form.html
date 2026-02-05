@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>استمارة متابعة معلم</title>
+
+  <style>
+    @page { size: A4; margin: 12mm; }
+
+    body{font-family:Arial,sans-serif;background:#f4f8fc;margin:0;padding:12px;color:#000}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+    .title{margin:0;color:#0d47a1;font-size:26px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{border:0;border-radius:8px;padding:9px 14px;font-size:14px;cursor:pointer}
+    .btn.back{background:#607d8b;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
+    .btn.print{background:#1976d2;color:#fff}
+    .btn.clear{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}
+
+    .layout{display:flex;gap:12px;align-items:flex-start}
+    .box{background:#fff;border:1px solid #bbdefb;border-radius:10px;padding:12px;box-sizing:border-box}
+    .info{width:30%}
+    .eval{width:70%}
+
+    label{font-weight:bold;display:block;margin-top:8px}
+    input,textarea{width:100%;padding:7px;margin-top:4px;border:1px solid #cfcfcf;border-radius:6px;box-sizing:border-box}
+    textarea{height:64px}
+
+    .domain{border:1px solid #90caf9;border-radius:10px;margin-bottom:12px;overflow:hidden}
+    .domain-head{background:#e3f2fd;padding:10px;font-weight:bold;color:#0d47a1}
+    .domain-body{padding:10px;background:#fff}
+
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{border:1px solid #000;padding:6px;vertical-align:top}
+    th{background:#e3f2fd;text-align:center}
+
+    .col-score{width:70px;text-align:center;font-weight:bold}
+    .col-eval{width:260px}
+    .eval-grid{display:grid;gap:6px}
+    .eval-opt{display:flex;align-items:center;gap:8px}
+    .eval-opt input{width:auto;margin:0}
+
+    .summary{margin-top:10px;background:#f6fbff;border:1px solid #bbdefb;border-radius:10px;padding:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+    .summary b{color:#0d47a1}
+    .summary span{font-weight:bold}
+
+    .sign-table{width:100%;border-collapse:collapse;margin-top:14px}
+    .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:bold}
+    .sign-line{height:60px}
+
+    @media print{
+      body{background:#fff;padding:0}
+      .top,.btn{display:none !important}
+      .box{border:1px solid #000}
+      .summary{border:1px solid #000}
+      .page-break{page-break-before:always}
+      .domain{border:1px solid #000}
+      .domain-head{background:#e3f2fd !important}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top">
+    <h1 class="title">استمارة متابعة معلم</h1>
+    <div class="actions">
+      <a class="btn back" href="index.html">الرجوع للرئيسية</a>
+      <button class="btn print" id="btnPrint">طباعة (صفحتين)</button>
+      <button class="btn clear" id="btnClear">مسح</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="box info">
+      <label>اسم المعلم</label>
+      <input id="teacherName" />
+
+      <label>المادة</label>
+      <input id="subject" />
+
+      <label>الصف</label>
+      <input id="grade" />
+
+      <label>التاريخ</label>
+      <input type="date" id="visitDate" />
+
+      <label>رقم الزيارة</label>
+      <input type="number" id="visitNumber" />
+
+      <label>اسم المشرف</label>
+      <input id="supervisorName" />
+    </div>
+
+    <div class="box eval">
+      <div id="domains"></div>
+
+      <div class="summary">
+        <div><b>المجموع:</b> <span id="rawTotal">0</span> / <span id="rawMax">0</span></div>
+        <div><b>النسبة:</b> <span id="percentage">0%</span></div>
+        <div><b>الدرجة النهائية:</b> <span id="finalScore">0</span> / 100</div>
+      </div>
+
+      <label style="margin-top:10px;">إيجابيات الحصة</label>
+      <textarea id="positives"></textarea>
+
+      <label>التوصيات والتوجيهات</label>
+      <textarea id="recommendations"></textarea>
+
+      <table class="sign-table">
+        <tr>
+          <td>اسم المعلم</td>
+          <td>اسم المشرف</td>
+        </tr>
+        <tr>
+          <td class="sign-line"></td>
+          <td class="sign-line"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const rubric = [
+      { title: "الرؤية", items: [
+        { label: "القيمة التربوية", best: "مناسب", mid: "إلى حد ما", worst: "غير مناسب" }
+      ]},
+      { title: "التخطيط للدرس", items: [
+        { label: "التحضير المسبق للدرس", best: "مكتمل", mid: "غير مكتمل", worst: "غير موجود" },
+        { label: "خطة الدرس", best: "مكتملة ومفصلة", mid: "غير مكتملة", worst: "غير موجودة" },
+        { label: "أهداف الدرس", best: "واضحة وقابلة للقياس", mid: "أهداف عامة", worst: "غير موجودة" },
+        { label: "المفاهيم والمصطلحات العلمية", best: "محددة وواضحة", mid: "غير محددة بدقة", worst: "غير موجودة" },
+        { label: "تسلسل خطوات الدرس", best: "متسلسلة ومصممة جيدًا", mid: "بعض الشواهد", worst: "لا توجد شواهد" },
+        { label: "إعدادات الفروق الفردية", best: "موجود بقوة", mid: "بعض الشواهد", worst: "لا توجد شواهد" }
+      ]},
+      { title: "إدارة الصف", items: [
+        { label: "تنظيم المقاعد", best: "مجموعات", mid: "خطوط", worst: "مزعج" },
+        { label: "نظافة الفصل", best: "اهتمام عال", mid: "اهتمام مناسب", worst: "لا يوجد اهتمام" },
+        { label: "البيئة الصفية", best: "معززة وإيجابية", mid: "مناسبة", worst: "غير مناسبة" },
+        { label: "تنظيم مشاركة الطلاب", best: "منظم", mid: "إلى حد ما", worst: "غير منظم" },
+        { label: "الإدارة الصفية", best: "جيدة وفعالة", mid: "متوسطة", worst: "ضعيفة" },
+        { label: "تفعيل القوانين الصفية", best: "مفعلة وفعالة", mid: "مفعلة إلى حد ما", worst: "لا مفعلة" }
+      ]},
+      { title: "دعم السلوك", items: [
+        { label: "تفاعل المعلم", best: "ممتاز", mid: "مقبول", worst: "ضعيف" },
+        { label: "سلوك الطلاب", best: "ممتاز", mid: "مقبول", worst: "ضعيف" },
+        { label: "تفاعل الطلاب", best: "ممتاز وقوي", mid: "إلى حد ما", worst: "ضعيف" },
+        { label: "صور/تحفيز المعلم وإلهامه للطلاب", best: "فعال عال المستوى", mid: "متوسط", worst: "محدود" }
+      ]},
+      { title: "استراتيجيات التدريس", items: [
+        { label: "خصائص الأسئلة حسب المنظومة", best: "مطابقة", mid: "إلى حد ما", worst: "غير مطابقة" },
+        { label: "تنفيذ استراتيجيات التدريس", best: "ينفذ", mid: "إلى حد ما", worst: "لا ينفذ" },
+        { label: "ممارسة التفكير", best: "ممارسة ممتازة", mid: "ممارسة متوسطة", worst: "ممارسة غير مناسبة" },
+        { label: "أهداف الدرس (معلنة/مدونة)", best: "معلنة وتناقش", mid: "إما مدونة أو تناقش", worst: "لا مدونة ولا تناقش" }
+      ]},
+      { title: "أدوات مساندة للتعلم", items: [
+        { label: "الوسيلة التعليمية", best: "مستخدمة", mid: "محدودة", worst: "غير مستخدمة" },
+        { label: "تفعيل السبورة", best: "مناسب جدًا", mid: "محدود", worst: "لا يوجد تفعيل" },
+        { label: "تطبيق ما تم التدريب عليه", best: "مستوى عال", mid: "مستوى مناسب", worst: "مستوى ضعيف" }
+      ]},
+      { title: "التقويم الختامي", items: [
+        { label: "ملخص الدرس", best: "خلاصة جيدة وواضحة", mid: "خلاصة محدودة", worst: "لا توجد خلاصة" }
+      ]}
+    ];
+
+    const domainsEl = document.getElementById("domains");
+    const questionMeta = [];
+    let qCounter = 0;
+
+    function buildDomains(){
+      rubric.forEach(domain => {
+        const wrap = document.createElement("div");
+        wrap.className = "domain";
+
+        const head = document.createElement("div");
+        head.className = "domain-head";
+        head.textContent = domain.title;
+
+        const body = document.createElement("div");
+        body.className = "domain-body";
+
+        const table = document.createElement("table");
+        table.innerHTML = `
+          <thead>
+            <tr>
+              <th class="col-score">الدرجة</th>
+              <th class="col-eval">التقييم</th>
+              <th>العنصر</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        `;
+        const tbody = table.querySelector("tbody");
+
+        domain.items.forEach(item => {
+          qCounter += 1;
+          const qName = "q" + qCounter;
+          const scoreId = "score_" + qName;
+          questionMeta.push({ name: qName, scoreId });
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="col-score" id="${scoreId}">0</td>
+            <td class="col-eval">
+              <div class="eval-grid">
+                <label class="eval-opt"><input type="radio" name="${qName}" value="4"><span>${item.best}</span></label>
+                <label class="eval-opt"><input type="radio" name="${qName}" value="3"><span>${item.mid}</span></label>
+                <label class="eval-opt"><input type="radio" name="${qName}" value="1"><span>${item.worst}</span></label>
+              </div>
+            </td>
+            <td>${item.label}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        body.appendChild(table);
+        wrap.appendChild(head);
+        wrap.appendChild(body);
+        domainsEl.appendChild(wrap);
+      });
+    }
+
+    const rawTotalEl = document.getElementById("rawTotal");
+    const rawMaxEl = document.getElementById("rawMax");
+    const percentageEl = document.getElementById("percentage");
+    const finalScoreEl = document.getElementById("finalScore");
+
+    function calcAll(){
+      let raw = 0;
+      questionMeta.forEach(q => {
+        const sel = document.querySelector(`input[name="${q.name}"]:checked`);
+        const val = sel ? Number(sel.value) : 0;
+        raw += val;
+        document.getElementById(q.scoreId).textContent = String(val);
+      });
+
+      const rawMax = questionMeta.length * 4;
+      rawMaxEl.textContent = String(rawMax);
+      rawTotalEl.textContent = String(raw);
+
+      const finalScore = rawMax === 0 ? 0 : Math.round((raw / rawMax) * 100);
+      finalScoreEl.textContent = String(finalScore);
+      percentageEl.textContent = String(finalScore) + "%";
+    }
+
+    function escHtml(s){
+      return (s || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+    }
+
+    function buildSignTableHtml(){
+      return `
+        <table style="width:100%;border-collapse:collapse;margin-top:14px;">
+          <tr><td style="border:1px solid #000;padding:10px;text-align:center;font-weight:bold;">اسم المعلم</td><td style="border:1px solid #000;padding:10px;text-align:center;font-weight:bold;">اسم المشرف</td></tr>
+          <tr><td style="border:1px solid #000;height:60px;"></td><td style="border:1px solid #000;height:60px;"></td></tr>
+        </table>
+      `;
+    }
+
+    function buildWrittenWorkPrintPage(){
+      let rows = "";
+      for (let i = 0; i < 18; i++) {
+        rows += `<tr><td style="height:28px;border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`;
+      }
+      return `
+        <div class="page-break"></div>
+        <h2 style="margin:0 0 10px;color:#0d47a1;text-align:center;">متابعة الأعمال التحريرية للطلاب</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم الطالب</th>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">مصحح</th>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">غير مكتمل</th>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">غير مصحح</th>
+          </tr>
+          ${rows}
+        </table>
+        ${buildSignTableHtml()}
+      `;
+    }
+
+    function printTwoPages(){
+      const domainBlocks = [...document.querySelectorAll(".domain")].map(dom => {
+        const title = dom.querySelector(".domain-head").textContent;
+        const table = dom.querySelector("table").outerHTML;
+        return `
+          <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">
+            <h2 style="margin:0 0 8px;color:#0d47a1;font-size:16px;">${escHtml(title)}</h2>
+            ${table}
+          </div>
+        `;
+      }).join("");
+
+      const headerTable = `
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم المعلم</th>
+            <td style="border:1px solid #000;padding:6px;">${escHtml(document.getElementById("teacherName").value)}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">المادة</th>
+            <td style="border:1px solid #000;padding:6px;">${escHtml(document.getElementById("subject").value)}</td>
+          </tr>
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">الصف</th>
+            <td style="border:1px solid #000;padding:6px;">${escHtml(document.getElementById("grade").value)}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">التاريخ</th>
+            <td style="border:1px solid #000;padding:6px;">${escHtml(document.getElementById("visitDate").value)}</td>
+          </tr>
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">رقم الزيارة</th>
+            <td style="border:1px solid #000;padding:6px;">${escHtml(document.getElementById("visitNumber").value)}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم المشرف</th>
+            <td style="border:1px solid #000;padding:6px;">${escHtml(document.getElementById("supervisorName").value)}</td>
+          </tr>
+        </table>
+      `;
+
+      const summaryHtml = `
+        <div style="border:1px solid #000;border-radius:8px;padding:8px;font-weight:bold;">
+          المجموع: ${escHtml(rawTotalEl.textContent)} / ${escHtml(rawMaxEl.textContent)}
+          &nbsp;&nbsp;|&nbsp;&nbsp; النسبة: ${escHtml(percentageEl.textContent)}
+          &nbsp;&nbsp;|&nbsp;&nbsp; الدرجة النهائية: ${escHtml(finalScoreEl.textContent)} / 100
+        </div>
+      `;
+
+      const notesHtml = `
+        <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-top:10px;">
+          <div style="font-weight:bold;margin-bottom:6px;">إيجابيات الحصة</div>
+          <div style="min-height:70px;border:1px solid #000;padding:8px;">${escHtml(document.getElementById("positives").value).replaceAll("\n","<br>")}</div>
+
+          <div style="font-weight:bold;margin:10px 0 6px;">التوصيات والتوجيهات</div>
+          <div style="min-height:70px;border:1px solid #000;padding:8px;">${escHtml(document.getElementById("recommendations").value).replaceAll("\n","<br>")}</div>
+
+          ${buildSignTableHtml()}
+        </div>
+      `;
+
+      const html = `
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+          <meta charset="UTF-8" />
+          <title>طباعة</title>
+          <style>
+            @page { size: A4; margin: 12mm; }
+            body{font-family:Arial,sans-serif;margin:0;color:#000}
+            table{width:100%;border-collapse:collapse;font-size:13px}
+            th,td{border:1px solid #000;padding:6px;vertical-align:top}
+            th{background:#e3f2fd;text-align:center}
+            .page-break{page-break-before:always}
+          </style>
+        </head>
+        <body>
+          <h1 style="text-align:center;color:#0d47a1;margin:0 0 10px;">استمارة متابعة معلم</h1>
+          <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">${headerTable}</div>
+          ${domainBlocks}
+          ${summaryHtml}
+          ${notesHtml}
+          ${buildWrittenWorkPrintPage()}
+          <script>window.onload=function(){window.print();}</script>
+        </body>
+        </html>
+      `;
+
+      const w = window.open("", "_blank");
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+    }
+
+    buildDomains();
+    calcAll();
+
+    document.addEventListener("change", (e) => {
+      if (e.target && e.target.matches('input[type="radio"]')) calcAll();
+    });
+
+    document.getElementById("btnClear").addEventListener("click", () => {
+      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      document.getElementById("positives").value = "";
+      document.getElementById("recommendations").value = "";
+      calcAll();
+    });
+
+    document.getElementById("btnPrint").addEventListener("click", printTwoPages);
+  </script>
+</body>
+</html>
