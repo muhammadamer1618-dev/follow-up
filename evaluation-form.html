@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>استمارة متابعة معلم</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0d47a1;
+    }
+
+    .box {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #1976d2;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #125aa3;
+    }
+  </style>
+</head>
+<body>
+
+<h1>استمارة متابعة معلم</h1>
+
+<div class="box">
+  <h3>بيانات الزيارة</h3>
+
+  <label>كود المعلم</label>
+  <input type="text" id="teacherCode">
+
+  <label>اسم المعلم</label>
+  <input type="text" id="teacherName">
+
+  <label>المادة</label>
+  <input type="text" id="subject">
+
+  <label>الصف</label>
+  <input type="text" id="grade">
+
+  <label>التاريخ</label>
+  <input type="date" id="visitDate">
+
+  <label>رقم الزيارة</label>
+  <input type="number" id="visitNumber">
+
+  <label>اسم المشرف</label>
+  <input type="text" id="supervisorName">
+</div>
+
+<div class="box">
+  <h3>التقييم</h3>
+  <p>
+    سيتم إضافة بنود التقييم هنا بنفس نموذج الاستمارة الورقية.
+  </p>
+</div>
+
+<button id="saveVisit">حفظ الاستمارة</button>
+
+<script type="module">
+  import { db } from "./firebase.js";
+  import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  document.getElementById("saveVisit").onclick = async () => {
+    const data = {
+      teacherCode: document.getElementById("teacherCode").value,
+      teacherName: document.getElementById("teacherName").value,
+      subject: document.getElementById("subject").value,
+      grade: document.getElementById("grade").value,
+      visitDate: document.getElementById("visitDate").value,
+      visitNumber: document.getElementById("visitNumber").value,
+      supervisorName: document.getElementById("supervisorName").value,
+      createdAt: new Date().toISOString()
+    };
+
+    await addDoc(collection(db, "visits"), data);
+
+    alert("تم حفظ بيانات الزيارة (بدون التقييم)");
+  };
+</script>
+
+</body>
+</html>
