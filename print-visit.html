@@ -1,239 +1,127 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>طباعة استمارة تقييم</title>
+<meta charset="UTF-8">
+<title>طباعة استمارة التقييم</title>
 
-  <style>
-    @page { size: A4; margin: 12mm; }
-
-    body{
-      font-family: Arial, sans-serif;
-      color:#000;
-      margin:0;
-      padding:0;
-    }
-
-    h2{
-      text-align:center;
-      margin:0 0 10px 0;
-    }
-
-    .school{
-      font-weight:900;
-      text-align:right;
-    }
-
-    .designer{
-      font-size:12px;
-      text-align:left;
-      margin-bottom:10px;
-    }
-
-    .box{
-      border:1px solid #000;
-      padding:8px;
-      margin-bottom:10px;
-    }
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:13px;
-    }
-
-    th,td{
-      border:1px solid #000;
-      padding:6px;
-      vertical-align:middle;
-      text-align:center;
-    }
-
-    th{
-      background:#eee;
-      font-weight:900;
-    }
-
-    .circle{
-      width:14px;
-      height:14px;
-      border:2px solid #000;
-      border-radius:50%;
-      margin:auto;
-      position:relative;
-    }
-
-    .circle.checked::after{
-      content:"";
-      width:8px;
-      height:8px;
-      background:#000;
-      border-radius:50%;
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%,-50%);
-    }
-
-    .page-break{
-      page-break-before: always;
-    }
-
-    .sign{
-      height:60px;
-    }
-  </style>
+<style>
+@page { size: A4; margin: 12mm; }
+body{
+  font-family: Arial, sans-serif;
+  background:#fff;
+  color:#000;
+}
+.page{page-break-after:always}
+h2{text-align:center;margin:0 0 10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border:1px solid #000;padding:6px}
+th{background:#f0f0f0}
+.box{border:1px solid #000;padding:6px;min-height:50px}
+.sign td{height:60px}
+</style>
 </head>
 
 <body>
 
-  <div class="school">مدارس الفلاح الأهلية</div>
-  <div class="designer">تصميم محمد عامر أحمد</div>
+<div class="page">
+<h2>استمارة التقييم</h2>
 
-  <h2>استمارة تقييم زيارة صفية</h2>
+<table>
+<tr><th>اسم المعلم</th><td id="teacherName"></td><th>كود المعلم</th><td id="teacherCode"></td></tr>
+<tr><th>الصف</th><td id="grade"></td><th>المادة</th><td id="subject"></td></tr>
+<tr><th>عنوان الدرس</th><td colspan="3" id="lessonTitle"></td></tr>
+<tr><th>رقم الزيارة</th><td id="visitNumber"></td><th>التاريخ</th><td id="visitDate"></td></tr>
+<tr><th>اسم المشرف</th><td colspan="3" id="supervisorName"></td></tr>
+</table>
 
-  <!-- بيانات الزيارة -->
-  <div class="box">
-    <table>
-      <tr>
-        <td>اسم المعلم</td><td id="teacherName"></td>
-        <td>كود المعلم</td><td id="teacherCode"></td>
-      </tr>
-      <tr>
-        <td>الصف</td><td id="grade"></td>
-        <td>المادة</td><td id="subject"></td>
-      </tr>
-      <tr>
-        <td>عنوان الدرس</td><td colspan="3" id="lessonTitle"></td>
-      </tr>
-      <tr>
-        <td>رقم الزيارة</td><td id="visitNumber"></td>
-        <td>التاريخ</td><td id="visitDate"></td>
-      </tr>
-      <tr>
-        <td>اسم المشرف</td><td colspan="3" id="supervisorName"></td>
-      </tr>
-    </table>
-  </div>
+<br>
 
-  <!-- جدول البنود -->
-  <table>
-    <thead>
-      <tr>
-        <th>المجال</th>
-        <th>العنصر</th>
-        <th>ممتاز</th>
-        <th>جيد</th>
-        <th>ضعيف</th>
-      </tr>
-    </thead>
-    <tbody id="rubricRows"></tbody>
-  </table>
+<table id="rubricTable">
+<tr><th>المجال</th><th>العنصر</th><th>التقييم</th></tr>
+</table>
 
-  <!-- إيجابيات وتوصيات -->
-  <div class="box">
-    <b>إيجابيات الحصة:</b>
-    <div id="positives"></div>
-  </div>
+<br>
+<b>إيجابيات الحصة</b>
+<div class="box" id="positives"></div>
 
-  <div class="box">
-    <b>توصيات وتوجيهات:</b>
-    <div id="recommendations"></div>
-  </div>
+<br>
+<b>توصيات وتوجيهات</b>
+<div class="box" id="recommendations"></div>
 
-  <table>
-    <tr>
-      <td>توقيع المعلم</td>
-      <td>توقيع المشرف</td>
-    </tr>
-    <tr>
-      <td class="sign"></td>
-      <td class="sign"></td>
-    </tr>
-  </table>
+<table class="sign">
+<tr><th>توقيع المعلم</th><th>توقيع المشرف</th></tr>
+<tr><td></td><td></td></tr>
+</table>
+</div>
 
-  <!-- صفحة 2 -->
-  <div class="page-break"></div>
+<div class="page">
+<h2>متابعة الأعمال التحريرية</h2>
 
-  <h2>متابعة الأعمال التحريرية</h2>
+<table id="workTable">
+<tr><th>اسم الطالب</th><th>مصحح</th><th>غير مكتمل</th><th>غير مصحح</th></tr>
+</table>
 
-  <table>
-    <thead>
-      <tr>
-        <th>اسم الطالب</th>
-        <th>مصحح</th>
-        <th>غير مكتمل</th>
-        <th>غير مصحح</th>
-      </tr>
-    </thead>
-    <tbody id="workRows"></tbody>
-  </table>
-
-  <table style="margin-top:20px;">
-    <tr>
-      <td>توقيع المعلم</td>
-      <td>توقيع المشرف</td>
-    </tr>
-    <tr>
-      <td class="sign"></td>
-      <td class="sign"></td>
-    </tr>
-  </table>
+<table class="sign">
+<tr><th>توقيع المعلم</th><th>توقيع المشرف</th></tr>
+<tr><td></td><td></td></tr>
+</table>
+</div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
-    authDomain: "follow-up-2026.firebaseapp.com",
-    projectId: "follow-up-2026"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
+  authDomain: "follow-up-2026.firebaseapp.com",
+  projectId: "follow-up-2026"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  const params = new URLSearchParams(location.search);
-  const id = params.get("id");
+const params = new URLSearchParams(location.search);
+const id = params.get("id");
+if(!id){ document.body.innerHTML="لا يوجد رقم زيارة"; throw ""; }
 
-  const snap = await getDoc(doc(db,"visits",id));
-  const v = snap.data();
+const snap = await getDoc(doc(db,"visits",id));
+if(!snap.exists()){ document.body.innerHTML="الزيارة غير موجودة"; throw ""; }
 
-  teacherName.textContent = v.teacherName;
-  teacherCode.textContent = v.teacherCode;
-  grade.textContent = v.grade;
-  subject.textContent = v.subject;
-  lessonTitle.textContent = v.lessonTitle;
-  visitNumber.textContent = v.visitNumber;
-  visitDate.textContent = v.visitDate;
-  supervisorName.textContent = v.supervisorName;
-  positives.textContent = v.positives;
-  recommendations.textContent = v.recommendations;
+const d = snap.data();
 
-  v.answers.forEach(a=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`
+teacherName.textContent = d.teacherName;
+teacherCode.textContent = d.teacherCode;
+grade.textContent = d.grade;
+subject.textContent = d.subject;
+lessonTitle.textContent = d.lessonTitle;
+visitNumber.textContent = d.visitNumber;
+visitDate.textContent = d.visitDate;
+supervisorName.textContent = d.supervisorName;
+positives.textContent = d.positives;
+recommendations.textContent = d.recommendations;
+
+d.answers.forEach(a=>{
+  rubricTable.insertAdjacentHTML("beforeend",
+    `<tr>
       <td>${a.domain}</td>
       <td>${a.itemLabel}</td>
-      <td><div class="circle ${a.selected===4?'checked':''}"></div></td>
-      <td><div class="circle ${a.selected===3?'checked':''}"></div></td>
-      <td><div class="circle ${a.selected===1?'checked':''}"></div></td>
-    `;
-    rubricRows.appendChild(tr);
-  });
+      <td>${a.selected===4?"●":""} ${a.selected===3?"●":""} ${a.selected===1?"●":""}</td>
+    </tr>`
+  );
+});
 
-  v.writtenWork.forEach(w=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`
+d.writtenWork.forEach(w=>{
+  workTable.insertAdjacentHTML("beforeend",
+    `<tr>
       <td>${w.name}</td>
-      <td>${w.status==='correct'?'✔️':''}</td>
-      <td>${w.status==='partial'?'✔️':''}</td>
-      <td>${w.status==='not'?'✔️':''}</td>
-    `;
-    workRows.appendChild(tr);
-  });
+      <td>${w.status==="correct"?"●":""}</td>
+      <td>${w.status==="partial"?"●":""}</td>
+      <td>${w.status==="not"?"●":""}</td>
+    </tr>`
+  );
+});
 
-  window.print();
+setTimeout(()=>window.print(),500);
 </script>
 
 </body>
