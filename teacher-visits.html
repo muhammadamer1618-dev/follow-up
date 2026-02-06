@@ -129,85 +129,141 @@ async function loadVisits(){
 }
 
 async function printVisit(id){
-  const snap = await getDoc(doc(db,"visits",id));
-  if(!snap.exists()) return;
+  const snap = await getDoc(doc(db, "visits", id));
+  if (!snap.exists()){
+    alert("الزيارة غير موجودة");
+    return;
+  }
+
   const v = snap.data();
 
-  let rows="";
-  (v.answers||[]).forEach((a,i)=>{
-    rows+=`
+  const esc = s => (s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+  const dot = v => v ? "◉" : "○";
+
+  /* ===== HEADER ===== */
+  let header = `
+  <h2 style="text-align:center;margin:0 0 6px;color:#0d47a1">استمارة متابعة معلم</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:6px">
+    <tr>
+      <th>كود المعلم</th><td>${esc(v.teacherCode)}</td>
+      <th>اسم المعلم</th><td>${esc(v.teacherName)}</td>
+    </tr>
+    <tr>
+      <th>الصف</th><td>${esc(v.grade)}</td>
+      <th>المادة</th><td>${esc(v.subject)}</td>
+    </tr>
+    <tr>
+      <th>عنوان الدرس</th><td colspan="3">${esc(v.lessonTitle)}</td>
+    </tr>
+    <tr>
+      <th>رقم الزيارة</th><td>${v.visitNumber}</td>
+      <th>اسم المشرف</th><td>${esc(v.supervisorName)}</td>
+    </tr>
+    <tr>
+      <th>التاريخ</th><td>${esc(v.visitDate)}</td>
+      <th>الدرجة النهائية</th><td><b>${v.finalScore} / 100</b></td>
+    </tr>
+  </table>
+  `;
+
+  /* ===== GROUP ANSWERS BY DOMAIN ===== */
+  const groups = {};
+  (v.answers || []).forEach(a=>{
+    if(!groups[a.domain]) groups[a.domain]=[];
+    groups[a.domain].push(a);
+  });
+
+  let rubricRows = "";
+  Object.keys(groups).forEach(domain=>{
+    const items = groups[domain];
+    items.forEach((a,i)=>{
+      rubricRows += `
       <tr>
-        <td>${i+1}</td>
-        <td>${esc(a.domain)}</td>
+        ${i===0 ? `<td rowspan="${items.length}">${esc(domain)}</td>` : ``}
         <td>${esc(a.itemLabel)}</td>
-        <td>
-          ${circle(a.selected==4)} ${esc(a.optTop)} |
-          ${circle(a.selected==3)} ${esc(a.optMid)} |
-          ${circle(a.selected==1)} ${esc(a.optLow)}
-        </td>
+        <td style="text-align:center">${dot(a.selected==4)}</td>
+        <td style="text-align:center">${dot(a.selected==3)}</td>
+        <td style="text-align:center">${dot(a.selected==1)}</td>
       </tr>
+      `;
+    });
+  });
+
+  const rubric = `
+  <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:6px">
+    <tr>
+      <th>المجال</th>
+      <th>العنصر</th>
+      <th>ممتاز</th>
+      <th>متوسط</th>
+      <th>ضعيف</th>
+    </tr>
+    ${rubricRows}
+  </table>
+  `;
+
+  const notes = `
+  <div style="border:1px solid #000;padding:6px;margin-bottom:6px">
+    <b>إيجابيات الحصة</b>
+    <div style="border:1px solid #000;min-height:40px;padding:4px">${esc(v.positives||"")}</div>
+    <b>توصيات وتوجيهات</b>
+    <div style="border:1px solid #000;min-height:40px;padding:4px">${esc(v.recommendations||"")}</div>
+  </div>
+
+  <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:6px">
+    <tr><th>توقيع المعلم</th><th>توقيع المشرف</th></tr>
+    <tr><td style="height:30px"></td><td></td></tr>
+  </table>
+  `;
+
+  let workRows="";
+  (v.writtenWork||[]).slice(0,8).forEach(r=>{
+    workRows+=`
+    <tr>
+      <td>${esc(r.name)}</td>
+      <td>${r.status==="correct"?"✓":""}</td>
+      <td>${r.status==="partial"?"✓":""}</td>
+      <td>${r.status==="not"?"✓":""}</td>
+    </tr>
     `;
   });
 
-  let work="";
-  (v.writtenWork||[]).forEach(r=>{
-    work+=`
-      <tr>
-        <td>${esc(r.name)}</td>
-        <td>${r.status=="correct"?"✓":""}</td>
-        <td>${r.status=="partial"?"✓":""}</td>
-        <td>${r.status=="not"?"✓":""}</td>
-      </tr>
-    `;
-  });
+  const work = `
+  <div style="page-break-before:always"></div>
+  <h3 style="text-align:center;color:#0d47a1">متابعة الأعمال التحريرية</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:11px">
+    <tr><th>اسم الطالب</th><th>مصحح</th><th>غير مكتمل</th><th>غير مصحح</th></tr>
+    ${workRows}
+  </table>
 
-  const html=`
-<!DOCTYPE html><html dir="rtl"><head>
-<meta charset="UTF-8">
-<style>
-@page{size:A4;margin:10mm}
-body{font-family:Arial}
-table{width:100%;border-collapse:collapse;font-size:11px}
-td,th{border:1px solid #000;padding:5px}
-th{background:#e3f2fd}
-</style></head><body>
+  <table style="width:100%;border-collapse:collapse;font-size:11px;margin-top:6px">
+    <tr><th>توقيع المعلم</th><th>توقيع المشرف</th></tr>
+    <tr><td style="height:30px"></td><td></td></tr>
+  </table>
+  `;
 
-<h3 style="text-align:center">استمارة متابعة معلم</h3>
+  const html = `
+  <html dir="rtl"><head>
+  <style>
+    @page{size:A4;margin:10mm}
+    body{font-family:Arial}
+    table,th,td{border:1px solid #000}
+    th{background:#e3f2fd}
+    th,td{padding:4px}
+  </style>
+  </head><body>
+  ${header}
+  ${rubric}
+  ${notes}
+  ${work}
+  </body></html>
+  `;
 
-<table>
-<tr><th>المعلم</th><td>${esc(v.teacherName)}</td><th>الصف</th><td>${esc(v.grade)}</td></tr>
-<tr><th>المادة</th><td>${esc(v.subject)}</td><th>التاريخ</th><td>${esc(v.visitDate)}</td></tr>
-</table>
-
-<table>
-<tr><th>م</th><th>المجال</th><th>العنصر</th><th>التقييم</th></tr>
-${rows}
-</table>
-
-<p><b>إيجابيات:</b><br>${esc(v.positives||"")}</p>
-<p><b>توصيات:</b><br>${esc(v.recommendations||"")}</p>
-
-<table><tr><td>توقيع المعلم</td><td>توقيع المشرف</td></tr></table>
-
-<div style="page-break-before:always"></div>
-
-<h3 style="text-align:center">الأعمال التحريرية</h3>
-<table>
-<tr><th>الاسم</th><th>مصحح</th><th>غير مكتمل</th><th>غير مصحح</th></tr>
-${work}
-</table>
-
-<table><tr><td>توقيع المعلم</td><td>توقيع المشرف</td></tr></table>
-
-</body></html>
-`;
-
-  const w=window.open();
+  const w = window.open();
   w.document.write(html);
   w.document.close();
   setTimeout(()=>w.print(),300);
 }
-
 el("btnSearch").onclick=loadVisits;
 </script>
 </body>
