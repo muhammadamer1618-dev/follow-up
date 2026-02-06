@@ -123,15 +123,55 @@
       .workScroll table{min-width:820px}
     }
 
-    @media print{
-      body{background:#fff;padding:0}
-      .top{display:none !important}
-      .box{border:1px solid #000}
-      .rubric{overflow:visible}
-      .rubric table{min-width:auto}
-      .workScroll{overflow:visible}
-      .workScroll table{min-width:auto}
-    }
+@media print{
+
+  body{
+    background:#fff;
+    padding:0;
+    font-size:12px;
+  }
+
+  .top,
+  .actions,
+  .btn{
+    display:none !important;
+  }
+
+  .layout{
+    display:block;
+  }
+
+  .box{
+    border:1px solid #000;
+    page-break-inside:avoid;
+    margin-bottom:12px;
+  }
+
+  .rubric,
+  .workWrap{
+    overflow:visible !important;
+  }
+
+  table{
+    width:100% !important;
+    border-collapse:collapse !important;
+  }
+
+  tr{
+    page-break-inside:avoid;
+  }
+
+  .evalCell{
+    display:grid !important;
+    grid-template-columns:1fr 1fr 1fr !important;
+  }
+
+  /* صفحة 1 */
+  .rubric{
+    page-break-after:always;
+  }
+
+}
   </style>
 </head>
 
