@@ -123,89 +123,68 @@
       .workScroll table{min-width:820px}
     }
 
-@media print{
-  body{
-    background:#fff;
-    padding:0;
+    @media print{
+      body{background:#fff;padding:0}
+      .top{display:none !important}
+      .box{border:1px solid #000}
+      .rubric{overflow:visible}
+      .rubric table{min-width:auto}
+      .workScroll{overflow:visible}
+      .workScroll table{min-width:auto}
+    }
+    @media print {
+
+  body {
+    background: #fff !important;
+    padding: 0 !important;
   }
 
-  .top{
-    display:none !important;
+  .top {
+    display: none !important;
   }
 
-  .layout{
-    display:block;
+  .layout {
+    display: block !important;
   }
 
   .info,
-  .main{
-    width:100%;
+  .main {
+    width: 100% !important;
   }
 
-  /* منع اختفاء البنود أو تقطيعها */
-  .rubric{
-    overflow:visible !important;
-  }
-
-  table{
-    page-break-inside:auto;
-  }
-
-  tr{
-    page-break-inside:avoid;
-    page-break-after:auto;
-  }
-
-  /* توسيط عناصر التقييم في الطباعة */
-  .evalCell{
-    display:flex !important;
-    justify-content:center;
-    gap:28px;
-    border:none !important;
-  }
-
-  .evalOpt{
-    border:none !important;
-    padding:0 !important;
-  }
-
-  /* صفحة ثانية للأعمال التحريرية */
-  .workWrap{
-    page-break-before:always;
-  }
-}
-    @media print {
-
-  /* FORCE rubric to print */
-  #rubricBody,
-  #rubricBody * {
-    visibility: visible !important;
-  }
-
-  .rubric {
-    display: block !important;
-    overflow: visible !important;
-    height: auto !important;
-  }
-
-  .rubric table {
+  /* رجّع الجدول لوضع الطباعة الطبيعي */
+  table {
     display: table !important;
     width: 100% !important;
     border-collapse: collapse !important;
   }
 
-  .rubric tr {
+  thead { display: table-header-group !important; }
+  tbody { display: table-row-group !important; }
+
+  tr {
     display: table-row !important;
     page-break-inside: avoid !important;
   }
 
-  .rubric td,
-  .rubric th {
+  th,
+  td {
     display: table-cell !important;
-    visibility: visible !important;
+    border: 1px solid #000 !important;
   }
 
-  /* cancel grid/flex in print */
+  /* إلغاء كل إضافات الموبايل */
+  .rubric,
+  .workScroll {
+    overflow: visible !important;
+  }
+
+  .rubric table,
+  .workScroll table {
+    min-width: auto !important;
+  }
+
+  /* إلغاء grid في الطباعة */
   .evalCell {
     display: table !important;
     width: 100% !important;
@@ -214,7 +193,13 @@
   .evalOpt {
     display: table-cell !important;
     text-align: center !important;
-    border: 1px solid #000 !important;
+    vertical-align: middle !important;
+    padding: 8px !important;
+  }
+
+  /* الصفحة الثانية */
+  .workWrap {
+    page-break-before: always !important;
   }
 }
   </style>
