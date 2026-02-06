@@ -303,12 +303,6 @@
           <tbody>
             ${htmlRows}
           </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="3" style="border:1px solid #000;text-align:left;font-weight:900;padding:4px;">الدرجة الكلية</td>
-              <td style="border:1px solid #000;text-align:center;font-weight:900;padding:4px;">100</td>
-            </tr>
-          </tfoot>
         </table>
       `;
     }
@@ -317,10 +311,10 @@
       return `
         <div style="margin-top:6px;border:1px solid #000;border-radius:8px;padding:8px;">
           <div style="font-weight:900;margin-bottom:4px;font-size:11px;">إيجابيات الحصة</div>
-          <div style="min-height:42px;border:1px solid #000;padding:6px;font-size:11px;">${esc(v.positives || "").replaceAll("\n","<br>")}</div>
+          <div style="min-height:38px;border:1px solid #000;padding:6px;font-size:11px;">${esc(v.positives || "").replaceAll("\n","<br>")}</div>
 
           <div style="font-weight:900;margin:6px 0 4px;font-size:11px;">توصيات وتوجيهات</div>
-          <div style="min-height:42px;border:1px solid #000;padding:6px;font-size:11px;">${esc(v.recommendations || "").replaceAll("\n","<br>")}</div>
+          <div style="min-height:38px;border:1px solid #000;padding:6px;font-size:11px;">${esc(v.recommendations || "").replaceAll("\n","<br>")}</div>
         </div>
 
         <table style="width:100%;border-collapse:collapse;margin-top:6px;font-size:11px;">
@@ -329,8 +323,8 @@
             <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المشرف</td>
           </tr>
           <tr>
-            <td style="border:1px solid #000;height:40px;"></td>
-            <td style="border:1px solid #000;height:40px;"></td>
+            <td style="border:1px solid #000;height:28px;"></td>
+            <td style="border:1px solid #000;height:28px;"></td>
           </tr>
         </table>
       `;
@@ -376,8 +370,8 @@
             <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المشرف</td>
           </tr>
           <tr>
-            <td style="border:1px solid #000;height:40px;"></td>
-            <td style="border:1px solid #000;height:40px;"></td>
+            <td style="border:1px solid #000;height:28px;"></td>
+            <td style="border:1px solid #000;height:28px;"></td>
           </tr>
         </table>
       `;
