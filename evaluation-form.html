@@ -38,9 +38,55 @@ th{background:#e3f2fd;font-weight:900;text-align:center}
 .page-break{page-break-before:always}
 
 @media print{
-.top{display:none}
-.layout{display:block}
-.info,.main{width:100%}
+  body{
+    background:#fff;
+    padding:0;
+  }
+
+  .top{
+    display:none !important;
+  }
+
+  .layout{
+    display:block;
+  }
+
+  .info,
+  .main{
+    width:100%;
+  }
+
+  /* منع اختفاء البنود أو تقطيعها */
+  .rubric{
+    overflow:visible !important;
+  }
+
+  table{
+    page-break-inside:auto;
+  }
+
+  tr{
+    page-break-inside:avoid;
+    page-break-after:auto;
+  }
+
+  /* توسيط عناصر التقييم في الطباعة */
+  .evalCell{
+    display:flex !important;
+    justify-content:center;
+    gap:28px;
+    border:none !important;
+  }
+
+  .evalOpt{
+    border:none !important;
+    padding:0 !important;
+  }
+
+  /* صفحة ثانية للأعمال التحريرية */
+  .workWrap{
+    page-break-before:always;
+  }
 }
 </style>
 </head>
