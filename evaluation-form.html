@@ -123,55 +123,15 @@
       .workScroll table{min-width:820px}
     }
 
-@media print{
-
-  body{
-    background:#fff;
-    padding:0;
-    font-size:12px;
-  }
-
-  .top,
-  .actions,
-  .btn{
-    display:none !important;
-  }
-
-  .layout{
-    display:block;
-  }
-
-  .box{
-    border:1px solid #000;
-    page-break-inside:avoid;
-    margin-bottom:12px;
-  }
-
-  .rubric,
-  .workWrap{
-    overflow:visible !important;
-  }
-
-  table{
-    width:100% !important;
-    border-collapse:collapse !important;
-  }
-
-  tr{
-    page-break-inside:avoid;
-  }
-
-  .evalCell{
-    display:grid !important;
-    grid-template-columns:1fr 1fr 1fr !important;
-  }
-
-  /* صفحة 1 */
-  .rubric{
-    page-break-after:always;
-  }
-
-}
+    @media print{
+      body{background:#fff;padding:0}
+      .top{display:none !important}
+      .box{border:1px solid #000}
+      .rubric{overflow:visible}
+      .rubric table{min-width:auto}
+      .workScroll{overflow:visible}
+      .workScroll table{min-width:auto}
+    }
   </style>
 </head>
 
@@ -511,79 +471,6 @@
 
     el("btnSave").addEventListener("click", saveVisit);
     el("btnClear").addEventListener("click", clearAll);
-    <script>
-function printVisit(){
-
-  let rows = "";
-  document.querySelectorAll("#rubricBody tr").forEach(tr=>{
-    rows += `<tr>${tr.innerHTML}</tr>`;
-  });
-
-  let workRows = "";
-  document.querySelectorAll("#workBody tr").forEach(tr=>{
-    workRows += `<tr>${tr.innerHTML}</tr>`;
-  });
-
-  const win = window.open("", "_blank");
-
-  win.document.write(`
-  <html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8">
-    <title>طباعة الاستمارة</title>
-    <style>
-      @page{size:A4;margin:12mm}
-      body{font-family:Arial;font-size:12px;color:#000}
-      table{width:100%;border-collapse:collapse}
-      th,td{border:1px solid #000;padding:6px;text-align:center}
-      h2{text-align:center;margin-bottom:10px}
-      .page-break{page-break-after:always}
-    </style>
-  </head>
-  <body>
-<button onclick="printVisit()">طباعة</button>
-  <h2>استمارة التقييم</h2>
-
-  <table>
-    <thead>
-      <tr>
-        <th>المجال</th>
-        <th>العنصر</th>
-        <th>التقييم</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${rows}
-    </tbody>
-  </table>
-
-  <div class="page-break"></div>
-
-  <h2>الأعمال التحريرية</h2>
-
-  <table>
-    <thead>
-      <tr>
-        <th>اسم الطالب</th>
-        <th>مصحح</th>
-        <th>غير مكتمل</th>
-        <th>غير مصحح</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${workRows}
-    </tbody>
-  </table>
-
-  </body>
-  </html>
-  `);
-
-  win.document.close();
-  win.focus();
-  win.print();
-}
-</script>
   </script>
 </body>
 </html>
