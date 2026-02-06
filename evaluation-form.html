@@ -46,10 +46,37 @@
     .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:900}
     .sign-line{height:70px}
 
+    /* ===== Mobile/Tablet fixes ONLY (no logic changes) ===== */
+    .rubric{
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+    }
+    .rubric table{
+      min-width:980px;
+    }
+
+    @media (max-width: 900px){
+      .layout{flex-direction:column}
+      .info,.main{width:100%}
+      .btn{padding:10px 12px}
+      .summary{gap:10px}
+    }
+
+    @media (max-width: 520px){
+      body{padding:10px}
+      .title{font-size:20px}
+      .btn{flex:1;min-width:140px}
+      .opt{white-space:nowrap}
+      .rubric table{min-width:1020px}
+    }
+
     @media print{
       body{background:#fff;padding:0}
       .top{display:none !important}
       .box{border:1px solid #000}
+      .rubric{overflow:visible}
+      .rubric table{min-width:auto}
     }
   </style>
 </head>
