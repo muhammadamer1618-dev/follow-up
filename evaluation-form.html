@@ -167,7 +167,6 @@
       { title: "الرؤية", items: [
         { label: "القيمة التربوية", max: 4, optTop: "مناسب", optMid: "إلى حد ما", optLow: "غير مناسب" }
       ]},
-
       { title: "التخطيط للدرس", items: [
         { label: "التحضير المسبق للدرس", max: 4, optTop: "مكتمل", optMid: "غير مكتمل", optLow: "غير موجود" },
         { label: "خطة الدرس", max: 4, optTop: "مكتملة ومفصلة", optMid: "غير مكتملة", optLow: "غير موجودة" },
@@ -176,7 +175,6 @@
         { label: "تسلسل خطوات الدرس", max: 4, optTop: "متسلسلة ومصممة جيدًا", optMid: "بعض الشواهد", optLow: "لا توجد شواهد" },
         { label: "إعدادات الفروق الفردية", max: 4, optTop: "موجود بقوة", optMid: "بعض الشواهد", optLow: "لا توجد شواهد" }
       ]},
-
       { title: "إدارة الصف", items: [
         { label: "تنظيم المقاعد", max: 3, optTop: "مجموعات", optMid: "خطوط", optLow: "مزعج" },
         { label: "نظافة الفصل", max: 4, optTop: "اهتمام عال", optMid: "اهتمام مناسب", optLow: "لا يوجد اهتمام" },
@@ -185,27 +183,23 @@
         { label: "الإدارة الصفية", max: 4, optTop: "جيدة وفعالة", optMid: "متوسطة", optLow: "ضعيفة" },
         { label: "تفعيل القوانين الصفية", max: 3, optTop: "مفعلة وفعالة", optMid: "مفعلة إلى حد ما", optLow: "لا مفعلة" }
       ]},
-
       { title: "دعم السلوك", items: [
         { label: "تفاعل المعلم", max: 4, optTop: "ممتاز", optMid: "مقبول", optLow: "ضعيف" },
         { label: "سلوك الطلاب", max: 3, optTop: "ممتاز", optMid: "مقبول", optLow: "ضعيف" },
         { label: "تفاعل الطلاب", max: 4, optTop: "ممتاز وقوي", optMid: "إلى حد ما", optLow: "ضعيف" },
         { label: "تحفيز المعلم وإلهامه للطلاب", max: 4, optTop: "فعال عال المستوى", optMid: "متوسط", optLow: "محدود" }
       ]},
-
       { title: "استراتيجيات التدريس", items: [
         { label: "خصائص الأسئلة حسب المنظومة", max: 4, optTop: "مطابقة", optMid: "إلى حد ما", optLow: "غير مطابقة" },
         { label: "تنفيذ استراتيجيات التدريس", max: 4, optTop: "ينفذ", optMid: "إلى حد ما", optLow: "لا ينفذ" },
         { label: "ممارسة التفكير", max: 4, optTop: "ممارسة ممتازة", optMid: "ممارسة متوسطة", optLow: "ممارسة غير مناسبة" },
         { label: "أهداف الدرس", max: 4, optTop: "معلنة وتناقش", optMid: "إما مدونة أو تناقش", optLow: "لا مدونة ولا تناقش" }
       ]},
-
       { title: "أدوات مساندة للتعلم", items: [
         { label: "الوسيلة التعليمية", max: 4, optTop: "مستخدمة", optMid: "محدودة", optLow: "غير مستخدمة" },
         { label: "تفعيل السبورة", max: 4, optTop: "مناسب جدًا", optMid: "محدود", optLow: "لا يوجد تفعيل" },
         { label: "تطبيق ما تم التدريب عليه", max: 4, optTop: "مستوى عال", optMid: "مستوى مناسب", optLow: "مستوى ضعيف" }
       ]},
-
       { title: "التقويم الختامي", items: [
         { label: "ملخص الدرس", max: 4, optTop: "خلاصة جيدة وواضحة", optMid: "خلاصة محدودة", optLow: "لا توجد خلاصة" }
       ]}
@@ -382,11 +376,12 @@
         rawTotal: Number(el("rawTotal").textContent || 0),
         rawMax: Number(el("rawMax").textContent || 0),
         finalScore: Number(el("finalScore").textContent || 0),
+        answers,
         writtenWork: getWorkData(),
         createdAt: serverTimestamp()
       };
 
-      const ref = await addDoc(collection(db, "visits"), payload);
+      await addDoc(collection(db, "visits"), payload);
 
       clearAll();
       el("visitNumber").value = "";
