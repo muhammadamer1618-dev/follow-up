@@ -1,476 +1,249 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>استمارة التقييم</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>استمارة التقييم</title>
 
-  <style>
-    @page { size: A4; margin: 12mm; }
+<style>
+@page{size:A4;margin:12mm}
+body{font-family:Arial,sans-serif;background:#f4f8fc;margin:0;padding:12px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.title{font-size:22px;font-weight:900;color:#0d47a1}
+.btn{padding:10px 14px;border-radius:10px;border:0;font-weight:900;cursor:pointer}
+.btn.back{background:#607d8b;color:#fff;text-decoration:none}
+.btn.save{background:#2e7d32;color:#fff}
+.btn.clear{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}
 
-    body{font-family:Arial,sans-serif;background:#f4f8fc;margin:0;padding:12px;color:#000}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-    .title{margin:0;color:#0d47a1;font-size:22px;font-weight:900}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{border:0;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer;font-weight:900}
-    .btn.back{background:#607d8b;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
-    .btn.save{background:#2e7d32;color:#fff}
-    .btn.clear{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}
+.layout{display:flex;gap:12px}
+.box{background:#fff;border:1px solid #bbdefb;border-radius:12px;padding:12px}
+.info{width:32%}
+.main{width:68%}
 
-    .layout{display:flex;gap:12px;align-items:flex-start}
-    .box{background:#fff;border:1px solid #bbdefb;border-radius:12px;padding:12px;box-sizing:border-box}
-    .info{width:32%}
-    .main{width:68%}
+label{font-weight:900;margin-top:8px;display:block}
+input,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #ccc}
+textarea{height:55px}
 
-    label{font-weight:900;display:block;margin-top:8px}
-    input,textarea{width:100%;padding:8px;margin-top:4px;border:1px solid #cfcfcf;border-radius:8px;box-sizing:border-box}
-    textarea{height:70px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border:1px solid #000;padding:6px;vertical-align:middle}
+th{background:#e3f2fd;font-weight:900;text-align:center}
 
-    .rubric{border:1px solid #000;border-radius:10px;overflow:hidden}
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{border:1px solid #000;padding:8px;vertical-align:middle}
-    th{background:#e3f2fd;text-align:center;font-weight:900}
+.eval{display:flex;justify-content:center;gap:24px}
+.eval label{display:flex;align-items:center;gap:6px;white-space:nowrap}
 
-    .summary{margin-top:12px;background:#f6fbff;border:1px solid #bbdefb;border-radius:12px;padding:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-    .summary b{color:#0d47a1}
-    .summary span{font-weight:900}
+.sign{display:flex;border:1px solid #000;margin-top:10px}
+.sign div{width:50%;min-height:70px;text-align:center;font-weight:900;padding-top:6px;border-left:1px solid #000}
+.sign div:last-child{border-left:0}
 
-    /* Radio (print-safe dot) */
-    input[type="radio"]{
-      -webkit-appearance:none;
-      appearance:none;
-      width:18px;height:18px;
-      border:2px solid #666;
-      border-radius:50%;
-      display:inline-grid;
-      place-content:center;
-      background:#fff;
-      margin:0;
-      flex:0 0 auto;
-    }
-    input[type="radio"]::before{
-      content:"";
-      width:9px;height:9px;
-      border-radius:50%;
-      transform:scale(0);
-      background:#111;
-    }
-    input[type="radio"]:checked::before{ transform:scale(1); }
+.page-break{page-break-before:always}
 
-    /* Evaluation as a mini-table with fixed 3 columns */
-    .evalTable{width:100%;border-collapse:collapse;table-layout:fixed}
-    .evalTable td{border:0;padding:0}
-    .evalCell{
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      gap:0;
-      border:1px solid #000;
-      border-right:0;
-      border-left:0;
-      background:#fff;
-    }
-    .evalOpt{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding:10px 6px;
-      border-left:1px solid #000;
-      text-align:center;
-      white-space:nowrap;
-      font-weight:900;
-    }
-    .evalOpt:last-child{border-left:0}
-
-    /* Written work */
-    .workWrap{margin-top:14px;border:1px solid #000;border-radius:10px;overflow:hidden}
-    .workHdr{background:#e3f2fd;padding:10px;font-weight:900;text-align:center}
-    .workInner{padding:10px}
-    .workTable{width:100%;border-collapse:collapse;font-size:13px}
-    .workTable th,.workTable td{border:1px solid #000;padding:10px;vertical-align:middle}
-    .workTable th{background:#e3f2fd;text-align:center;font-weight:900}
-    .workTable input[type="text"]{width:100%;padding:8px;border:1px solid #cfcfcf;border-radius:10px;box-sizing:border-box}
-    .workChoice{
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      align-items:center;
-      gap:0;
-      width:100%;
-    }
-    .workOpt{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      font-weight:900;
-      white-space:nowrap;
-    }
-
-    .sign-table{width:100%;border-collapse:collapse;margin-top:14px}
-    .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:900}
-    .sign-line{height:70px}
-
-    @media (max-width: 900px){
-      .layout{flex-direction:column}
-      .info,.main{width:100%}
-    }
-
-    /* Mobile: keep everything intact with horizontal scroll (no breaking layout) */
-    @media (max-width: 700px){
-      .rubric{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
-      .rubric table{min-width:980px}
-      .workScroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
-      .workScroll table{min-width:820px}
-    }
-
-    @media print{
-      body{background:#fff;padding:0}
-      .top{display:none !important}
-      .box{border:1px solid #000}
-      .rubric{overflow:visible}
-      .rubric table{min-width:auto}
-      .workScroll{overflow:visible}
-      .workScroll table{min-width:auto}
-    }
-  </style>
+@media print{
+.top{display:none}
+.layout{display:block}
+.info,.main{width:100%}
+}
+</style>
 </head>
 
 <body>
-  <div class="top">
-    <h1 class="title">استمارة التقييم</h1>
-    <div class="actions">
-      <a class="btn back" href="index.html">الرجوع للرئيسية</a>
-      <button class="btn save" id="btnSave">حفظ</button>
-      <button class="btn clear" id="btnClear">تفريغ</button>
-    </div>
+
+<div class="top">
+  <div class="title">استمارة التقييم</div>
+  <div>
+    <a class="btn back" href="index.html">الرجوع</a>
+    <button class="btn save">حفظ</button>
+    <button class="btn clear">تفريغ</button>
   </div>
+</div>
 
-  <div class="layout">
-    <div class="box info">
-      <label>كود المعلم</label>
-      <input id="teacherCode" />
+<!-- الصفحة الأولى -->
+<div class="layout">
 
-      <label>اسم المعلم</label>
-      <input id="teacherName" />
+<div class="box info">
+<label>كود المعلم</label><input>
+<label>اسم المعلم</label><input>
+<label>الصف</label><input>
+<label>المادة</label><input>
+<label>عنوان الدرس</label><input>
+<label>رقم الزيارة</label><input>
+<label>اسم المشرف</label><input>
+<label>التاريخ</label><input type="date">
+</div>
 
-      <label>الصف</label>
-      <input id="grade" />
+<div class="box main">
 
-      <label>المادة</label>
-      <input id="subject" />
+<table>
+<thead>
+<tr>
+<th>المجال</th>
+<th>العنصر</th>
+<th>التقييم</th>
+</tr>
+</thead>
 
-      <label>عنوان الدرس</label>
-      <input id="lessonTitle" />
+<tbody>
 
-      <label>رقم الزيارة</label>
-      <input type="number" id="visitNumber" />
+<!-- 1 الرؤية -->
+<tr>
+<td rowspan="1">الرؤية</td>
+<td>القيمة التربوية</td>
+<td class="eval">
+<label><input type="radio"> مناسب</label>
+<label><input type="radio"> إلى حد ما</label>
+<label><input type="radio"> غير مناسب</label>
+</td>
+</tr>
 
-      <label>اسم المشرف</label>
-      <input id="supervisorName" />
+<!-- 2 التخطيط للدرس -->
+<tr><td rowspan="6">التخطيط للدرس</td><td>التحضير بمنصة مدرستي</td><td class="eval">
+<label><input type="radio"> مكتمل</label><label><input type="radio"> غير مكتمل</label><label><input type="radio"> غير موجود</label>
+</td></tr>
 
-      <label>التاريخ</label>
-      <input type="date" id="visitDate" />
-    </div>
+<tr><td>خطة الدرس</td><td class="eval">
+<label><input type="radio"> مكتملة ومفصلة</label><label><input type="radio"> غير مكتملة</label><label><input type="radio"> غير موجودة</label>
+</td></tr>
 
-    <div class="box main">
-      <div class="rubric">
-        <table>
-          <thead>
-            <tr>
-              <th style="width:160px;">المجال</th>
-              <th style="width:220px;">العنصر</th>
-              <th>التقييم</th>
-            </tr>
-          </thead>
-          <tbody id="rubricBody"></tbody>
-        </table>
-      </div>
+<tr><td>أهداف الدرس</td><td class="eval">
+<label><input type="radio"> واضحة قابلة للقياس</label><label><input type="radio"> أهداف عامة</label><label><input type="radio"> غير موجودة</label>
+</td></tr>
 
-      <div class="summary">
-        <div><b>المجموع:</b> <span id="rawTotal">0</span> / <span id="rawMax">100</span></div>
-        <div><b>النسبة:</b> <span id="percentage">0%</span></div>
-        <div><b>الدرجة النهائية:</b> <span id="finalScore">0</span> / 100</div>
-      </div>
+<tr><td>المفاهيم والمصطلحات الهامة</td><td class="eval">
+<label><input type="radio"> محددة وواضحة</label><label><input type="radio"> غير محددة بدقة</label><label><input type="radio"> غير موجودة</label>
+</td></tr>
 
-      <label style="margin-top:12px;">إيجابيات الحصة</label>
-      <textarea id="positives"></textarea>
+<tr><td>تسلسل خطوات الدرس</td><td class="eval">
+<label><input type="radio"> متسلسلة ومعدة جيدًا</label><label><input type="radio"> يوجد بعض خطوات</label><label><input type="radio"> خطوات قليلة</label>
+</td></tr>
 
-      <label>توصيات وتوجيهات</label>
-      <textarea id="recommendations"></textarea>
+<tr><td>إعدادات الفروق الفردية</td><td class="eval">
+<label><input type="radio"> موجود بقوة</label><label><input type="radio"> بعض الشواهد</label><label><input type="radio"> لا توجد شواهد</label>
+</td></tr>
 
-      <div class="workWrap">
-        <div class="workHdr">متابعة الأعمال التحريرية للطلاب (8 فقط)</div>
-        <div class="workInner">
-          <div class="workScroll">
-            <table class="workTable">
-              <thead>
-                <tr>
-                  <th style="width:45%;">اسم الطالب</th>
-                  <th>مصحح</th>
-                  <th>غير مكتمل</th>
-                  <th>غير مصحح</th>
-                </tr>
-              </thead>
-              <tbody id="workBody"></tbody>
-            </table>
-          </div>
+<!-- 3 إدارة الصف -->
+<tr><td rowspan="6">إدارة الصف</td><td>تنظيم المقاعد</td><td class="eval">
+<label><input type="radio"> مجموعات</label><label><input type="radio"> خطوط</label><label><input type="radio"> مزعج</label>
+</td></tr>
 
-          <table class="sign-table">
-            <tr>
-              <td>توقيع المعلم</td>
-              <td>توقيع المشرف</td>
-            </tr>
-            <tr>
-              <td class="sign-line"></td>
-              <td class="sign-line"></td>
-            </tr>
-          </table>
-        </div>
-      </div>
+<tr><td>نظافة الفصل</td><td class="eval">
+<label><input type="radio"> اهتمام عال</label><label><input type="radio"> اهتمام مناسب</label><label><input type="radio"> لا يوجد اهتمام</label>
+</td></tr>
 
-    </div>
-  </div>
+<tr><td>البيئة الصفية</td><td class="eval">
+<label><input type="radio"> معززة وإيجابية</label><label><input type="radio"> مناسبة</label><label><input type="radio"> غير مناسبة</label>
+</td></tr>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+<tr><td>تنظيم إيجابيات الطلاب</td><td class="eval">
+<label><input type="radio"> منظم</label><label><input type="radio"> إلى حد ما</label><label><input type="radio"> غير منظم</label>
+</td></tr>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
-      authDomain: "follow-up-2026.firebaseapp.com",
-      projectId: "follow-up-2026",
-      storageBucket: "follow-up-2026.firebasestorage.app",
-      messagingSenderId: "1077131515114",
-      appId: "1:1077131515114:web:d10d9c5228382d7cfdb393"
-    };
+<tr><td>الإدارة الصفية</td><td class="eval">
+<label><input type="radio"> جيدة وفعالة</label><label><input type="radio"> متوسطة</label><label><input type="radio"> ضعيفة</label>
+</td></tr>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+<tr><td>تفعيل القوانين الصفية</td><td class="eval">
+<label><input type="radio"> مفعلة وفعالة</label><label><input type="radio"> مفعلة جزئياً</label><label><input type="radio"> غير مفعلة</label>
+</td></tr>
 
-    const el = (id) => document.getElementById(id);
+<!-- 4 دعم السلوك -->
+<tr><td rowspan="4">دعم السلوك</td><td>توجيهات المعلم</td><td class="eval">
+<label><input type="radio"> واضحة وجازمة</label><label><input type="radio"> غير واضحة</label><label><input type="radio"> غير موجودة</label>
+</td></tr>
 
-    const rubric = [
-      { domain: "الرؤية", items: [
-        { label: "القيمة التربوية", optTop: "مناسب", optMid: "إلى حد ما", optLow: "غير مناسب" }
-      ]},
+<tr><td>سلوك الطلاب</td><td class="eval">
+<label><input type="radio"> ممتاز</label><label><input type="radio"> مقبول</label><label><input type="radio"> ضعيف</label>
+</td></tr>
 
-      { domain: "التخطيط للدرس", items: [
-        { label: "التحضير بمنصة مدرستي", optTop: "مكتمل", optMid: "غير مكتمل", optLow: "غير موجود" },
-        { label: "خطة الدرس", optTop: "مكتملة ومفصلة", optMid: "غير مكتملة", optLow: "غير موجودة" },
-        { label: "أهداف الدرس", optTop: "واضحة قابلة للقياس", optMid: "أهداف عامة", optLow: "غير موجودة" },
-        { label: "المفاهيم والمصطلحات الهامة", optTop: "محددة وواضحة", optMid: "غير محددة بدقة", optLow: "غير موجودة" },
-        { label: "تسلسل خطوات الدرس", optTop: "متسلسلة ومعدة جيدا", optMid: "يوجد بعض خطوات", optLow: "خطوات قليلة" },
-        { label: "إعدادات الفروق الفردية", optTop: "موجود بقوة", optMid: "بعض الشواهد", optLow: "لا توجد شواهد" }
-      ]},
+<tr><td>تفاعل الطلاب</td><td class="eval">
+<label><input type="radio"> قوي</label><label><input type="radio"> متوسط</label><label><input type="radio"> ضعيف</label>
+</td></tr>
 
-      { domain: "إدارة الصف", items: [
-        { label: "تنظيم المقاعد", optTop: "مجموعات", optMid: "خطوط", optLow: "مزيج" },
-        { label: "نظافة الفصل", optTop: "اهتمام عال بالنظافة", optMid: "اهتمام مناسب", optLow: "لا يوجد اهتمام" },
-        { label: "البيئة الصفية", optTop: "معززة وإيجابية", optMid: "مناسبة", optLow: "غير مناسبة" },
-        { label: "تنظيم إيجابيات الطلاب", optTop: "منظم", optMid: "إلى حد ما", optLow: "غير منظم" },
-        { label: "الإدارة الصفية", optTop: "جيدة وفعالة", optMid: "متوسطة", optLow: "ضعيفة" },
-        { label: "تفعيل القوانين الصفية", optTop: "مفعلة وفعالة", optMid: "مفعلة وغير مفعلة", optLow: "لا مفعلة" }
-      ]},
+<tr><td>صوت المعلم وتواصله</td><td class="eval">
+<label><input type="radio"> فعال</label><label><input type="radio"> متوسط</label><label><input type="radio"> ضعيف</label>
+</td></tr>
 
-      { domain: "دعم السلوك", items: [
-        { label: "توجيهات المعلم", optTop: "واضحة وجزائية", optMid: "مبهمة", optLow: "غير موجودة" },
-        { label: "سلوك الطلاب", optTop: "ممتاز", optMid: "مقبول", optLow: "ضعيف" },
-        { label: "تفاعل الطلاب", optTop: "ممتاز وقوي", optMid: "إلى حد ما", optLow: "ضعيف" },
-        { label: "صوت المعلم وتواصله مع الطلاب", optTop: "فعال عال المستوى", optMid: "متوسط", optLow: "محدود" }
-      ]},
+<!-- 5 استراتيجيات التدريس -->
+<tr><td rowspan="4">استراتيجيات التدريس</td><td>خصائص الأسئلة</td><td class="eval">
+<label><input type="radio"> مطابقة</label><label><input type="radio"> إلى حد ما</label><label><input type="radio"> غير مطابقة</label>
+</td></tr>
 
-      { domain: "استراتيجيات التدريس", items: [
-        { label: "خصائص الأسئلة حسب المنظومة", optTop: "مطابقة", optMid: "إلى حد ما", optLow: "غير مطابقة" },
-        { label: "تنفيذ استراتيجية التدريس", optTop: "ينفذ", optMid: "إلى حد ما", optLow: "لا ينفذ" },
-        { label: "ممارسة الفصحى", optTop: "ممارسة ممتازة", optMid: "ممارسة متوسطة", optLow: "ممارسة غير مناسبة" },
-        { label: "أهداف الدرس", optTop: "معلنة وتناقش بداية الحصة", optMid: "إما مدونة أو تناقش", optLow: "لا مدونة ولا تناقش" }
-      ]},
+<tr><td>تنفيذ الاستراتيجية</td><td class="eval">
+<label><input type="radio"> ينفذ</label><label><input type="radio"> جزئياً</label><label><input type="radio"> لا ينفذ</label>
+</td></tr>
 
-      { domain: "أدوات مساندة للتعلم", items: [
-        { label: "الوسيلة التعليمية", optTop: "مستخدمة", optMid: "محدودة", optLow: "غير مستخدمة" },
-        { label: "تفعيل السبورة التفاعلية", optTop: "مناسب جدا", optMid: "محدود", optLow: "لا يوجد تفعيل" },
-        { label: "تطبيق ما تم التدريب عليه", optTop: "مستوى عال", optMid: "مستوى مناسب", optLow: "مستوى ضعيف" }
-      ]},
+<tr><td>ممارسة الفصحى</td><td class="eval">
+<label><input type="radio"> ممتازة</label><label><input type="radio"> متوسطة</label><label><input type="radio"> غير مناسبة</label>
+</td></tr>
 
-      { domain: "التقويم الصفي", items: [
-        { label: "ملخص الدرس", optTop: "خلاصة جيدة وواضحة", optMid: "خلاصة محدودة", optLow: "لا توجد خلاصة" }
-      ]}
-    ];
+<tr><td>إعلان أهداف الدرس</td><td class="eval">
+<label><input type="radio"> معلنة وتناقش</label><label><input type="radio"> معلنة فقط</label><label><input type="radio"> غير معلنة</label>
+</td></tr>
 
-    const qMeta = [];
-    const body = el("rubricBody");
+<!-- 6 أدوات -->
+<tr><td rowspan="3">أدوات مساندة</td><td>الوسيلة التعليمية</td><td class="eval">
+<label><input type="radio"> مستخدمة</label><label><input type="radio"> محدودة</label><label><input type="radio"> غير مستخدمة</label>
+</td></tr>
 
-    function buildRubric(){
-      body.innerHTML = "";
-      qMeta.length = 0;
+<tr><td>السبورة التفاعلية</td><td class="eval">
+<label><input type="radio"> مفعلة</label><label><input type="radio"> محدودة</label><label><input type="radio"> غير مفعلة</label>
+</td></tr>
 
-      let idx = 0;
+<tr><td>تطبيق ما تم التدريب عليه</td><td class="eval">
+<label><input type="radio"> مستوى عال</label><label><input type="radio"> مستوى مناسب</label><label><input type="radio"> ضعيف</label>
+</td></tr>
 
-      rubric.forEach(group => {
-        const rowspan = group.items.length;
+<!-- 7 التقويم -->
+<tr>
+<td>التقويم الصفي</td>
+<td>ملخص الدرس</td>
+<td class="eval">
+<label><input type="radio"> خلاصة واضحة</label>
+<label><input type="radio"> خلاصة محدودة</label>
+<label><input type="radio"> لا توجد خلاصة</label>
+</td>
+</tr>
 
-        group.items.forEach((it, i) => {
-          idx += 1;
-          const name = "q" + idx;
+</tbody>
+</table>
 
-          qMeta.push({
-            name,
-            domain: group.domain,
-            label: it.label,
-            optTop: it.optTop,
-            optMid: it.optMid,
-            optLow: it.optLow
-          });
+<label>إيجابيات الحصة</label>
+<textarea></textarea>
 
-          const tr = document.createElement("tr");
+<label>توصيات وتوجيهات</label>
+<textarea></textarea>
 
-          if (i === 0){
-            const tdDomain = document.createElement("td");
-            tdDomain.textContent = group.domain;
-            tdDomain.style.textAlign = "center";
-            tdDomain.style.fontWeight = "900";
-            tdDomain.rowSpan = rowspan;
-            tr.appendChild(tdDomain);
-          }
+<div class="sign">
+<div>توقيع المعلم</div>
+<div>توقيع المشرف</div>
+</div>
 
-          const tdItem = document.createElement("td");
-          tdItem.textContent = it.label;
-          tdItem.style.textAlign = "center";
-          tdItem.style.fontWeight = "900";
-          tr.appendChild(tdItem);
+</div>
+</div>
 
-          const tdEval = document.createElement("td");
-          tdEval.innerHTML = `
-            <div class="evalCell">
-              <label class="evalOpt"><span>${it.optTop}</span><input type="radio" name="${name}" value="4"></label>
-              <label class="evalOpt"><span>${it.optMid}</span><input type="radio" name="${name}" value="3"></label>
-              <label class="evalOpt"><span>${it.optLow}</span><input type="radio" name="${name}" value="1"></label>
-            </div>
-          `;
-          tr.appendChild(tdEval);
+<!-- الصفحة الثانية -->
+<div class="page-break"></div>
 
-          body.appendChild(tr);
-        });
-      });
+<div class="box">
+<h3 style="text-align:center;background:#e3f2fd;padding:10px">متابعة الأعمال التحريرية للطلاب (8 فقط)</h3>
 
-      if (qMeta.length !== 25){
-        alert("عدد البنود الحالي ليس 25. راجع بيانات الاستمارة.");
-      }
-    }
+<table>
+<thead>
+<tr><th>اسم الطالب</th><th>الحالة</th></tr>
+</thead>
+<tbody>
+<tr><td><input></td><td class="eval">
+<label><input type="radio"> مصحح</label>
+<label><input type="radio"> غير مكتمل</label>
+<label><input type="radio"> غير مصحح</label>
+</td></tr>
+<!-- كرر الصف 8 مرات -->
+</tbody>
+</table>
 
-    function calcAll(){
-      let raw = 0;
-      qMeta.forEach(m => {
-        const sel = document.querySelector(`input[name="${m.name}"]:checked`);
-        raw += sel ? Number(sel.value) : 0;
-      });
+<div class="sign">
+<div>توقيع المعلم</div>
+<div>توقيع المشرف</div>
+</div>
+</div>
 
-      el("rawTotal").textContent = String(raw);
-      el("rawMax").textContent = "100";
-
-      const finalScore = Math.round((raw / 100) * 100);
-      el("finalScore").textContent = String(finalScore);
-      el("percentage").textContent = String(finalScore) + "%";
-    }
-
-    function buildWorkRows(){
-      const wb = el("workBody");
-      wb.innerHTML = "";
-      for (let i = 1; i <= 8; i++){
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><input type="text" id="st_name_${i}" placeholder="اسم الطالب"></td>
-          <td style="text-align:center;"><input type="radio" name="st_${i}" value="correct"></td>
-          <td style="text-align:center;"><input type="radio" name="st_${i}" value="partial"></td>
-          <td style="text-align:center;"><input type="radio" name="st_${i}" value="not"></td>
-        `;
-        wb.appendChild(tr);
-      }
-    }
-
-    function getWorkData(){
-      const rows = [];
-      for (let i = 1; i <= 8; i++){
-        const name = el("st_name_" + i).value.trim();
-        const checked = document.querySelector(`input[name="st_${i}"]:checked`);
-        const status = checked ? checked.value : "";
-        rows.push({ name, status });
-      }
-      return rows;
-    }
-
-    function clearAll(){
-      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-      el("positives").value = "";
-      el("recommendations").value = "";
-      for (let i = 1; i <= 8; i++){
-        el("st_name_" + i).value = "";
-      }
-      calcAll();
-    }
-
-    async function saveVisit(){
-      const teacherCode = el("teacherCode").value.trim();
-      const teacherName = el("teacherName").value.trim();
-
-      if (!teacherCode || !teacherName){
-        alert("اكتب كود المعلم واسم المعلم");
-        return;
-      }
-
-      const answers = qMeta.map(m => {
-        const sel = document.querySelector(`input[name="${m.name}"]:checked`);
-        const val = sel ? Number(sel.value) : 0;
-        return {
-          domain: m.domain,
-          itemLabel: m.label,
-          optTop: m.optTop,
-          optMid: m.optMid,
-          optLow: m.optLow,
-          selected: val,
-          max: 4
-        };
-      });
-
-      const payload = {
-        teacherCode,
-        teacherName,
-        grade: el("grade").value.trim(),
-        subject: el("subject").value.trim(),
-        lessonTitle: el("lessonTitle").value.trim(),
-        visitNumber: Number(el("visitNumber").value || 0),
-        supervisorName: el("supervisorName").value.trim(),
-        visitDate: el("visitDate").value,
-        positives: el("positives").value,
-        recommendations: el("recommendations").value,
-        rawTotal: Number(el("rawTotal").textContent || 0),
-        rawMax: 100,
-        finalScore: Number(el("finalScore").textContent || 0),
-        answers,
-        writtenWork: getWorkData(),
-        createdAt: serverTimestamp()
-      };
-
-      await addDoc(collection(db, "visits"), payload);
-
-      clearAll();
-      el("visitNumber").value = "";
-      el("lessonTitle").value = "";
-      alert("تم الحفظ");
-
-      location.href = `teacher-visits.html?code=${encodeURIComponent(teacherCode)}`;
-    }
-
-    buildRubric();
-    buildWorkRows();
-    calcAll();
-
-    document.addEventListener("change", (e) => {
-      if (e.target && e.target.matches('input[type="radio"]')) calcAll();
-    });
-
-    el("btnSave").addEventListener("click", saveVisit);
-    el("btnClear").addEventListener("click", clearAll);
-  </script>
 </body>
 </html>
