@@ -26,18 +26,20 @@
     input,textarea{width:100%;padding:8px;margin-top:4px;border:1px solid #cfcfcf;border-radius:8px;box-sizing:border-box}
     textarea{height:70px}
 
-    .rubric{border:1px solid #000;border-radius:10px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
-    table{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
+    /* Rubric table */
+    .rubric{border:1px solid #000;border-radius:10px;overflow:hidden}
+    table{width:100%;border-collapse:collapse;font-size:13px}
     th,td{border:1px solid #000;padding:6px;vertical-align:middle}
     th{background:#e3f2fd;text-align:center;font-weight:900}
 
-    /* Evaluation layout: centered columns */
+    /* Evaluation layout centered like your screenshot */
     .evalCell{
       display:grid;
       grid-template-columns:1fr 1fr 1fr;
-      gap:18px;
+      gap:14px;
       align-items:center;
       justify-items:center;
+      width:100%;
     }
     .opt{
       display:flex;
@@ -54,17 +56,50 @@
     .summary b{color:#0d47a1}
     .summary span{font-weight:900}
 
+    /* Written work */
+    .workWrap{margin-top:14px;border:1px solid #000;border-radius:10px;overflow:hidden}
+    .workHdr{background:#e3f2fd;padding:10px;font-weight:900;text-align:center}
+    .workInner{padding:10px}
+
+    .workTable{width:100%;border-collapse:collapse;font-size:13px}
+    .workTable th,.workTable td{border:1px solid #000;padding:8px;vertical-align:middle}
+    .workTable th{background:#e3f2fd;text-align:center;font-weight:900}
     .workTable input[type="text"]{width:100%;padding:7px;border:1px solid #cfcfcf;border-radius:8px;box-sizing:border-box}
-    .workTable input[type="radio"]{transform:scale(1.15)}
+    .workTable input[type="radio"]{transform:scale(1.15);margin:0}
+
+    /* One selection per student row */
+    .workOpts{
+      display:flex;
+      gap:18px;
+      justify-content:center;
+      align-items:center;
+      flex-wrap:nowrap;
+    }
+    .workOpt{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      justify-content:center;
+      white-space:nowrap;
+    }
 
     .sign-table{width:100%;border-collapse:collapse;margin-top:14px}
     .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:900}
     .sign-line{height:70px}
 
+    /* Mobile: keep layout without breaking print */
     @media (max-width: 900px){
       .layout{flex-direction:column}
       .info,.main{width:100%}
-      table{min-width:780px}
+      body{padding:10px}
+    }
+
+    /* Mobile tables: horizontal scroll only (doesn't affect print) */
+    @media (max-width: 700px){
+      .rubric{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+      .rubric table{min-width:860px}
+      .workScroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+      .workScroll table{min-width:680px}
     }
 
     @media print{
@@ -72,7 +107,9 @@
       .top{display:none !important}
       .box{border:1px solid #000}
       .rubric{overflow:visible}
-      table{min-width:auto}
+      .rubric table{min-width:auto}
+      .workScroll{overflow:visible}
+      .workScroll table{min-width:auto}
     }
   </style>
 </head>
@@ -119,10 +156,9 @@
         <table>
           <thead>
             <tr>
-              <th style="width:40px;">م</th>
               <th style="width:140px;">المجال</th>
-              <th>العنصر</th>
-              <th style="width:360px;">التقييم</th>
+              <th style="width:180px;">العنصر</th>
+              <th>التقييم</th>
             </tr>
           </thead>
           <tbody id="rubricBody"></tbody>
@@ -141,20 +177,20 @@
       <label>توصيات وتوجيهات</label>
       <textarea id="recommendations"></textarea>
 
-      <div style="margin-top:14px;border:1px solid #000;border-radius:10px;overflow:hidden;">
-        <div style="background:#e3f2fd;padding:10px;font-weight:900;">متابعة الأعمال التحريرية للطلاب (8 فقط)</div>
-        <div style="padding:10px;">
-          <table class="workTable" id="workTable">
-            <thead>
-              <tr>
-                <th style="width:45%;">اسم الطالب</th>
-                <th>مصحح</th>
-                <th>غير مكتمل</th>
-                <th>غير مصحح</th>
-              </tr>
-            </thead>
-            <tbody id="workBody"></tbody>
-          </table>
+      <div class="workWrap">
+        <div class="workHdr">متابعة الأعمال التحريرية للطلاب (8 فقط)</div>
+        <div class="workInner">
+          <div class="workScroll">
+            <table class="workTable" id="workTable">
+              <thead>
+                <tr>
+                  <th style="width:50%;">اسم الطالب</th>
+                  <th style="width:50%;">الحالة</th>
+                </tr>
+              </thead>
+              <tbody id="workBody"></tbody>
+            </table>
+          </div>
 
           <table class="sign-table">
             <tr>
@@ -191,11 +227,11 @@
     const el = (id) => document.getElementById(id);
 
     const rubric = [
-      { domainNo: 1, domain: "الرؤية", items: [
+      { domain: "الرؤية", items: [
         { label: "القيمة التربوية", optTop: "مناسب", optMid: "إلى حد ما", optLow: "غير مناسب" }
       ]},
 
-      { domainNo: 2, domain: "التخطيط للدرس", items: [
+      { domain: "التخطيط للدرس", items: [
         { label: "التحضير بمنصة مدرستي", optTop: "مكتمل", optMid: "غير مكتمل", optLow: "غير موجود" },
         { label: "خطة الدرس", optTop: "مكتملة ومفصلة", optMid: "غير مكتملة", optLow: "غير موجودة" },
         { label: "أهداف الدرس", optTop: "واضحة قابلة للقياس", optMid: "أهداف عامة", optLow: "غير موجودة" },
@@ -204,7 +240,7 @@
         { label: "إعدادات الفروق الفردية", optTop: "موجود بقوة", optMid: "بعض الشواهد", optLow: "لا توجد شواهد" }
       ]},
 
-      { domainNo: 3, domain: "إدارة الصف", items: [
+      { domain: "إدارة الصف", items: [
         { label: "تنظيم المقاعد", optTop: "مجموعات", optMid: "خطوط", optLow: "مزعج" },
         { label: "نظافة الفصل", optTop: "اهتمام عال بالنظافة", optMid: "اهتمام مناسب", optLow: "لا يوجد اهتمام" },
         { label: "البيئة الصفية", optTop: "معززة وإيجابية", optMid: "مناسبة", optLow: "غير مناسبة" },
@@ -213,27 +249,27 @@
         { label: "تفعيل القوانين الصفية", optTop: "مفعلة وفعالة", optMid: "مفعلة وغير مفعلة", optLow: "لا مفعلة" }
       ]},
 
-      { domainNo: 4, domain: "دعم السلوك", items: [
+      { domain: "دعم السلوك", items: [
         { label: "توجيهات المعلم", optTop: "واضحة وجزائية", optMid: "مبهمة", optLow: "غير موجودة" },
         { label: "سلوك الطلاب", optTop: "ممتاز", optMid: "مقبول", optLow: "ضعيف" },
         { label: "تفاعل الطلاب", optTop: "ممتاز وقوي", optMid: "إلى حد ما", optLow: "ضعيف" },
         { label: "صوت المعلم وتواصله مع الطلاب", optTop: "فعال عال المستوى", optMid: "متوسط", optLow: "محدود" }
       ]},
 
-      { domainNo: 5, domain: "استراتيجيات التدريس", items: [
+      { domain: "استراتيجيات التدريس", items: [
         { label: "خصائص الأسئلة حسب المنظومة", optTop: "مطابقة", optMid: "إلى حد ما", optLow: "غير مطابقة" },
         { label: "تنفيذ استراتيجية التدريس", optTop: "ينفذ", optMid: "إلى حد ما", optLow: "لا ينفذ" },
         { label: "ممارسة الفصحى", optTop: "ممارسة ممتازة", optMid: "ممارسة متوسطة", optLow: "ممارسة غير مناسبة" },
         { label: "أهداف الدرس", optTop: "معلنة وتناقش بداية الحصة", optMid: "إما مدونة أو تناقش", optLow: "لا مدونة ولا تناقش" }
       ]},
 
-      { domainNo: 6, domain: "أدوات مساندة للتعلم", items: [
+      { domain: "أدوات مساندة للتعلم", items: [
         { label: "الوسيلة التعليمية", optTop: "مستخدمة", optMid: "محدودة", optLow: "غير مستخدمة" },
         { label: "تفعيل السبورة التفاعلية", optTop: "مناسب جدا", optMid: "محدود", optLow: "لا يوجد تفعيل" },
         { label: "تطبيق ما تم التدريب عليه", optTop: "مستوى عال", optMid: "مستوى مناسب", optLow: "مستوى ضعيف" }
       ]},
 
-      { domainNo: 7, domain: "التقويم الصفي", items: [
+      { domain: "التقويم الصفي", items: [
         { label: "ملخص الدرس", optTop: "خلاصة جيدة وواضحة", optMid: "خلاصة محدودة", optLow: "لا توجد خلاصة" }
       ]}
     ];
@@ -253,9 +289,9 @@
         group.items.forEach((it, i) => {
           idx += 1;
           const name = "q" + idx;
+
           qMeta.push({
             name,
-            domainNo: group.domainNo,
             domain: group.domain,
             label: it.label,
             optTop: it.optTop,
@@ -266,13 +302,6 @@
           const tr = document.createElement("tr");
 
           if (i === 0){
-            const tdNo = document.createElement("td");
-            tdNo.textContent = String(group.domainNo);
-            tdNo.style.textAlign = "center";
-            tdNo.style.fontWeight = "900";
-            tdNo.rowSpan = rowspan;
-            tr.appendChild(tdNo);
-
             const tdDomain = document.createElement("td");
             tdDomain.textContent = group.domain;
             tdDomain.style.textAlign = "center";
@@ -283,14 +312,16 @@
 
           const tdItem = document.createElement("td");
           tdItem.textContent = it.label;
+          tdItem.style.textAlign = "center";
+          tdItem.style.fontWeight = "900";
           tr.appendChild(tdItem);
 
           const tdEval = document.createElement("td");
           tdEval.innerHTML = `
             <div class="evalCell">
-              <label class="opt"><input type="radio" name="${name}" value="4"><span>${it.optTop}</span></label>
-              <label class="opt"><input type="radio" name="${name}" value="3"><span>${it.optMid}</span></label>
-              <label class="opt"><input type="radio" name="${name}" value="1"><span>${it.optLow}</span></label>
+              <label class="opt"><span>${it.optTop}</span><input type="radio" name="${name}" value="4"></label>
+              <label class="opt"><span>${it.optMid}</span><input type="radio" name="${name}" value="3"></label>
+              <label class="opt"><span>${it.optLow}</span><input type="radio" name="${name}" value="1"></label>
             </div>
           `;
           tr.appendChild(tdEval);
@@ -326,9 +357,13 @@
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><input type="text" id="st_name_${i}" placeholder="اسم الطالب"></td>
-          <td style="text-align:center;"><input type="radio" name="st_${i}" value="correct"></td>
-          <td style="text-align:center;"><input type="radio" name="st_${i}" value="partial"></td>
-          <td style="text-align:center;"><input type="radio" name="st_${i}": value="not"></td>
+          <td>
+            <div class="workOpts">
+              <label class="workOpt"><span>مصحح</span><input type="radio" name="st_${i}" value="correct"></label>
+              <label class="workOpt"><span>غير مكتمل</span><input type="radio" name="st_${i}" value="partial"></label>
+              <label class="workOpt"><span>غير مصحح</span><input type="radio" name="st_${i}" value="not"></label>
+            </div>
+          </td>
         `;
         wb.appendChild(tr);
       }
@@ -368,7 +403,6 @@
         const sel = document.querySelector(`input[name="${m.name}"]:checked`);
         const val = sel ? Number(sel.value) : 0;
         return {
-          domainNo: m.domainNo,
           domain: m.domain,
           itemLabel: m.label,
           optTop: m.optTop,
