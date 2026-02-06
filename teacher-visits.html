@@ -6,29 +6,27 @@
   <title>زيارات المعلمين</title>
 
   <style>
-    @page { size: A4; margin: 12mm; }
-
     body{font-family:Arial,sans-serif;background:#f4f8fc;margin:0;padding:12px;color:#000}
     .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-    .title{margin:0;color:#0d47a1;font-size:22px;font-weight:800}
+    .title{margin:0;color:#0d47a1;font-size:22px;font-weight:900}
     .actions{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{border:0;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer;font-weight:700}
+    .btn{border:0;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer;font-weight:900}
     .btn.back{background:#607d8b;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
     .btn.search{background:#1976d2;color:#fff}
     .btn.print{background:#0d47a1;color:#fff}
     .btn.del{background:#c62828;color:#fff}
 
     .box{background:#fff;border:1px solid #bbdefb;border-radius:12px;padding:12px}
-    label{font-weight:800;display:block}
+    label{font-weight:900;display:block}
     input{width:min(420px,100%);padding:10px;border:1px solid #cfcfcf;border-radius:10px;box-sizing:border-box;margin-top:6px}
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
 
     table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
     th,td{border:1px solid #000;padding:8px;vertical-align:middle}
-    th{background:#e3f2fd;text-align:center}
+    th{background:#e3f2fd;text-align:center;font-weight:900}
 
-    .muted{color:#607d8b;font-weight:700;margin-top:10px}
-    .err{color:#c62828;font-weight:800;margin-top:10px}
+    .muted{color:#607d8b;font-weight:800;margin-top:10px}
+    .err{color:#c62828;font-weight:900;margin-top:10px}
   </style>
 </head>
 
@@ -147,7 +145,7 @@
             <td style="text-align:center;">${esc(String(v.visitNumber || ""))}</td>
             <td>${esc(v.grade || "")}</td>
             <td>${esc(v.subject || "")}</td>
-            <td style="text-align:center;font-weight:800;">${esc(String(v.finalScore || 0))} / 100</td>
+            <td style="text-align:center;font-weight:900;">${esc(String(v.finalScore || 0))} / 100</td>
             <td style="text-align:center;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
               <button class="btn print" data-print="${esc(v.id)}">طباعة</button>
               <button class="btn del" data-del="${esc(v.id)}">مسح</button>
@@ -166,7 +164,7 @@
         tbody.querySelectorAll("button[data-del]").forEach(btn => {
           btn.addEventListener("click", async () => {
             const id = btn.getAttribute("data-del");
-            const ok = confirm("تأكيد مسح هذه الزيارة؟");
+            const ok = confirm("تأكيد مسح هذه الزيارة نهائياً؟");
             if (!ok) return;
             await deleteDoc(doc(db, "visits", id));
             await loadVisits();
@@ -176,13 +174,18 @@
       }catch(err){
         el("visitsTable").style.display = "none";
         el("resultInfo").textContent = "";
-        el("errorInfo").textContent = "حصل خطأ في جلب الزيارات. تأكد من Rules أو من وجود زيارات محفوظة.";
+        el("errorInfo").textContent = "حصل خطأ في جلب الزيارات.";
         console.error(err);
       }
     }
 
-    function buildHeaderTable(v){
+    function buildHeaderBlock(v){
       return `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+          <div style="font-weight:900;">مدارس الفلاح الأهلية</div>
+          <div style="font-weight:900;">تصميم محمد عامر أحمد</div>
+        </div>
+        <h1 style="text-align:center;color:#0d47a1;margin:0 0 10px;">استمارة متابعة معلم</h1>
         <table style="width:100%;border-collapse:collapse;font-size:13px;">
           <tr>
             <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">كود المعلم</th>
@@ -209,91 +212,132 @@
           <tr>
             <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">التاريخ</th>
             <td style="border:1px solid #000;padding:6px;">${esc(v.visitDate || "")}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">الدرجة</th>
-            <td style="border:1px solid #000;padding:6px;font-weight:800;">${esc(String(v.finalScore || 0))} / 100</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">الدرجة النهائية</th>
+            <td style="border:1px solid #000;padding:6px;font-weight:900;">${esc(String(v.finalScore || 0))} / 100</td>
           </tr>
         </table>
       `;
     }
 
-    function groupAnswers(answers){
-      const map = new Map();
-      (answers || []).forEach(a => {
-        if (!map.has(a.domain)) map.set(a.domain, []);
-        map.get(a.domain).push(a);
-      });
-      return map;
+    const domainOrder = [
+      { no: 1, name: "الرؤية" },
+      { no: 2, name: "التخطيط للدرس" },
+      { no: 3, name: "إدارة الصف" },
+      { no: 4, name: "دعم السلوك" },
+      { no: 5, name: "استراتيجيات التدريس" },
+      { no: 6, name: "أدوات مساندة للتعلم" },
+      { no: 7, name: "التقويم الصفي" }
+    ];
+
+    function rowsPerDomain(){
+      return new Map([
+        [1, 1],
+        [2, 6],
+        [3, 6],
+        [4, 4],
+        [5, 4],
+        [6, 3],
+        [7, 1]
+      ]);
     }
 
-    function buildEvaluationPrint(v){
-      const grouped = groupAnswers(v.answers);
-      let html = "";
-
-      if (!v.answers || !v.answers.length){
-        html += `
-          <div style="border:1px solid #c62828;border-radius:8px;padding:10px;margin-bottom:10px;font-weight:800;">
-            هذه الزيارة تم حفظها بدون بنود التقييم (answers). اطبع زيارات جديدة بعد تحديث الصفحة.
-          </div>
-        `;
-        return html;
+    function buildPaperRubricTable(v){
+      const answers = Array.isArray(v.answers) ? v.answers : [];
+      if (!answers.length){
+        return `<div style="border:1px solid #c62828;padding:10px;border-radius:8px;font-weight:900;">هذه الزيارة لا تحتوي على بنود محفوظة. اعمل زيارة جديدة بعد تحديث الاستمارة.</div>`;
       }
 
-      for (const [domain, items] of grouped.entries()){
-        let rows = "";
-        items.forEach(a => {
-          const max = Number(a.max || 4);
-          const topVal = max;
-          const midVal = max === 4 ? 3 : 2;
-          const lowVal = 1;
+      const grouped = new Map();
+      answers.forEach(a => {
+        const key = String(a.domainNo || "");
+        if (!grouped.has(key)) grouped.set(key, []);
+        grouped.get(key).push(a);
+      });
+
+      domainOrder.forEach(d => {
+        const key = String(d.no);
+        if (grouped.has(key)){
+          grouped.get(key).sort((x,y) => 0);
+        }
+      });
+
+      const rowsp = rowsPerDomain();
+      let htmlRows = "";
+
+      domainOrder.forEach(d => {
+        const key = String(d.no);
+        const list = grouped.get(key) || [];
+        const rowspan = rowsp.get(d.no) || list.length || 1;
+
+        list.forEach((a, i) => {
           const sel = Number(a.selected || 0);
 
-          rows += `
-            <tr>
-              <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:800;width:70px;">${sel}</td>
-              <td style="border:1px solid #000;padding:6px;">
-                <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
-                  <span>${circle(sel===topVal)} ${esc(a.optTop || "")}</span>
-                  <span>${circle(sel===midVal)} ${esc(a.optMid || "")}</span>
-                  <span>${circle(sel===lowVal)} ${esc(a.optLow || "")}</span>
-                </div>
-              </td>
-              <td style="border:1px solid #000;padding:6px;">${esc(a.itemLabel || "")}</td>
-            </tr>
+          const trStart = `<tr>`;
+          let cells = "";
+
+          if (i === 0){
+            cells += `
+              <td rowspan="${rowspan}" style="border:1px solid #000;text-align:center;font-weight:900;width:36px;">${d.no}</td>
+              <td rowspan="${rowspan}" style="border:1px solid #000;text-align:center;font-weight:900;width:120px;">${esc(d.name)}</td>
+            `;
+          }
+
+          cells += `
+            <td style="border:1px solid #000;padding:6px;">${esc(a.itemLabel || "")}</td>
+            <td style="border:1px solid #000;padding:6px;">
+              <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+                <span>${circle(sel===4)} ${esc(a.optTop || "")}</span>
+                <span>${circle(sel===3)} ${esc(a.optMid || "")}</span>
+                <span>${circle(sel===1)} ${esc(a.optLow || "")}</span>
+              </div>
+            </td>
+            <td style="border:1px solid #000;text-align:center;font-weight:900;width:80px;">4</td>
+            <td style="border:1px solid #000;width:110px;"></td>
           `;
+
+          htmlRows += trStart + cells + `</tr>`;
         });
+      });
 
-        html += `
-          <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">
-            <h2 style="margin:0 0 8px;color:#0d47a1;font-size:16px;">${esc(domain)}</h2>
-            <table style="width:100%;border-collapse:collapse;font-size:13px;">
-              <tr>
-                <th style="border:1px solid #000;background:#e3f2fd;padding:6px;width:70px;">الدرجة</th>
-                <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">التقييم</th>
-                <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">العنصر</th>
-              </tr>
-              ${rows}
-            </table>
-          </div>
-        `;
-      }
-
-      return html;
+      return `
+        <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;">
+          <thead>
+            <tr>
+              <th style="border:1px solid #000;background:#e3f2fd;padding:6px;width:36px;">م</th>
+              <th style="border:1px solid #000;background:#e3f2fd;padding:6px;width:120px;">المجال</th>
+              <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">العنصر</th>
+              <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">التقييم</th>
+              <th style="border:1px solid #000;background:#e3f2fd;padding:6px;width:80px;">درجة العنصر</th>
+              <th style="border:1px solid #000;background:#e3f2fd;padding:6px;width:110px;">مستوى الأداء</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${htmlRows}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4" style="border:1px solid #000;text-align:left;font-weight:900;padding:6px;">الدرجة الكلية</td>
+              <td colspan="2" style="border:1px solid #000;text-align:center;font-weight:900;padding:6px;">100</td>
+            </tr>
+          </tfoot>
+        </table>
+      `;
     }
 
     function buildNotesAndSigns(v){
       return `
-        <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-top:10px;">
-          <div style="font-weight:800;margin-bottom:6px;">إيجابيات الحصة</div>
+        <div style="margin-top:12px;border:1px solid #000;border-radius:10px;padding:10px;">
+          <div style="font-weight:900;margin-bottom:6px;">إيجابيات الحصة</div>
           <div style="min-height:70px;border:1px solid #000;padding:8px;">${esc(v.positives || "").replaceAll("\n","<br>")}</div>
 
-          <div style="font-weight:800;margin:10px 0 6px;">توصيات وتوجيهات</div>
+          <div style="font-weight:900;margin:10px 0 6px;">توصيات وتوجيهات</div>
           <div style="min-height:70px;border:1px solid #000;padding:8px;">${esc(v.recommendations || "").replaceAll("\n","<br>")}</div>
         </div>
 
         <table style="width:100%;border-collapse:collapse;margin-top:12px;">
           <tr>
-            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:800;">توقيع المعلم</td>
-            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:800;">توقيع المشرف</td>
+            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:900;">توقيع المعلم</td>
+            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:900;">توقيع المشرف</td>
           </tr>
           <tr>
             <td style="border:1px solid #000;height:70px;"></td>
@@ -321,6 +365,10 @@
 
       return `
         <div style="page-break-before:always;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+          <div style="font-weight:900;">مدارس الفلاح الأهلية</div>
+          <div style="font-weight:900;">تصميم محمد عامر أحمد</div>
+        </div>
         <h2 style="margin:0 0 10px;color:#0d47a1;text-align:center;">متابعة الأعمال التحريرية للطلاب</h2>
         <table style="width:100%;border-collapse:collapse;font-size:13px;">
           <tr>
@@ -334,8 +382,8 @@
 
         <table style="width:100%;border-collapse:collapse;margin-top:12px;">
           <tr>
-            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:800;">توقيع المعلم</td>
-            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:800;">توقيع المشرف</td>
+            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:900;">توقيع المعلم</td>
+            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:900;">توقيع المشرف</td>
           </tr>
           <tr>
             <td style="border:1px solid #000;height:70px;"></td>
@@ -354,8 +402,8 @@
 
       const v = snap.data();
 
-      const header = buildHeaderTable(v);
-      const evalHtml = buildEvaluationPrint(v);
+      const header = buildHeaderBlock(v);
+      const rubricTable = buildPaperRubricTable(v);
       const notes = buildNotesAndSigns(v);
       const work = buildWorkPrint(v);
 
@@ -370,13 +418,12 @@
             body{font-family:Arial,sans-serif;margin:0;color:#000}
             table{width:100%;border-collapse:collapse;font-size:13px}
             th,td{border:1px solid #000;padding:6px;vertical-align:middle}
-            th{background:#e3f2fd;text-align:center}
+            th{background:#e3f2fd;text-align:center;font-weight:900}
           </style>
         </head>
         <body>
-          <h1 style="text-align:center;color:#0d47a1;margin:0 0 10px;">استمارة التقييم</h1>
-          <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">${header}</div>
-          ${evalHtml}
+          ${header}
+          ${rubricTable}
           ${notes}
           ${work}
         </body>
