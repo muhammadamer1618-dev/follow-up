@@ -26,60 +26,83 @@
     input,textarea{width:100%;padding:8px;margin-top:4px;border:1px solid #cfcfcf;border-radius:8px;box-sizing:border-box}
     textarea{height:70px}
 
-    /* Rubric table */
     .rubric{border:1px solid #000;border-radius:10px;overflow:hidden}
     table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{border:1px solid #000;padding:6px;vertical-align:middle}
+    th,td{border:1px solid #000;padding:8px;vertical-align:middle}
     th{background:#e3f2fd;text-align:center;font-weight:900}
-
-    /* Evaluation layout centered like your screenshot */
-    .evalCell{
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      gap:14px;
-      align-items:center;
-      justify-items:center;
-      width:100%;
-    }
-    .opt{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      justify-content:center;
-      white-space:nowrap;
-      width:100%;
-      text-align:center;
-    }
-    .opt input{margin:0}
 
     .summary{margin-top:12px;background:#f6fbff;border:1px solid #bbdefb;border-radius:12px;padding:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
     .summary b{color:#0d47a1}
     .summary span{font-weight:900}
 
+    /* Radio (print-safe dot) */
+    input[type="radio"]{
+      -webkit-appearance:none;
+      appearance:none;
+      width:18px;height:18px;
+      border:2px solid #666;
+      border-radius:50%;
+      display:inline-grid;
+      place-content:center;
+      background:#fff;
+      margin:0;
+      flex:0 0 auto;
+    }
+    input[type="radio"]::before{
+      content:"";
+      width:9px;height:9px;
+      border-radius:50%;
+      transform:scale(0);
+      background:#111;
+    }
+    input[type="radio"]:checked::before{ transform:scale(1); }
+
+    /* Evaluation as a mini-table with fixed 3 columns */
+    .evalTable{width:100%;border-collapse:collapse;table-layout:fixed}
+    .evalTable td{border:0;padding:0}
+    .evalCell{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:0;
+      border:1px solid #000;
+      border-right:0;
+      border-left:0;
+      background:#fff;
+    }
+    .evalOpt{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:10px 6px;
+      border-left:1px solid #000;
+      text-align:center;
+      white-space:nowrap;
+      font-weight:900;
+    }
+    .evalOpt:last-child{border-left:0}
+
     /* Written work */
     .workWrap{margin-top:14px;border:1px solid #000;border-radius:10px;overflow:hidden}
     .workHdr{background:#e3f2fd;padding:10px;font-weight:900;text-align:center}
     .workInner{padding:10px}
-
     .workTable{width:100%;border-collapse:collapse;font-size:13px}
-    .workTable th,.workTable td{border:1px solid #000;padding:8px;vertical-align:middle}
+    .workTable th,.workTable td{border:1px solid #000;padding:10px;vertical-align:middle}
     .workTable th{background:#e3f2fd;text-align:center;font-weight:900}
-    .workTable input[type="text"]{width:100%;padding:7px;border:1px solid #cfcfcf;border-radius:8px;box-sizing:border-box}
-    .workTable input[type="radio"]{transform:scale(1.15);margin:0}
-
-    /* One selection per student row */
-    .workOpts{
-      display:flex;
-      gap:18px;
-      justify-content:center;
+    .workTable input[type="text"]{width:100%;padding:8px;border:1px solid #cfcfcf;border-radius:10px;box-sizing:border-box}
+    .workChoice{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
       align-items:center;
-      flex-wrap:nowrap;
+      gap:0;
+      width:100%;
     }
     .workOpt{
       display:flex;
-      gap:8px;
       align-items:center;
       justify-content:center;
+      gap:10px;
+      font-weight:900;
       white-space:nowrap;
     }
 
@@ -87,19 +110,17 @@
     .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:900}
     .sign-line{height:70px}
 
-    /* Mobile: keep layout without breaking print */
     @media (max-width: 900px){
       .layout{flex-direction:column}
       .info,.main{width:100%}
-      body{padding:10px}
     }
 
-    /* Mobile tables: horizontal scroll only (doesn't affect print) */
+    /* Mobile: keep everything intact with horizontal scroll (no breaking layout) */
     @media (max-width: 700px){
       .rubric{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
-      .rubric table{min-width:860px}
+      .rubric table{min-width:980px}
       .workScroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
-      .workScroll table{min-width:680px}
+      .workScroll table{min-width:820px}
     }
 
     @media print{
@@ -156,8 +177,8 @@
         <table>
           <thead>
             <tr>
-              <th style="width:140px;">المجال</th>
-              <th style="width:180px;">العنصر</th>
+              <th style="width:160px;">المجال</th>
+              <th style="width:220px;">العنصر</th>
               <th>التقييم</th>
             </tr>
           </thead>
@@ -181,11 +202,13 @@
         <div class="workHdr">متابعة الأعمال التحريرية للطلاب (8 فقط)</div>
         <div class="workInner">
           <div class="workScroll">
-            <table class="workTable" id="workTable">
+            <table class="workTable">
               <thead>
                 <tr>
-                  <th style="width:50%;">اسم الطالب</th>
-                  <th style="width:50%;">الحالة</th>
+                  <th style="width:45%;">اسم الطالب</th>
+                  <th>مصحح</th>
+                  <th>غير مكتمل</th>
+                  <th>غير مصحح</th>
                 </tr>
               </thead>
               <tbody id="workBody"></tbody>
@@ -319,9 +342,9 @@
           const tdEval = document.createElement("td");
           tdEval.innerHTML = `
             <div class="evalCell">
-              <label class="opt"><span>${it.optTop}</span><input type="radio" name="${name}" value="4"></label>
-              <label class="opt"><span>${it.optMid}</span><input type="radio" name="${name}" value="3"></label>
-              <label class="opt"><span>${it.optLow}</span><input type="radio" name="${name}" value="1"></label>
+              <label class="evalOpt"><span>${it.optTop}</span><input type="radio" name="${name}" value="4"></label>
+              <label class="evalOpt"><span>${it.optMid}</span><input type="radio" name="${name}" value="3"></label>
+              <label class="evalOpt"><span>${it.optLow}</span><input type="radio" name="${name}" value="1"></label>
             </div>
           `;
           tr.appendChild(tdEval);
@@ -357,13 +380,9 @@
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><input type="text" id="st_name_${i}" placeholder="اسم الطالب"></td>
-          <td>
-            <div class="workOpts">
-              <label class="workOpt"><span>مصحح</span><input type="radio" name="st_${i}" value="correct"></label>
-              <label class="workOpt"><span>غير مكتمل</span><input type="radio" name="st_${i}" value="partial"></label>
-              <label class="workOpt"><span>غير مصحح</span><input type="radio" name="st_${i}" value="not"></label>
-            </div>
-          </td>
+          <td style="text-align:center;"><input type="radio" name="st_${i}" value="correct"></td>
+          <td style="text-align:center;"><input type="radio" name="st_${i}" value="partial"></td>
+          <td style="text-align:center;"><input type="radio" name="st_${i}" value="not"></td>
         `;
         wb.appendChild(tr);
       }
