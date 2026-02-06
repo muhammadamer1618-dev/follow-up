@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>زيارات المعلمين</title>
+
+  <style>
+    @page { size: A4; margin: 12mm; }
+
+    body{font-family:Arial,sans-serif;background:#f4f8fc;margin:0;padding:12px;color:#000}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+    .title{margin:0;color:#0d47a1;font-size:22px;font-weight:800}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{border:0;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer;font-weight:700}
+    .btn.back{background:#607d8b;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
+    .btn.search{background:#1976d2;color:#fff}
+    .btn.print{background:#0d47a1;color:#fff}
+
+    .box{background:#fff;border:1px solid #bbdefb;border-radius:12px;padding:12px}
+    label{font-weight:800;display:block}
+    input{width:min(420px,100%);padding:10px;border:1px solid #cfcfcf;border-radius:10px;box-sizing:border-box;margin-top:6px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+
+    table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+    th,td{border:1px solid #000;padding:8px;vertical-align:middle}
+    th{background:#e3f2fd;text-align:center}
+
+    .muted{color:#607d8b;font-weight:700;margin-top:10px}
+  </style>
+</head>
+
+<body>
+  <div class="top">
+    <h1 class="title">زيارات المعلمين</h1>
+    <div class="actions">
+      <a class="btn back" href="index.html">الرجوع للرئيسية</a>
+      <a class="btn back" href="evaluation-form.html">استمارة التقييم</a>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="row">
+      <div>
+        <label>كود المعلم</label>
+        <input id="teacherCode" placeholder="مثال: 12345" />
+      </div>
+      <button class="btn search" id="btnSearch">عرض زيارات المعلم</button>
+    </div>
+
+    <div class="muted" id="resultInfo"></div>
+
+    <table id="visitsTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>التاريخ</th>
+          <th>رقم الزيارة</th>
+          <th>الصف</th>
+          <th>المادة</th>
+          <th>الدرجة</th>
+          <th>طباعة</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import {
+      getFirestore, collection, query, where, orderBy, getDocs, doc, getDoc
+    } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
+      authDomain: "follow-up-2026.firebaseapp.com",
+      projectId: "follow-up-2026",
+      storageBucket: "follow-up-2026.firebasestorage.app",
+      messagingSenderId: "1077131515114",
+      appId: "1:1077131515114:web:d10d9c5228382d7cfdb393"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const el = (id) => document.getElementById(id);
+
+    function esc(s){
+      return (s || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+    }
+
+    function circle(on){
+      return on ? "◉" : "○";
+    }
+
+    async function loadVisits(){
+      const code = el("teacherCode").value.trim();
+      if (!code){
+        alert("اكتب كود المعلم");
+        return;
+      }
+
+      const qy = query(
+        collection(db, "visits"),
+        where("teacherCode", "==", code),
+        orderBy("createdAt", "desc")
+      );
+
+      const snap = await getDocs(qy);
+
+      const tbody = document.querySelector("#visitsTable tbody");
+      tbody.innerHTML = "";
+
+      if (snap.empty){
+        el("resultInfo").textContent = "لا توجد زيارات لهذا المعلم";
+        el("visitsTable").style.display = "none";
+        return;
+      }
+
+      el("resultInfo").textContent = `عدد الزيارات: ${snap.size}`;
+      el("visitsTable").style.display = "table";
+
+      snap.forEach(d => {
+        const v = d.data();
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${esc(v.visitDate || "")}</td>
+          <td style="text-align:center;">${esc(String(v.visitNumber || ""))}</td>
+          <td>${esc(v.grade || "")}</td>
+          <td>${esc(v.subject || "")}</td>
+          <td style="text-align:center;font-weight:800;">${esc(String(v.finalScore || 0))} / 100</td>
+          <td style="text-align:center;">
+            <button class="btn print" data-id="${d.id}">طباعة</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody.querySelectorAll("button[data-id]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const id = btn.getAttribute("data-id");
+          await printVisit(id);
+        });
+      });
+    }
+
+    function buildHeaderTable(v){
+      return `
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">كود المعلم</th>
+            <td style="border:1px solid #000;padding:6px;">${esc(v.teacherCode || "")}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم المعلم</th>
+            <td style="border:1px solid #000;padding:6px;">${esc(v.teacherName || "")}</td>
+          </tr>
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">الصف</th>
+            <td style="border:1px solid #000;padding:6px;">${esc(v.grade || "")}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">المادة</th>
+            <td style="border:1px solid #000;padding:6px;">${esc(v.subject || "")}</td>
+          </tr>
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">عنوان الدرس</th>
+            <td style="border:1px solid #000;padding:6px;" colspan="3">${esc(v.lessonTitle || "")}</td>
+          </tr>
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">رقم الزيارة</th>
+            <td style="border:1px solid #000;padding:6px;">${esc(String(v.visitNumber || ""))}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم المشرف</th>
+            <td style="border:1px solid #000;padding:6px;">${esc(v.supervisorName || "")}</td>
+          </tr>
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">التاريخ</th>
+            <td style="border:1px solid #000;padding:6px;">${esc(v.visitDate || "")}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">الدرجة</th>
+            <td style="border:1px solid #000;padding:6px;font-weight:800;">${esc(String(v.finalScore || 0))} / 100</td>
+          </tr>
+        </table>
+      `;
+    }
+
+    function groupAnswers(answers){
+      const map = new Map();
+      (answers || []).forEach(a => {
+        if (!map.has(a.domain)) map.set(a.domain, []);
+        map.get(a.domain).push(a);
+      });
+      return map;
+    }
+
+    function buildEvaluationPrint(v){
+      const grouped = groupAnswers(v.answers);
+      let html = "";
+
+      for (const [domain, items] of grouped.entries()){
+        let rows = "";
+        items.forEach(a => {
+          const max = Number(a.max || 4);
+          const topVal = max;
+          const midVal = max === 4 ? 3 : 2;
+          const lowVal = 1;
+          const sel = Number(a.selected || 0);
+
+          rows += `
+            <tr>
+              <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:800;width:70px;">${sel}</td>
+              <td style="border:1px solid #000;padding:6px;">
+                <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
+                  <span>${circle(sel===topVal)} ${esc(a.optTop || "")}</span>
+                  <span>${circle(sel===midVal)} ${esc(a.optMid || "")}</span>
+                  <span>${circle(sel===lowVal)} ${esc(a.optLow || "")}</span>
+                </div>
+              </td>
+              <td style="border:1px solid #000;padding:6px;">${esc(a.itemLabel || "")}</td>
+            </tr>
+          `;
+        });
+
+        html += `
+          <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">
+            <h2 style="margin:0 0 8px;color:#0d47a1;font-size:16px;">${esc(domain)}</h2>
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <tr>
+                <th style="border:1px solid #000;background:#e3f2fd;padding:6px;width:70px;">الدرجة</th>
+                <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">التقييم</th>
+                <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">العنصر</th>
+              </tr>
+              ${rows}
+            </table>
+          </div>
+        `;
+      }
+
+      return html;
+    }
+
+    function buildNotesAndSigns(v){
+      return `
+        <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-top:10px;">
+          <div style="font-weight:800;margin-bottom:6px;">إيجابيات الحصة</div>
+          <div style="min-height:70px;border:1px solid #000;padding:8px;">${esc(v.positives || "").replaceAll("\n","<br>")}</div>
+
+          <div style="font-weight:800;margin:10px 0 6px;">توصيات وتوجيهات</div>
+          <div style="min-height:70px;border:1px solid #000;padding:8px;">${esc(v.recommendations || "").replaceAll("\n","<br>")}</div>
+        </div>
+
+        <table style="width:100%;border-collapse:collapse;margin-top:12px;">
+          <tr>
+            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:800;">توقيع المعلم</td>
+            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:800;">توقيع المشرف</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #000;height:70px;"></td>
+            <td style="border:1px solid #000;height:70px;"></td>
+          </tr>
+        </table>
+      `;
+    }
+
+    function buildWorkPrint(v){
+      const rows = (v.writtenWork || []).slice(0,8);
+      let body = "";
+
+      for (let i = 0; i < 8; i++){
+        const r = rows[i] || { name:"", status:"" };
+        body += `
+          <tr>
+            <td style="border:1px solid #000;height:28px;padding:6px;">${esc(r.name || "")}</td>
+            <td style="border:1px solid #000;text-align:center;">${r.status==="correct" ? "✓" : ""}</td>
+            <td style="border:1px solid #000;text-align:center;">${r.status==="partial" ? "✓" : ""}</td>
+            <td style="border:1px solid #000;text-align:center;">${r.status==="not" ? "✓" : ""}</td>
+          </tr>
+        `;
+      }
+
+      return `
+        <div style="page-break-before:always;"></div>
+        <h2 style="margin:0 0 10px;color:#0d47a1;text-align:center;">متابعة الأعمال التحريرية للطلاب</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم الطالب</th>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">مصحح</th>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">غير مكتمل</th>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">غير مصحح</th>
+          </tr>
+          ${body}
+        </table>
+
+        <table style="width:100%;border-collapse:collapse;margin-top:12px;">
+          <tr>
+            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:800;">توقيع المعلم</td>
+            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:800;">توقيع المشرف</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #000;height:70px;"></td>
+            <td style="border:1px solid #000;height:70px;"></td>
+          </tr>
+        </table>
+      `;
+    }
+
+    async function printVisit(id){
+      const snap = await getDoc(doc(db, "visits", id));
+      if (!snap.exists()){
+        alert("الزيارة غير موجودة");
+        return;
+      }
+
+      const v = snap.data();
+
+      const header = buildHeaderTable(v);
+      const evalHtml = buildEvaluationPrint(v);
+      const notes = buildNotesAndSigns(v);
+      const work = buildWorkPrint(v);
+
+      const html = `
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+          <meta charset="UTF-8" />
+          <title>طباعة</title>
+          <style>
+            @page { size: A4; margin: 12mm; }
+            body{font-family:Arial,sans-serif;margin:0;color:#000}
+            table{width:100%;border-collapse:collapse;font-size:13px}
+            th,td{border:1px solid #000;padding:6px;vertical-align:middle}
+            th{background:#e3f2fd;text-align:center}
+          </style>
+        </head>
+        <body>
+          <h1 style="text-align:center;color:#0d47a1;margin:0 0 10px;">استمارة التقييم</h1>
+          <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">${header}</div>
+          ${evalHtml}
+          ${notes}
+          ${work}
+        </body>
+        </html>
+      `;
+
+      const w = window.open("", "_blank");
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+      w.focus();
+      setTimeout(() => w.print(), 350);
+    }
+
+    el("btnSearch").addEventListener("click", loadVisits);
+
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    if (code){
+      el("teacherCode").value = code;
+      await loadVisits();
+    }
+  </script>
+</body>
+</html>
