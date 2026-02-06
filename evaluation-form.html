@@ -3,115 +3,100 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>استمارة متابعة معلم</title>
+  <title>استمارة التقييم</title>
 
   <style>
     @page { size: A4; margin: 12mm; }
 
     body{font-family:Arial,sans-serif;background:#f4f8fc;margin:0;padding:12px;color:#000}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-    .title{margin:0;color:#0d47a1;font-size:24px}
-    .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .btn{border:0;border-radius:8px;padding:9px 14px;font-size:14px;cursor:pointer}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+    .title{margin:0;color:#0d47a1;font-size:22px;font-weight:800}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{border:0;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer;font-weight:700}
     .btn.back{background:#607d8b;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
-    .btn.print{background:#1976d2;color:#fff}
-    .btn.print2{background:#0d47a1;color:#fff}
     .btn.save{background:#2e7d32;color:#fff}
     .btn.clear{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}
 
     .layout{display:flex;gap:12px;align-items:flex-start}
-    .box{background:#fff;border:1px solid #bbdefb;border-radius:10px;padding:12px;box-sizing:border-box}
-    .info{width:30%}
-    .main{width:70%}
+    .box{background:#fff;border:1px solid #bbdefb;border-radius:12px;padding:12px;box-sizing:border-box}
+    .info{width:32%}
+    .main{width:68%}
 
-    label{font-weight:bold;display:block;margin-top:8px}
-    input,textarea{width:100%;padding:7px;margin-top:4px;border:1px solid #cfcfcf;border-radius:6px;box-sizing:border-box}
-    textarea{height:64px}
+    label{font-weight:800;display:block;margin-top:8px}
+    input,textarea{width:100%;padding:8px;margin-top:4px;border:1px solid #cfcfcf;border-radius:8px;box-sizing:border-box}
+    textarea{height:70px}
 
-    .domain{border:1px solid #90caf9;border-radius:10px;margin-bottom:12px;overflow:hidden}
-    .domain-head{background:#e3f2fd;padding:10px;font-weight:bold;color:#0d47a1}
+    .domain{border:1px solid #90caf9;border-radius:12px;margin-bottom:12px;overflow:hidden}
+    .domain-head{background:#e3f2fd;padding:10px;font-weight:800;color:#0d47a1}
     .domain-body{padding:10px;background:#fff}
 
     table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{border:1px solid #000;padding:6px;vertical-align:top}
+    th,td{border:1px solid #000;padding:6px;vertical-align:middle}
     th{background:#e3f2fd;text-align:center}
 
-    .col-score{width:70px;text-align:center;font-weight:bold}
-    .col-eval{width:260px}
-    .eval-grid{display:grid;gap:6px}
-    .eval-opt{display:flex;align-items:center;gap:8px}
-    .eval-opt input{width:auto;margin:0}
+    .col-score{width:70px;text-align:center;font-weight:800}
+    .col-eval{width:300px}
+    .eval-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .opt{display:inline-flex;align-items:center;gap:6px}
+    .opt input{margin:0}
 
-    .summary{margin-top:10px;background:#f6fbff;border:1px solid #bbdefb;border-radius:10px;padding:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+    .summary{margin-top:10px;background:#f6fbff;border:1px solid #bbdefb;border-radius:12px;padding:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
     .summary b{color:#0d47a1}
-    .summary span{font-weight:bold}
+    .summary span{font-weight:800}
 
     .sign-table{width:100%;border-collapse:collapse;margin-top:14px}
-    .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:bold}
-    .sign-line{height:60px}
+    .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:800}
+    .sign-line{height:70px}
 
-    .chip{display:inline-block;background:#e3f2fd;border:1px solid #90caf9;color:#0d47a1;padding:6px 10px;border-radius:999px;font-weight:bold}
-    .muted{font-size:12px;color:#0d47a1}
-
-    .collapse-head{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;user-select:none}
-    .collapse-title{margin:0;color:#0d47a1;font-size:16px}
-    .collapse-body{display:none;margin-top:10px}
-    .collapse.open .collapse-body{display:block}
-
-    .work-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .btn.addrow{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}
-
-    .workTable input[type="text"]{width:100%;padding:6px;border:1px solid #cfcfcf;border-radius:6px;box-sizing:border-box}
-    .workTable input[type="radio"]{transform:scale(1.1)}
+    .workTable input[type="text"]{width:100%;padding:7px;border:1px solid #cfcfcf;border-radius:8px;box-sizing:border-box}
+    .workTable input[type="radio"]{transform:scale(1.15)}
 
     @media print{
       body{background:#fff;padding:0}
       .top,.btn{display:none !important}
       .box{border:1px solid #000}
-      .summary{border:1px solid #000}
       .domain{border:1px solid #000}
       .domain-head{background:#e3f2fd !important}
+      .summary{border:1px solid #000}
     }
   </style>
 </head>
 
 <body>
   <div class="top">
-    <div>
-      <h1 class="title">استمارة متابعة معلم</h1>
-      <div class="muted">
-        <span class="chip">رقم الزيارة (Firestore): <span id="docId">—</span></span>
-      </div>
-    </div>
-
+    <h1 class="title">استمارة التقييم</h1>
     <div class="actions">
       <a class="btn back" href="index.html">الرجوع للرئيسية</a>
-      <button class="btn save" id="btnSave">حفظ الزيارة</button>
-      <button class="btn print" id="btnPrintEval">طباعة الاستمارة فقط</button>
-      <button class="btn print2" id="btnPrintBoth">طباعة الاستمارة + الأعمال التحريرية</button>
-      <button class="btn clear" id="btnClear">مسح</button>
+      <button class="btn save" id="btnSave">حفظ</button>
+      <button class="btn clear" id="btnClear">تفريغ</button>
     </div>
   </div>
 
   <div class="layout">
     <div class="box info">
+      <label>كود المعلم</label>
+      <input id="teacherCode" />
+
       <label>اسم المعلم</label>
       <input id="teacherName" />
-
-      <label>المادة</label>
-      <input id="subject" />
 
       <label>الصف</label>
       <input id="grade" />
 
-      <label>التاريخ</label>
-      <input type="date" id="visitDate" />
+      <label>المادة</label>
+      <input id="subject" />
+
+      <label>عنوان الدرس</label>
+      <input id="lessonTitle" />
 
       <label>رقم الزيارة</label>
       <input type="number" id="visitNumber" />
 
       <label>اسم المشرف</label>
       <input id="supervisorName" />
+
+      <label>التاريخ</label>
+      <input type="date" id="visitDate" />
     </div>
 
     <div class="box main">
@@ -126,31 +111,16 @@
       <label style="margin-top:10px;">إيجابيات الحصة</label>
       <textarea id="positives"></textarea>
 
-      <label>التوصيات والتوجيهات</label>
+      <label>توصيات وتوجيهات</label>
       <textarea id="recommendations"></textarea>
 
-      <table class="sign-table">
-        <tr>
-          <td>اسم المعلم</td>
-          <td>اسم المشرف</td>
-        </tr>
-        <tr>
-          <td class="sign-line"></td>
-          <td class="sign-line"></td>
-        </tr>
-      </table>
-
       <div class="domain" style="margin-top:14px;">
-        <div class="domain-head collapse-head" id="workToggle">
-          <h3 class="collapse-title">متابعة الأعمال التحريرية للطلاب</h3>
-          <div class="muted">فتح / إغلاق</div>
-        </div>
-
-        <div class="domain-body collapse-body" id="workBody">
+        <div class="domain-head">متابعة الأعمال التحريرية للطلاب (8 فقط)</div>
+        <div class="domain-body">
           <table class="workTable" id="workTable">
             <thead>
               <tr>
-                <th style="width:40%;">اسم الطالب</th>
+                <th style="width:45%;">اسم الطالب</th>
                 <th>مصحح</th>
                 <th>غير مكتمل</th>
                 <th>غير مصحح</th>
@@ -159,10 +129,16 @@
             <tbody></tbody>
           </table>
 
-          <div class="work-actions">
-            <button class="btn addrow" id="addRow" type="button">إضافة صف</button>
-            <button class="btn clear" id="clearWork" type="button">مسح جدول الأعمال</button>
-          </div>
+          <table class="sign-table">
+            <tr>
+              <td>توقيع المعلم</td>
+              <td>توقيع المشرف</td>
+            </tr>
+            <tr>
+              <td class="sign-line"></td>
+              <td class="sign-line"></td>
+            </tr>
+          </table>
         </div>
       </div>
 
@@ -171,10 +147,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-    import {
-      getFirestore, collection, addDoc, serverTimestamp,
-      doc, getDoc, setDoc
-    } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
@@ -192,54 +165,59 @@
 
     const rubric = [
       { title: "الرؤية", items: [
-        { label: "القيمة التربوية", best: "مناسب", mid: "إلى حد ما", worst: "غير مناسب" }
+        { label: "القيمة التربوية", max: 4, optTop: "مناسب", optMid: "إلى حد ما", optLow: "غير مناسب" }
       ]},
+
       { title: "التخطيط للدرس", items: [
-        { label: "التحضير المسبق للدرس", best: "مكتمل", mid: "غير مكتمل", worst: "غير موجود" },
-        { label: "خطة الدرس", best: "مكتملة ومفصلة", mid: "غير مكتملة", worst: "غير موجودة" },
-        { label: "أهداف الدرس", best: "واضحة وقابلة للقياس", mid: "أهداف عامة", worst: "غير موجودة" },
-        { label: "المفاهيم والمصطلحات العلمية", best: "محددة وواضحة", mid: "غير محددة بدقة", worst: "غير موجودة" },
-        { label: "تسلسل خطوات الدرس", best: "متسلسلة ومصممة جيدًا", mid: "بعض الشواهد", worst: "لا توجد شواهد" },
-        { label: "إعدادات الفروق الفردية", best: "موجود بقوة", mid: "بعض الشواهد", worst: "لا توجد شواهد" }
+        { label: "التحضير المسبق للدرس", max: 4, optTop: "مكتمل", optMid: "غير مكتمل", optLow: "غير موجود" },
+        { label: "خطة الدرس", max: 4, optTop: "مكتملة ومفصلة", optMid: "غير مكتملة", optLow: "غير موجودة" },
+        { label: "أهداف الدرس", max: 4, optTop: "واضحة وقابلة للقياس", optMid: "أهداف عامة", optLow: "غير موجودة" },
+        { label: "المفاهيم والمصطلحات العلمية", max: 4, optTop: "محددة وواضحة", optMid: "غير محددة بدقة", optLow: "غير موجودة" },
+        { label: "تسلسل خطوات الدرس", max: 4, optTop: "متسلسلة ومصممة جيدًا", optMid: "بعض الشواهد", optLow: "لا توجد شواهد" },
+        { label: "إعدادات الفروق الفردية", max: 4, optTop: "موجود بقوة", optMid: "بعض الشواهد", optLow: "لا توجد شواهد" }
       ]},
+
       { title: "إدارة الصف", items: [
-        { label: "تنظيم المقاعد", best: "مجموعات", mid: "خطوط", worst: "مزعج" },
-        { label: "نظافة الفصل", best: "اهتمام عال", mid: "اهتمام مناسب", worst: "لا يوجد اهتمام" },
-        { label: "البيئة الصفية", best: "معززة وإيجابية", mid: "مناسبة", worst: "غير مناسبة" },
-        { label: "تنظيم مشاركة الطلاب", best: "منظم", mid: "إلى حد ما", worst: "غير منظم" },
-        { label: "الإدارة الصفية", best: "جيدة وفعالة", mid: "متوسطة", worst: "ضعيفة" },
-        { label: "تفعيل القوانين الصفية", best: "مفعلة وفعالة", mid: "مفعلة إلى حد ما", worst: "لا مفعلة" }
+        { label: "تنظيم المقاعد", max: 3, optTop: "مجموعات", optMid: "خطوط", optLow: "مزعج" },
+        { label: "نظافة الفصل", max: 4, optTop: "اهتمام عال", optMid: "اهتمام مناسب", optLow: "لا يوجد اهتمام" },
+        { label: "البيئة الصفية", max: 4, optTop: "معززة وإيجابية", optMid: "مناسبة", optLow: "غير مناسبة" },
+        { label: "تنظيم مشاركة الطلاب", max: 4, optTop: "منظم", optMid: "إلى حد ما", optLow: "غير منظم" },
+        { label: "الإدارة الصفية", max: 4, optTop: "جيدة وفعالة", optMid: "متوسطة", optLow: "ضعيفة" },
+        { label: "تفعيل القوانين الصفية", max: 3, optTop: "مفعلة وفعالة", optMid: "مفعلة إلى حد ما", optLow: "لا مفعلة" }
       ]},
+
       { title: "دعم السلوك", items: [
-        { label: "تفاعل المعلم", best: "ممتاز", mid: "مقبول", worst: "ضعيف" },
-        { label: "سلوك الطلاب", best: "ممتاز", mid: "مقبول", worst: "ضعيف" },
-        { label: "تفاعل الطلاب", best: "ممتاز وقوي", mid: "إلى حد ما", worst: "ضعيف" },
-        { label: "صور/تحفيز المعلم وإلهامه للطلاب", best: "فعال عال المستوى", mid: "متوسط", worst: "محدود" }
+        { label: "تفاعل المعلم", max: 4, optTop: "ممتاز", optMid: "مقبول", optLow: "ضعيف" },
+        { label: "سلوك الطلاب", max: 3, optTop: "ممتاز", optMid: "مقبول", optLow: "ضعيف" },
+        { label: "تفاعل الطلاب", max: 4, optTop: "ممتاز وقوي", optMid: "إلى حد ما", optLow: "ضعيف" },
+        { label: "تحفيز المعلم وإلهامه للطلاب", max: 4, optTop: "فعال عال المستوى", optMid: "متوسط", optLow: "محدود" }
       ]},
+
       { title: "استراتيجيات التدريس", items: [
-        { label: "خصائص الأسئلة حسب المنظومة", best: "مطابقة", mid: "إلى حد ما", worst: "غير مطابقة" },
-        { label: "تنفيذ استراتيجيات التدريس", best: "ينفذ", mid: "إلى حد ما", worst: "لا ينفذ" },
-        { label: "ممارسة التفكير", best: "ممارسة ممتازة", mid: "ممارسة متوسطة", worst: "ممارسة غير مناسبة" },
-        { label: "أهداف الدرس (معلنة/مدونة)", best: "معلنة وتناقش", mid: "إما مدونة أو تناقش", worst: "لا مدونة ولا تناقش" }
+        { label: "خصائص الأسئلة حسب المنظومة", max: 4, optTop: "مطابقة", optMid: "إلى حد ما", optLow: "غير مطابقة" },
+        { label: "تنفيذ استراتيجيات التدريس", max: 4, optTop: "ينفذ", optMid: "إلى حد ما", optLow: "لا ينفذ" },
+        { label: "ممارسة التفكير", max: 4, optTop: "ممارسة ممتازة", optMid: "ممارسة متوسطة", optLow: "ممارسة غير مناسبة" },
+        { label: "أهداف الدرس", max: 4, optTop: "معلنة وتناقش", optMid: "إما مدونة أو تناقش", optLow: "لا مدونة ولا تناقش" }
       ]},
+
       { title: "أدوات مساندة للتعلم", items: [
-        { label: "الوسيلة التعليمية", best: "مستخدمة", mid: "محدودة", worst: "غير مستخدمة" },
-        { label: "تفعيل السبورة", best: "مناسب جدًا", mid: "محدود", worst: "لا يوجد تفعيل" },
-        { label: "تطبيق ما تم التدريب عليه", best: "مستوى عال", mid: "مستوى مناسب", worst: "مستوى ضعيف" }
+        { label: "الوسيلة التعليمية", max: 4, optTop: "مستخدمة", optMid: "محدودة", optLow: "غير مستخدمة" },
+        { label: "تفعيل السبورة", max: 4, optTop: "مناسب جدًا", optMid: "محدود", optLow: "لا يوجد تفعيل" },
+        { label: "تطبيق ما تم التدريب عليه", max: 4, optTop: "مستوى عال", optMid: "مستوى مناسب", optLow: "مستوى ضعيف" }
       ]},
+
       { title: "التقويم الختامي", items: [
-        { label: "ملخص الدرس", best: "خلاصة جيدة وواضحة", mid: "خلاصة محدودة", worst: "لا توجد خلاصة" }
+        { label: "ملخص الدرس", max: 4, optTop: "خلاصة جيدة وواضحة", optMid: "خلاصة محدودة", optLow: "لا توجد خلاصة" }
       ]}
     ];
 
     const domainsEl = el("domains");
-    const questionMeta = [];
-    let qCounter = 0;
+    const qMeta = [];
 
     function buildDomains(){
       domainsEl.innerHTML = "";
-      questionMeta.length = 0;
-      qCounter = 0;
+      qMeta.length = 0;
+      let q = 0;
 
       rubric.forEach(domain => {
         const wrap = document.createElement("div");
@@ -266,19 +244,36 @@
         const tbody = table.querySelector("tbody");
 
         domain.items.forEach(item => {
-          qCounter += 1;
-          const qName = "q" + qCounter;
-          const scoreId = "score_" + qName;
-          questionMeta.push({ name: qName, scoreId, itemLabel: item.label, domain: domain.title });
+          q += 1;
+          const name = "q" + q;
+          const scoreId = "s_" + name;
+
+          const topVal = item.max;
+          const midVal = item.max === 4 ? 3 : 2;
+          const lowVal = 1;
+
+          qMeta.push({
+            name,
+            domain: domain.title,
+            label: item.label,
+            max: item.max,
+            optTop: item.optTop,
+            optMid: item.optMid,
+            optLow: item.optLow,
+            topVal,
+            midVal,
+            lowVal,
+            scoreId
+          });
 
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td class="col-score" id="${scoreId}">0</td>
             <td class="col-eval">
-              <div class="eval-grid">
-                <label class="eval-opt"><input type="radio" name="${qName}" value="4"><span>${item.best}</span></label>
-                <label class="eval-opt"><input type="radio" name="${qName}" value="3"><span>${item.mid}</span></label>
-                <label class="eval-opt"><input type="radio" name="${qName}" value="1"><span>${item.worst}</span></label>
+              <div class="eval-row">
+                <label class="opt"><input type="radio" name="${name}" value="${topVal}"><span>${item.optTop}</span></label>
+                <label class="opt"><input type="radio" name="${name}" value="${midVal}"><span>${item.optMid}</span></label>
+                <label class="opt"><input type="radio" name="${name}" value="${lowVal}"><span>${item.optLow}</span></label>
               </div>
             </td>
             <td>${item.label}</td>
@@ -295,360 +290,122 @@
 
     function calcAll(){
       let raw = 0;
-      questionMeta.forEach(q => {
-        const sel = document.querySelector(`input[name="${q.name}"]:checked`);
+      let rawMax = 0;
+
+      qMeta.forEach(m => {
+        rawMax += m.max;
+        const sel = document.querySelector(`input[name="${m.name}"]:checked`);
         const val = sel ? Number(sel.value) : 0;
         raw += val;
-        const cell = document.getElementById(q.scoreId);
+        const cell = document.getElementById(m.scoreId);
         if (cell) cell.textContent = String(val);
       });
 
-      const rawMax = questionMeta.length * 4;
-      el("rawMax").textContent = String(rawMax);
       el("rawTotal").textContent = String(raw);
+      el("rawMax").textContent = String(rawMax);
 
       const finalScore = rawMax === 0 ? 0 : Math.round((raw / rawMax) * 100);
       el("finalScore").textContent = String(finalScore);
       el("percentage").textContent = String(finalScore) + "%";
     }
 
-    function escHtml(s){
-      return (s || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
-    }
-
-    // Written work inside same visit
-    const workTbody = document.querySelector("#workTable tbody");
-
-    function addWorkRow(name = "", status = ""){
-      const idx = workTbody.children.length + 1;
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><input type="text" value="${escHtml(name)}" placeholder="اكتب اسم الطالب"></td>
-        <td><input type="radio" name="st_${idx}" value="correct" ${status==="correct"?"checked":""}></td>
-        <td><input type="radio" name="st_${idx}" value="partial" ${status==="partial"?"checked":""}></td>
-        <td><input type="radio" name="st_${idx}" value="not" ${status==="not"?"checked":""}></td>
-      `;
-      workTbody.appendChild(tr);
-    }
-
-    function ensureDefaultWorkRows(){
-      if (workTbody.children.length === 0){
-        for (let i = 0; i < 18; i++) addWorkRow();
+    function buildWorkRows(){
+      const tbody = document.querySelector("#workTable tbody");
+      tbody.innerHTML = "";
+      for (let i = 1; i <= 8; i++){
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><input type="text" id="st_name_${i}" placeholder="اسم الطالب"></td>
+          <td style="text-align:center;"><input type="radio" name="st_${i}" value="correct"></td>
+          <td style="text-align:center;"><input type="radio" name="st_${i}" value="partial"></td>
+          <td style="text-align:center;"><input type="radio" name="st_${i}" value="not"></td>
+        `;
+        tbody.appendChild(tr);
       }
     }
 
     function getWorkData(){
       const rows = [];
-      [...workTbody.querySelectorAll("tr")].forEach((tr, i) => {
-        const name = tr.querySelector('input[type="text"]').value.trim();
-        const idx = i + 1;
-        const checked = tr.querySelector(`input[name="st_${idx}"]:checked`);
+      for (let i = 1; i <= 8; i++){
+        const name = el("st_name_" + i).value.trim();
+        const checked = document.querySelector(`input[name="st_${i}"]:checked`);
         const status = checked ? checked.value : "";
-        if (name || status){
-          rows.push({ name, status });
-        }
-      });
+        rows.push({ name, status });
+      }
       return rows;
     }
 
-    function setWorkData(rows){
-      workTbody.innerHTML = "";
-      if (rows && rows.length){
-        rows.forEach(r => addWorkRow(r.name || "", r.status || ""));
-      } else {
-        ensureDefaultWorkRows();
+    function clearAll(){
+      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      el("positives").value = "";
+      el("recommendations").value = "";
+      for (let i = 1; i <= 8; i++){
+        el("st_name_" + i).value = "";
       }
+      calcAll();
     }
 
-    // Collapse
-    const workToggle = el("workToggle");
-    const workBody = el("workBody");
-    let workOpen = false;
+    async function saveVisit(){
+      const teacherCode = el("teacherCode").value.trim();
+      const teacherName = el("teacherName").value.trim();
 
-    workToggle.addEventListener("click", () => {
-      workOpen = !workOpen;
-      if (workOpen){
-        workBody.parentElement.classList.add("open");
-        ensureDefaultWorkRows();
-      } else {
-        workBody.parentElement.classList.remove("open");
+      if (!teacherCode || !teacherName){
+        alert("اكتب كود المعلم واسم المعلم");
+        return;
       }
-    });
 
-    el("addRow").addEventListener("click", () => addWorkRow());
-    el("clearWork").addEventListener("click", () => setWorkData([]));
-
-    // Save / Load visit
-    let currentDocId = "";
-
-    function getVisitPayload(){
-      const answers = questionMeta.map(q => {
-        const sel = document.querySelector(`input[name="${q.name}"]:checked`);
+      const answers = qMeta.map(m => {
+        const sel = document.querySelector(`input[name="${m.name}"]:checked`);
+        const val = sel ? Number(sel.value) : 0;
         return {
-          domain: q.domain,
-          itemLabel: q.itemLabel,
-          value: sel ? Number(sel.value) : 0
+          domain: m.domain,
+          itemLabel: m.label,
+          max: m.max,
+          optTop: m.optTop,
+          optMid: m.optMid,
+          optLow: m.optLow,
+          selected: val
         };
       });
 
-      return {
-        teacherName: el("teacherName").value.trim(),
-        subject: el("subject").value.trim(),
+      const payload = {
+        teacherCode,
+        teacherName,
         grade: el("grade").value.trim(),
-        visitDate: el("visitDate").value,
+        subject: el("subject").value.trim(),
+        lessonTitle: el("lessonTitle").value.trim(),
         visitNumber: Number(el("visitNumber").value || 0),
         supervisorName: el("supervisorName").value.trim(),
+        visitDate: el("visitDate").value,
         positives: el("positives").value,
         recommendations: el("recommendations").value,
         rawTotal: Number(el("rawTotal").textContent || 0),
         rawMax: Number(el("rawMax").textContent || 0),
         finalScore: Number(el("finalScore").textContent || 0),
-        answers,
         writtenWork: getWorkData(),
-        updatedAt: serverTimestamp()
+        createdAt: serverTimestamp()
       };
+
+      const ref = await addDoc(collection(db, "visits"), payload);
+
+      clearAll();
+      el("visitNumber").value = "";
+      el("lessonTitle").value = "";
+      alert("تم الحفظ");
+
+      location.href = `teacher-visits.html?code=${encodeURIComponent(teacherCode)}`;
     }
 
-    async function saveVisit(){
-      const payload = getVisitPayload();
-
-      if (!payload.teacherName){
-        alert("اكتب اسم المعلم أولاً");
-        return;
-      }
-
-      if (!currentDocId){
-        payload.createdAt = serverTimestamp();
-        const ref = await addDoc(collection(db, "visits"), payload);
-        currentDocId = ref.id;
-        el("docId").textContent = currentDocId;
-        const url = new URL(window.location.href);
-        url.searchParams.set("id", currentDocId);
-        history.replaceState({}, "", url.toString());
-        alert("تم حفظ الزيارة");
-      } else {
-        await setDoc(doc(db, "visits", currentDocId), payload, { merge: true });
-        alert("تم تحديث الزيارة");
-      }
-    }
-
-    async function loadVisitById(id){
-      const snap = await getDoc(doc(db, "visits", id));
-      if (!snap.exists()){
-        alert("الزيارة غير موجودة");
-        return;
-      }
-
-      const data = snap.data();
-      currentDocId = id;
-      el("docId").textContent = id;
-
-      el("teacherName").value = data.teacherName || "";
-      el("subject").value = data.subject || "";
-      el("grade").value = data.grade || "";
-      el("visitDate").value = data.visitDate || "";
-      el("visitNumber").value = data.visitNumber || "";
-      el("supervisorName").value = data.supervisorName || "";
-      el("positives").value = data.positives || "";
-      el("recommendations").value = data.recommendations || "";
-
-      // apply answers
-      if (Array.isArray(data.answers)){
-        data.answers.forEach((a, i) => {
-          const qName = "q" + (i + 1);
-          const val = Number(a.value || 0);
-          if (val === 4 || val === 3 || val === 1){
-            const radio = document.querySelector(`input[name="${qName}"][value="${val}"]`);
-            if (radio) radio.checked = true;
-          }
-        });
-      }
-
-      setWorkData(Array.isArray(data.writtenWork) ? data.writtenWork : []);
-      calcAll();
-    }
-
-    // Printing
-    function buildHeaderTable(){
-      return `
-        <table style="width:100%;border-collapse:collapse;font-size:13px;">
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم المعلم</th>
-            <td style="border:1px solid #000;padding:6px;">${escHtml(el("teacherName").value)}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">المادة</th>
-            <td style="border:1px solid #000;padding:6px;">${escHtml(el("subject").value)}</td>
-          </tr>
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">الصف</th>
-            <td style="border:1px solid #000;padding:6px;">${escHtml(el("grade").value)}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">التاريخ</th>
-            <td style="border:1px solid #000;padding:6px;">${escHtml(el("visitDate").value)}</td>
-          </tr>
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">رقم الزيارة</th>
-            <td style="border:1px solid #000;padding:6px;">${escHtml(el("visitNumber").value)}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم المشرف</th>
-            <td style="border:1px solid #000;padding:6px;">${escHtml(el("supervisorName").value)}</td>
-          </tr>
-        </table>
-      `;
-    }
-
-    function buildSignTable(){
-      return `
-        <table style="width:100%;border-collapse:collapse;margin-top:14px;">
-          <tr>
-            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:bold;">اسم المعلم</td>
-            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:bold;">اسم المشرف</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid #000;height:60px;"></td>
-            <td style="border:1px solid #000;height:60px;"></td>
-          </tr>
-        </table>
-      `;
-    }
-
-    function buildDomainsHtml(){
-      return [...document.querySelectorAll(".domain")]
-        .filter(d => d.querySelector(".domain-head") && d.querySelector("table") && !d.querySelector("#workTable"))
-        .map(dom => {
-          const title = dom.querySelector(".domain-head").textContent;
-          const table = dom.querySelector("table").outerHTML;
-          return `
-            <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">
-              <h2 style="margin:0 0 8px;color:#0d47a1;font-size:16px;">${escHtml(title)}</h2>
-              ${table}
-            </div>
-          `;
-        }).join("");
-    }
-
-    function buildSummaryHtml(){
-      return `
-        <div style="border:1px solid #000;border-radius:8px;padding:8px;font-weight:bold;">
-          المجموع: ${escHtml(el("rawTotal").textContent)} / ${escHtml(el("rawMax").textContent)}
-          &nbsp;&nbsp;|&nbsp;&nbsp; النسبة: ${escHtml(el("percentage").textContent)}
-          &nbsp;&nbsp;|&nbsp;&nbsp; الدرجة النهائية: ${escHtml(el("finalScore").textContent)} / 100
-        </div>
-      `;
-    }
-
-    function buildNotesHtml(){
-      return `
-        <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-top:10px;">
-          <div style="font-weight:bold;margin-bottom:6px;">إيجابيات الحصة</div>
-          <div style="min-height:70px;border:1px solid #000;padding:8px;">${escHtml(el("positives").value).replaceAll("\n","<br>")}</div>
-
-          <div style="font-weight:bold;margin:10px 0 6px;">التوصيات والتوجيهات</div>
-          <div style="min-height:70px;border:1px solid #000;padding:8px;">${escHtml(el("recommendations").value).replaceAll("\n","<br>")}</div>
-
-          ${buildSignTable()}
-        </div>
-      `;
-    }
-
-    function buildWorkPrintHtml(){
-      const rows = getWorkData();
-      const maxRows = Math.max(rows.length, 18);
-      let bodyRows = "";
-      for (let i = 0; i < maxRows; i++){
-        const r = rows[i] || { name: "", status: "" };
-        bodyRows += `
-          <tr>
-            <td style="border:1px solid #000;height:28px;padding:6px;">${escHtml(r.name || "")}</td>
-            <td style="border:1px solid #000;text-align:center;">${r.status==="correct" ? "✓" : ""}</td>
-            <td style="border:1px solid #000;text-align:center;">${r.status==="partial" ? "✓" : ""}</td>
-            <td style="border:1px solid #000;text-align:center;">${r.status==="not" ? "✓" : ""}</td>
-          </tr>
-        `;
-      }
-
-      return `
-        <div style="page-break-before:always;"></div>
-        <h2 style="margin:0 0 10px;color:#0d47a1;text-align:center;">متابعة الأعمال التحريرية للطلاب</h2>
-        <table style="width:100%;border-collapse:collapse;font-size:13px;">
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم الطالب</th>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">مصحح</th>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">غير مكتمل</th>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">غير مصحح</th>
-          </tr>
-          ${bodyRows}
-        </table>
-        ${buildSignTable()}
-      `;
-    }
-
-    function openPrint(includeWork){
-      const headerTable = buildHeaderTable();
-      const domainsHtml = buildDomainsHtml();
-      const summaryHtml = buildSummaryHtml();
-      const notesHtml = buildNotesHtml();
-      const workHtml = includeWork ? buildWorkPrintHtml() : "";
-
-      const html = `
-        <!DOCTYPE html>
-        <html lang="ar" dir="rtl">
-        <head>
-          <meta charset="UTF-8" />
-          <title>طباعة</title>
-          <style>
-            @page { size: A4; margin: 12mm; }
-            body{font-family:Arial,sans-serif;margin:0;color:#000}
-            table{width:100%;border-collapse:collapse;font-size:13px}
-            th,td{border:1px solid #000;padding:6px;vertical-align:top}
-            th{background:#e3f2fd;text-align:center}
-          </style>
-        </head>
-        <body>
-          <h1 style="text-align:center;color:#0d47a1;margin:0 0 10px;">استمارة متابعة معلم</h1>
-          <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">${headerTable}</div>
-          ${domainsHtml}
-          ${summaryHtml}
-          ${notesHtml}
-          ${workHtml}
-        </body>
-        </html>
-      `;
-
-      const w = window.open("", "_blank");
-      w.document.open();
-      w.document.write(html);
-      w.document.close();
-      w.focus();
-      setTimeout(() => w.print(), 350);
-    }
-
-    // Clear
-    function clearAll(){
-      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-      el("positives").value = "";
-      el("recommendations").value = "";
-      setWorkData([]);
-      calcAll();
-    }
-
-    // Init
     buildDomains();
+    buildWorkRows();
     calcAll();
-    ensureDefaultWorkRows();
 
     document.addEventListener("change", (e) => {
       if (e.target && e.target.matches('input[type="radio"]')) calcAll();
     });
 
     el("btnSave").addEventListener("click", saveVisit);
-    el("btnPrintEval").addEventListener("click", () => openPrint(false));
-    el("btnPrintBoth").addEventListener("click", () => openPrint(true));
     el("btnClear").addEventListener("click", clearAll);
-
-    // Load by URL: ?id=DOC_ID
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
-    if (id){
-      await loadVisitById(id);
-    }
   </script>
 </body>
 </html>
