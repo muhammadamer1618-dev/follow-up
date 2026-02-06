@@ -51,6 +51,11 @@
       .top{display:none !important}
       .box{border:1px solid #000}
     }
+    .table-scroll{
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
   </style>
 </head>
 
@@ -90,10 +95,15 @@
       <label>التاريخ</label>
       <input type="date" id="visitDate" />
     </div>
-
-    <div class="box main">
-      <div class="rubric">
-        <table>
+<div class="box main">
+  <div class="rubric">
+    <div class="table-scroll">
+      <table>
+        ...
+      </table>
+    </div>
+  </div>
+</div>
           <thead>
             <tr>
               <th style="width:36px;">م</th>
