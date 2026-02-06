@@ -16,6 +16,7 @@
     .btn.back{background:#607d8b;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
     .btn.search{background:#1976d2;color:#fff}
     .btn.print{background:#0d47a1;color:#fff}
+    .btn.del{background:#c62828;color:#fff}
 
     .box{background:#fff;border:1px solid #bbdefb;border-radius:12px;padding:12px}
     label{font-weight:800;display:block}
@@ -27,6 +28,7 @@
     th{background:#e3f2fd;text-align:center}
 
     .muted{color:#607d8b;font-weight:700;margin-top:10px}
+    .err{color:#c62828;font-weight:800;margin-top:10px}
   </style>
 </head>
 
@@ -49,6 +51,7 @@
     </div>
 
     <div class="muted" id="resultInfo"></div>
+    <div class="err" id="errorInfo"></div>
 
     <table id="visitsTable" style="display:none;">
       <thead>
@@ -58,7 +61,7 @@
           <th>الصف</th>
           <th>المادة</th>
           <th>الدرجة</th>
-          <th>طباعة</th>
+          <th>إجراءات</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -68,7 +71,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
     import {
-      getFirestore, collection, query, where, orderBy, getDocs, doc, getDoc
+      getFirestore, collection, query, where, getDocs, doc, getDoc, deleteDoc
     } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -93,56 +96,95 @@
       return on ? "◉" : "○";
     }
 
+    function toSortableDate(s){
+      if (!s) return 0;
+      const t = Date.parse(s);
+      return Number.isFinite(t) ? t : 0;
+    }
+
     async function loadVisits(){
       const code = el("teacherCode").value.trim();
+      el("errorInfo").textContent = "";
       if (!code){
         alert("اكتب كود المعلم");
         return;
       }
 
-      const qy = query(
-        collection(db, "visits"),
-        where("teacherCode", "==", code),
-        orderBy("createdAt", "desc")
-      );
+      try{
+        const qy = query(
+          collection(db, "visits"),
+          where("teacherCode", "==", code)
+        );
 
-      const snap = await getDocs(qy);
+        const snap = await getDocs(qy);
 
-      const tbody = document.querySelector("#visitsTable tbody");
-      tbody.innerHTML = "";
+        const tbody = document.querySelector("#visitsTable tbody");
+        tbody.innerHTML = "";
 
-      if (snap.empty){
-        el("resultInfo").textContent = "لا توجد زيارات لهذا المعلم";
-        el("visitsTable").style.display = "none";
-        return;
-      }
+        if (snap.empty){
+          el("resultInfo").textContent = "لا توجد زيارات لهذا المعلم";
+          el("visitsTable").style.display = "none";
+          return;
+        }
 
-      el("resultInfo").textContent = `عدد الزيارات: ${snap.size}`;
-      el("visitsTable").style.display = "table";
-
-      snap.forEach(d => {
-        const v = d.data();
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-          <td>${esc(v.visitDate || "")}</td>
-          <td style="text-align:center;">${esc(String(v.visitNumber || ""))}</td>
-          <td>${esc(v.grade || "")}</td>
-          <td>${esc(v.subject || "")}</td>
-          <td style="text-align:center;font-weight:800;">${esc(String(v.finalScore || 0))} / 100</td>
-          <td style="text-align:center;">
-            <button class="btn print" data-id="${d.id}">طباعة</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      tbody.querySelectorAll("button[data-id]").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const id = btn.getAttribute("data-id");
-          await printVisit(id);
+        // Convert to array then sort client-side (no index needed)
+        const list = [];
+        snap.forEach(d => {
+          const v = d.data();
+          list.push({ id: d.id, ...v });
         });
-      });
+
+        list.sort((a,b) => {
+          const da = toSortableDate(a.visitDate);
+          const dbb = toSortableDate(b.visitDate);
+          if (dbb !== da) return dbb - da; // newest date first
+          const va = Number(a.visitNumber || 0);
+          const vb = Number(b.visitNumber || 0);
+          return vb - va;
+        });
+
+        el("resultInfo").textContent = `عدد الزيارات: ${list.length}`;
+        el("visitsTable").style.display = "table";
+
+        list.forEach(v => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${esc(v.visitDate || "")}</td>
+            <td style="text-align:center;">${esc(String(v.visitNumber || ""))}</td>
+            <td>${esc(v.grade || "")}</td>
+            <td>${esc(v.subject || "")}</td>
+            <td style="text-align:center;font-weight:800;">${esc(String(v.finalScore || 0))} / 100</td>
+            <td style="text-align:center;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+              <button class="btn print" data-print="${esc(v.id)}">طباعة</button>
+              <button class="btn del" data-del="${esc(v.id)}">مسح</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        tbody.querySelectorAll("button[data-print]").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const id = btn.getAttribute("data-print");
+            await printVisit(id);
+          });
+        });
+
+        tbody.querySelectorAll("button[data-del]").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const id = btn.getAttribute("data-del");
+            const ok = confirm("تأكيد مسح هذه الزيارة؟");
+            if (!ok) return;
+            await deleteDoc(doc(db, "visits", id));
+            await loadVisits();
+          });
+        });
+
+      }catch(err){
+        el("visitsTable").style.display = "none";
+        el("resultInfo").textContent = "";
+        el("errorInfo").textContent = "حصل خطأ في جلب الزيارات. لو أول مرة: تأكد من Rules أو من وجود بيانات محفوظة.";
+        console.error(err);
+      }
     }
 
     function buildHeaderTable(v){
