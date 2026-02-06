@@ -9,18 +9,20 @@
     @page { size: A4; margin: 12mm; }
 
     body{font-family:Arial,sans-serif;background:#f4f8fc;margin:0;padding:12px;color:#000}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-    .title{margin:0;color:#0d47a1;font-size:26px}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+    .title{margin:0;color:#0d47a1;font-size:24px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
     .btn{border:0;border-radius:8px;padding:9px 14px;font-size:14px;cursor:pointer}
     .btn.back{background:#607d8b;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
     .btn.print{background:#1976d2;color:#fff}
+    .btn.print2{background:#0d47a1;color:#fff}
+    .btn.save{background:#2e7d32;color:#fff}
     .btn.clear{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}
 
     .layout{display:flex;gap:12px;align-items:flex-start}
     .box{background:#fff;border:1px solid #bbdefb;border-radius:10px;padding:12px;box-sizing:border-box}
     .info{width:30%}
-    .eval{width:70%}
+    .main{width:70%}
 
     label{font-weight:bold;display:block;margin-top:8px}
     input,textarea{width:100%;padding:7px;margin-top:4px;border:1px solid #cfcfcf;border-radius:6px;box-sizing:border-box}
@@ -48,12 +50,25 @@
     .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:bold}
     .sign-line{height:60px}
 
+    .chip{display:inline-block;background:#e3f2fd;border:1px solid #90caf9;color:#0d47a1;padding:6px 10px;border-radius:999px;font-weight:bold}
+    .muted{font-size:12px;color:#0d47a1}
+
+    .collapse-head{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;user-select:none}
+    .collapse-title{margin:0;color:#0d47a1;font-size:16px}
+    .collapse-body{display:none;margin-top:10px}
+    .collapse.open .collapse-body{display:block}
+
+    .work-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .btn.addrow{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}
+
+    .workTable input[type="text"]{width:100%;padding:6px;border:1px solid #cfcfcf;border-radius:6px;box-sizing:border-box}
+    .workTable input[type="radio"]{transform:scale(1.1)}
+
     @media print{
       body{background:#fff;padding:0}
       .top,.btn{display:none !important}
       .box{border:1px solid #000}
       .summary{border:1px solid #000}
-      .page-break{page-break-before:always}
       .domain{border:1px solid #000}
       .domain-head{background:#e3f2fd !important}
     }
@@ -62,10 +77,18 @@
 
 <body>
   <div class="top">
-    <h1 class="title">استمارة متابعة معلم</h1>
+    <div>
+      <h1 class="title">استمارة متابعة معلم</h1>
+      <div class="muted">
+        <span class="chip">رقم الزيارة (Firestore): <span id="docId">—</span></span>
+      </div>
+    </div>
+
     <div class="actions">
       <a class="btn back" href="index.html">الرجوع للرئيسية</a>
-      <button class="btn print" id="btnPrint">طباعة (صفحتين)</button>
+      <button class="btn save" id="btnSave">حفظ الزيارة</button>
+      <button class="btn print" id="btnPrintEval">طباعة الاستمارة فقط</button>
+      <button class="btn print2" id="btnPrintBoth">طباعة الاستمارة + الأعمال التحريرية</button>
       <button class="btn clear" id="btnClear">مسح</button>
     </div>
   </div>
@@ -91,7 +114,7 @@
       <input id="supervisorName" />
     </div>
 
-    <div class="box eval">
+    <div class="box main">
       <div id="domains"></div>
 
       <div class="summary">
@@ -116,10 +139,57 @@
           <td class="sign-line"></td>
         </tr>
       </table>
+
+      <div class="domain" style="margin-top:14px;">
+        <div class="domain-head collapse-head" id="workToggle">
+          <h3 class="collapse-title">متابعة الأعمال التحريرية للطلاب</h3>
+          <div class="muted">فتح / إغلاق</div>
+        </div>
+
+        <div class="domain-body collapse-body" id="workBody">
+          <table class="workTable" id="workTable">
+            <thead>
+              <tr>
+                <th style="width:40%;">اسم الطالب</th>
+                <th>مصحح</th>
+                <th>غير مكتمل</th>
+                <th>غير مصحح</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <div class="work-actions">
+            <button class="btn addrow" id="addRow" type="button">إضافة صف</button>
+            <button class="btn clear" id="clearWork" type="button">مسح جدول الأعمال</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import {
+      getFirestore, collection, addDoc, serverTimestamp,
+      doc, getDoc, setDoc
+    } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
+      authDomain: "follow-up-2026.firebaseapp.com",
+      projectId: "follow-up-2026",
+      storageBucket: "follow-up-2026.firebasestorage.app",
+      messagingSenderId: "1077131515114",
+      appId: "1:1077131515114:web:d10d9c5228382d7cfdb393"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const el = (id) => document.getElementById(id);
+
     const rubric = [
       { title: "الرؤية", items: [
         { label: "القيمة التربوية", best: "مناسب", mid: "إلى حد ما", worst: "غير مناسب" }
@@ -162,7 +232,7 @@
       ]}
     ];
 
-    const domainsEl = document.getElementById("domains");
+    const domainsEl = el("domains");
     const questionMeta = [];
     let qCounter = 0;
 
@@ -199,7 +269,7 @@
           qCounter += 1;
           const qName = "q" + qCounter;
           const scoreId = "score_" + qName;
-          questionMeta.push({ name: qName, scoreId });
+          questionMeta.push({ name: qName, scoreId, itemLabel: item.label, domain: domain.title });
 
           const tr = document.createElement("tr");
           tr.innerHTML = `
@@ -223,14 +293,8 @@
       });
     }
 
-    const rawTotalEl = document.getElementById("rawTotal");
-    const rawMaxEl = document.getElementById("rawMax");
-    const percentageEl = document.getElementById("percentage");
-    const finalScoreEl = document.getElementById("finalScore");
-
     function calcAll(){
       let raw = 0;
-
       questionMeta.forEach(q => {
         const sel = document.querySelector(`input[name="${q.name}"]:checked`);
         const val = sel ? Number(sel.value) : 0;
@@ -240,22 +304,197 @@
       });
 
       const rawMax = questionMeta.length * 4;
-      rawMaxEl.textContent = String(rawMax);
-      rawTotalEl.textContent = String(raw);
+      el("rawMax").textContent = String(rawMax);
+      el("rawTotal").textContent = String(raw);
 
       const finalScore = rawMax === 0 ? 0 : Math.round((raw / rawMax) * 100);
-      finalScoreEl.textContent = String(finalScore);
-      percentageEl.textContent = String(finalScore) + "%";
+      el("finalScore").textContent = String(finalScore);
+      el("percentage").textContent = String(finalScore) + "%";
     }
 
     function escHtml(s){
-      return (s || "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;");
+      return (s || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
     }
 
-    function buildSignTableHtml(){
+    // Written work inside same visit
+    const workTbody = document.querySelector("#workTable tbody");
+
+    function addWorkRow(name = "", status = ""){
+      const idx = workTbody.children.length + 1;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><input type="text" value="${escHtml(name)}" placeholder="اكتب اسم الطالب"></td>
+        <td><input type="radio" name="st_${idx}" value="correct" ${status==="correct"?"checked":""}></td>
+        <td><input type="radio" name="st_${idx}" value="partial" ${status==="partial"?"checked":""}></td>
+        <td><input type="radio" name="st_${idx}" value="not" ${status==="not"?"checked":""}></td>
+      `;
+      workTbody.appendChild(tr);
+    }
+
+    function ensureDefaultWorkRows(){
+      if (workTbody.children.length === 0){
+        for (let i = 0; i < 18; i++) addWorkRow();
+      }
+    }
+
+    function getWorkData(){
+      const rows = [];
+      [...workTbody.querySelectorAll("tr")].forEach((tr, i) => {
+        const name = tr.querySelector('input[type="text"]').value.trim();
+        const idx = i + 1;
+        const checked = tr.querySelector(`input[name="st_${idx}"]:checked`);
+        const status = checked ? checked.value : "";
+        if (name || status){
+          rows.push({ name, status });
+        }
+      });
+      return rows;
+    }
+
+    function setWorkData(rows){
+      workTbody.innerHTML = "";
+      if (rows && rows.length){
+        rows.forEach(r => addWorkRow(r.name || "", r.status || ""));
+      } else {
+        ensureDefaultWorkRows();
+      }
+    }
+
+    // Collapse
+    const workToggle = el("workToggle");
+    const workBody = el("workBody");
+    let workOpen = false;
+
+    workToggle.addEventListener("click", () => {
+      workOpen = !workOpen;
+      if (workOpen){
+        workBody.parentElement.classList.add("open");
+        ensureDefaultWorkRows();
+      } else {
+        workBody.parentElement.classList.remove("open");
+      }
+    });
+
+    el("addRow").addEventListener("click", () => addWorkRow());
+    el("clearWork").addEventListener("click", () => setWorkData([]));
+
+    // Save / Load visit
+    let currentDocId = "";
+
+    function getVisitPayload(){
+      const answers = questionMeta.map(q => {
+        const sel = document.querySelector(`input[name="${q.name}"]:checked`);
+        return {
+          domain: q.domain,
+          itemLabel: q.itemLabel,
+          value: sel ? Number(sel.value) : 0
+        };
+      });
+
+      return {
+        teacherName: el("teacherName").value.trim(),
+        subject: el("subject").value.trim(),
+        grade: el("grade").value.trim(),
+        visitDate: el("visitDate").value,
+        visitNumber: Number(el("visitNumber").value || 0),
+        supervisorName: el("supervisorName").value.trim(),
+        positives: el("positives").value,
+        recommendations: el("recommendations").value,
+        rawTotal: Number(el("rawTotal").textContent || 0),
+        rawMax: Number(el("rawMax").textContent || 0),
+        finalScore: Number(el("finalScore").textContent || 0),
+        answers,
+        writtenWork: getWorkData(),
+        updatedAt: serverTimestamp()
+      };
+    }
+
+    async function saveVisit(){
+      const payload = getVisitPayload();
+
+      if (!payload.teacherName){
+        alert("اكتب اسم المعلم أولاً");
+        return;
+      }
+
+      if (!currentDocId){
+        payload.createdAt = serverTimestamp();
+        const ref = await addDoc(collection(db, "visits"), payload);
+        currentDocId = ref.id;
+        el("docId").textContent = currentDocId;
+        const url = new URL(window.location.href);
+        url.searchParams.set("id", currentDocId);
+        history.replaceState({}, "", url.toString());
+        alert("تم حفظ الزيارة");
+      } else {
+        await setDoc(doc(db, "visits", currentDocId), payload, { merge: true });
+        alert("تم تحديث الزيارة");
+      }
+    }
+
+    async function loadVisitById(id){
+      const snap = await getDoc(doc(db, "visits", id));
+      if (!snap.exists()){
+        alert("الزيارة غير موجودة");
+        return;
+      }
+
+      const data = snap.data();
+      currentDocId = id;
+      el("docId").textContent = id;
+
+      el("teacherName").value = data.teacherName || "";
+      el("subject").value = data.subject || "";
+      el("grade").value = data.grade || "";
+      el("visitDate").value = data.visitDate || "";
+      el("visitNumber").value = data.visitNumber || "";
+      el("supervisorName").value = data.supervisorName || "";
+      el("positives").value = data.positives || "";
+      el("recommendations").value = data.recommendations || "";
+
+      // apply answers
+      if (Array.isArray(data.answers)){
+        data.answers.forEach((a, i) => {
+          const qName = "q" + (i + 1);
+          const val = Number(a.value || 0);
+          if (val === 4 || val === 3 || val === 1){
+            const radio = document.querySelector(`input[name="${qName}"][value="${val}"]`);
+            if (radio) radio.checked = true;
+          }
+        });
+      }
+
+      setWorkData(Array.isArray(data.writtenWork) ? data.writtenWork : []);
+      calcAll();
+    }
+
+    // Printing
+    function buildHeaderTable(){
+      return `
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم المعلم</th>
+            <td style="border:1px solid #000;padding:6px;">${escHtml(el("teacherName").value)}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">المادة</th>
+            <td style="border:1px solid #000;padding:6px;">${escHtml(el("subject").value)}</td>
+          </tr>
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">الصف</th>
+            <td style="border:1px solid #000;padding:6px;">${escHtml(el("grade").value)}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">التاريخ</th>
+            <td style="border:1px solid #000;padding:6px;">${escHtml(el("visitDate").value)}</td>
+          </tr>
+          <tr>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">رقم الزيارة</th>
+            <td style="border:1px solid #000;padding:6px;">${escHtml(el("visitNumber").value)}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم المشرف</th>
+            <td style="border:1px solid #000;padding:6px;">${escHtml(el("supervisorName").value)}</td>
+          </tr>
+        </table>
+      `;
+    }
+
+    function buildSignTable(){
       return `
         <table style="width:100%;border-collapse:collapse;margin-top:14px;">
           <tr>
@@ -270,21 +509,63 @@
       `;
     }
 
-    function buildWrittenWorkPrintPage(){
-      let rows = "";
-      for (let i = 0; i < 18; i++) {
-        rows += `
+    function buildDomainsHtml(){
+      return [...document.querySelectorAll(".domain")]
+        .filter(d => d.querySelector(".domain-head") && d.querySelector("table") && !d.querySelector("#workTable"))
+        .map(dom => {
+          const title = dom.querySelector(".domain-head").textContent;
+          const table = dom.querySelector("table").outerHTML;
+          return `
+            <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">
+              <h2 style="margin:0 0 8px;color:#0d47a1;font-size:16px;">${escHtml(title)}</h2>
+              ${table}
+            </div>
+          `;
+        }).join("");
+    }
+
+    function buildSummaryHtml(){
+      return `
+        <div style="border:1px solid #000;border-radius:8px;padding:8px;font-weight:bold;">
+          المجموع: ${escHtml(el("rawTotal").textContent)} / ${escHtml(el("rawMax").textContent)}
+          &nbsp;&nbsp;|&nbsp;&nbsp; النسبة: ${escHtml(el("percentage").textContent)}
+          &nbsp;&nbsp;|&nbsp;&nbsp; الدرجة النهائية: ${escHtml(el("finalScore").textContent)} / 100
+        </div>
+      `;
+    }
+
+    function buildNotesHtml(){
+      return `
+        <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-top:10px;">
+          <div style="font-weight:bold;margin-bottom:6px;">إيجابيات الحصة</div>
+          <div style="min-height:70px;border:1px solid #000;padding:8px;">${escHtml(el("positives").value).replaceAll("\n","<br>")}</div>
+
+          <div style="font-weight:bold;margin:10px 0 6px;">التوصيات والتوجيهات</div>
+          <div style="min-height:70px;border:1px solid #000;padding:8px;">${escHtml(el("recommendations").value).replaceAll("\n","<br>")}</div>
+
+          ${buildSignTable()}
+        </div>
+      `;
+    }
+
+    function buildWorkPrintHtml(){
+      const rows = getWorkData();
+      const maxRows = Math.max(rows.length, 18);
+      let bodyRows = "";
+      for (let i = 0; i < maxRows; i++){
+        const r = rows[i] || { name: "", status: "" };
+        bodyRows += `
           <tr>
-            <td style="height:28px;border:1px solid #000;"></td>
-            <td style="border:1px solid #000;"></td>
-            <td style="border:1px solid #000;"></td>
-            <td style="border:1px solid #000;"></td>
+            <td style="border:1px solid #000;height:28px;padding:6px;">${escHtml(r.name || "")}</td>
+            <td style="border:1px solid #000;text-align:center;">${r.status==="correct" ? "✓" : ""}</td>
+            <td style="border:1px solid #000;text-align:center;">${r.status==="partial" ? "✓" : ""}</td>
+            <td style="border:1px solid #000;text-align:center;">${r.status==="not" ? "✓" : ""}</td>
           </tr>
         `;
       }
 
       return `
-        <div class="page-break"></div>
+        <div style="page-break-before:always;"></div>
         <h2 style="margin:0 0 10px;color:#0d47a1;text-align:center;">متابعة الأعمال التحريرية للطلاب</h2>
         <table style="width:100%;border-collapse:collapse;font-size:13px;">
           <tr>
@@ -293,68 +574,18 @@
             <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">غير مكتمل</th>
             <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">غير مصحح</th>
           </tr>
-          ${rows}
+          ${bodyRows}
         </table>
-        ${buildSignTableHtml()}
+        ${buildSignTable()}
       `;
     }
 
-    function printTwoPages(){
-      const domainBlocks = [...document.querySelectorAll(".domain")].map(dom => {
-        const title = dom.querySelector(".domain-head").textContent;
-        const table = dom.querySelector("table").outerHTML;
-        return `
-          <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">
-            <h2 style="margin:0 0 8px;color:#0d47a1;font-size:16px;">${escHtml(title)}</h2>
-            ${table}
-          </div>
-        `;
-      }).join("");
-
-      const headerTable = `
-        <table style="width:100%;border-collapse:collapse;font-size:13px;">
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم المعلم</th>
-            <td style="border:1px solid #000;padding:6px;">${escHtml(document.getElementById("teacherName").value)}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">المادة</th>
-            <td style="border:1px solid #000;padding:6px;">${escHtml(document.getElementById("subject").value)}</td>
-          </tr>
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">الصف</th>
-            <td style="border:1px solid #000;padding:6px;">${escHtml(document.getElementById("grade").value)}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">التاريخ</th>
-            <td style="border:1px solid #000;padding:6px;">${escHtml(document.getElementById("visitDate").value)}</td>
-          </tr>
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">رقم الزيارة</th>
-            <td style="border:1px solid #000;padding:6px;">${escHtml(document.getElementById("visitNumber").value)}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم المشرف</th>
-            <td style="border:1px solid #000;padding:6px;">${escHtml(document.getElementById("supervisorName").value)}</td>
-          </tr>
-        </table>
-      `;
-
-      const summaryHtml = `
-        <div style="border:1px solid #000;border-radius:8px;padding:8px;font-weight:bold;">
-          المجموع: ${escHtml(rawTotalEl.textContent)} / ${escHtml(rawMaxEl.textContent)}
-          &nbsp;&nbsp;|&nbsp;&nbsp; النسبة: ${escHtml(percentageEl.textContent)}
-          &nbsp;&nbsp;|&nbsp;&nbsp; الدرجة النهائية: ${escHtml(finalScoreEl.textContent)} / 100
-        </div>
-      `;
-
-      const notesHtml = `
-        <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-top:10px;">
-          <div style="font-weight:bold;margin-bottom:6px;">إيجابيات الحصة</div>
-          <div style="min-height:70px;border:1px solid #000;padding:8px;">${escHtml(document.getElementById("positives").value).replaceAll("\n","<br>")}</div>
-
-          <div style="font-weight:bold;margin:10px 0 6px;">التوصيات والتوجيهات</div>
-          <div style="min-height:70px;border:1px solid #000;padding:8px;">${escHtml(document.getElementById("recommendations").value).replaceAll("\n","<br>")}</div>
-
-          ${buildSignTableHtml()}
-        </div>
-      `;
-
-      const printScript = "<scr" + "ipt>window.onload=function(){window.print();}</scr" + "ipt>";
+    function openPrint(includeWork){
+      const headerTable = buildHeaderTable();
+      const domainsHtml = buildDomainsHtml();
+      const summaryHtml = buildSummaryHtml();
+      const notesHtml = buildNotesHtml();
+      const workHtml = includeWork ? buildWorkPrintHtml() : "";
 
       const html = `
         <!DOCTYPE html>
@@ -368,17 +599,15 @@
             table{width:100%;border-collapse:collapse;font-size:13px}
             th,td{border:1px solid #000;padding:6px;vertical-align:top}
             th{background:#e3f2fd;text-align:center}
-            .page-break{page-break-before:always}
           </style>
         </head>
         <body>
           <h1 style="text-align:center;color:#0d47a1;margin:0 0 10px;">استمارة متابعة معلم</h1>
           <div style="border:1px solid #000;border-radius:8px;padding:10px;margin-bottom:10px;">${headerTable}</div>
-          ${domainBlocks}
+          ${domainsHtml}
           ${summaryHtml}
           ${notesHtml}
-          ${buildWrittenWorkPrintPage()}
-          ${printScript}
+          ${workHtml}
         </body>
         </html>
       `;
@@ -387,23 +616,39 @@
       w.document.open();
       w.document.write(html);
       w.document.close();
+      w.focus();
+      setTimeout(() => w.print(), 350);
     }
 
+    // Clear
+    function clearAll(){
+      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      el("positives").value = "";
+      el("recommendations").value = "";
+      setWorkData([]);
+      calcAll();
+    }
+
+    // Init
     buildDomains();
     calcAll();
+    ensureDefaultWorkRows();
 
     document.addEventListener("change", (e) => {
       if (e.target && e.target.matches('input[type="radio"]')) calcAll();
     });
 
-    document.getElementById("btnClear").addEventListener("click", () => {
-      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-      document.getElementById("positives").value = "";
-      document.getElementById("recommendations").value = "";
-      calcAll();
-    });
+    el("btnSave").addEventListener("click", saveVisit);
+    el("btnPrintEval").addEventListener("click", () => openPrint(false));
+    el("btnPrintBoth").addEventListener("click", () => openPrint(true));
+    el("btnClear").addEventListener("click", clearAll);
 
-    document.getElementById("btnPrint").addEventListener("click", printTwoPages);
+    // Load by URL: ?id=DOC_ID
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    if (id){
+      await loadVisitById(id);
+    }
   </script>
 </body>
 </html>
