@@ -74,14 +74,19 @@
     <div class="box info">
       <label>اسم المعلم</label>
       <input id="teacherName" />
+
       <label>المادة</label>
       <input id="subject" />
+
       <label>الصف</label>
       <input id="grade" />
+
       <label>التاريخ</label>
       <input type="date" id="visitDate" />
+
       <label>رقم الزيارة</label>
       <input type="number" id="visitNumber" />
+
       <label>اسم المشرف</label>
       <input id="supervisorName" />
     </div>
@@ -162,6 +167,8 @@
     let qCounter = 0;
 
     function buildDomains(){
+      domainsEl.innerHTML = "";
+
       rubric.forEach(domain => {
         const wrap = document.createElement("div");
         wrap.className = "domain";
@@ -221,11 +228,13 @@
 
     function calcAll(){
       let raw = 0;
+
       questionMeta.forEach(q => {
         const sel = document.querySelector(`input[name="${q.name}"]:checked`);
         const val = sel ? Number(sel.value) : 0;
         raw += val;
-        document.getElementById(q.scoreId).textContent = String(val);
+        const cell = document.getElementById(q.scoreId);
+        if (cell) cell.textContent = String(val);
       });
 
       const rawMax = questionMeta.length * 4;
@@ -238,14 +247,23 @@
     }
 
     function escHtml(s){
-      return (s || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+      return (s || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;");
     }
 
     function buildSignTableHtml(){
       return `
         <table style="width:100%;border-collapse:collapse;margin-top:14px;">
-          <tr><td style="border:1px solid #000;padding:10px;text-align:center;font-weight:bold;">اسم المعلم</td><td style="border:1px solid #000;padding:10px;text-align:center;font-weight:bold;">اسم المشرف</td></tr>
-          <tr><td style="border:1px solid #000;height:60px;"></td><td style="border:1px solid #000;height:60px;"></td></tr>
+          <tr>
+            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:bold;">اسم المعلم</td>
+            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:bold;">اسم المشرف</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #000;height:60px;"></td>
+            <td style="border:1px solid #000;height:60px;"></td>
+          </tr>
         </table>
       `;
     }
@@ -253,8 +271,16 @@
     function buildWrittenWorkPrintPage(){
       let rows = "";
       for (let i = 0; i < 18; i++) {
-        rows += `<tr><td style="height:28px;border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`;
+        rows += `
+          <tr>
+            <td style="height:28px;border:1px solid #000;"></td>
+            <td style="border:1px solid #000;"></td>
+            <td style="border:1px solid #000;"></td>
+            <td style="border:1px solid #000;"></td>
+          </tr>
+        `;
       }
+
       return `
         <div class="page-break"></div>
         <h2 style="margin:0 0 10px;color:#0d47a1;text-align:center;">متابعة الأعمال التحريرية للطلاب</h2>
