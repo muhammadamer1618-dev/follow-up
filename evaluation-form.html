@@ -26,13 +26,28 @@
     input,textarea{width:100%;padding:8px;margin-top:4px;border:1px solid #cfcfcf;border-radius:8px;box-sizing:border-box}
     textarea{height:70px}
 
-    .rubric{border:1px solid #000;border-radius:10px;overflow:hidden}
-    table{width:100%;border-collapse:collapse;font-size:13px}
+    .rubric{border:1px solid #000;border-radius:10px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+    table{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     th,td{border:1px solid #000;padding:6px;vertical-align:middle}
     th{background:#e3f2fd;text-align:center;font-weight:900}
 
-    .evalCell{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center}
-    .opt{display:flex;gap:6px;align-items:center;justify-content:flex-start;white-space:nowrap}
+    /* Evaluation layout: centered columns */
+    .evalCell{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:18px;
+      align-items:center;
+      justify-items:center;
+    }
+    .opt{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      justify-content:center;
+      white-space:nowrap;
+      width:100%;
+      text-align:center;
+    }
     .opt input{margin:0}
 
     .summary{margin-top:12px;background:#f6fbff;border:1px solid #bbdefb;border-radius:12px;padding:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
@@ -46,29 +61,10 @@
     .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:900}
     .sign-line{height:70px}
 
-    /* ===== Mobile/Tablet fixes ONLY (no logic changes) ===== */
-    .rubric{
-      overflow-x:auto;
-      overflow-y:hidden;
-      -webkit-overflow-scrolling:touch;
-    }
-    .rubric table{
-      min-width:980px;
-    }
-
     @media (max-width: 900px){
       .layout{flex-direction:column}
       .info,.main{width:100%}
-      .btn{padding:10px 12px}
-      .summary{gap:10px}
-    }
-
-    @media (max-width: 520px){
-      body{padding:10px}
-      .title{font-size:20px}
-      .btn{flex:1;min-width:140px}
-      .opt{white-space:nowrap}
-      .rubric table{min-width:1020px}
+      table{min-width:780px}
     }
 
     @media print{
@@ -76,7 +72,7 @@
       .top{display:none !important}
       .box{border:1px solid #000}
       .rubric{overflow:visible}
-      .rubric table{min-width:auto}
+      table{min-width:auto}
     }
   </style>
 </head>
@@ -123,21 +119,13 @@
         <table>
           <thead>
             <tr>
-              <th style="width:36px;">م</th>
-              <th style="width:120px;">المجال</th>
+              <th style="width:40px;">م</th>
+              <th style="width:140px;">المجال</th>
               <th>العنصر</th>
-              <th style="width:330px;">التقييم</th>
-              <th style="width:80px;">درجة العنصر</th>
-              <th style="width:110px;">مستوى الأداء</th>
+              <th style="width:360px;">التقييم</th>
             </tr>
           </thead>
           <tbody id="rubricBody"></tbody>
-          <tfoot>
-            <tr>
-              <td colspan="4" style="text-align:left;font-weight:900;">الدرجة الكلية</td>
-              <td colspan="2" style="text-align:center;font-weight:900;">100</td>
-            </tr>
-          </tfoot>
         </table>
       </div>
 
@@ -307,16 +295,6 @@
           `;
           tr.appendChild(tdEval);
 
-          const tdDeg = document.createElement("td");
-          tdDeg.textContent = "4";
-          tdDeg.style.textAlign = "center";
-          tdDeg.style.fontWeight = "900";
-          tr.appendChild(tdDeg);
-
-          const tdPerf = document.createElement("td");
-          tdPerf.textContent = "";
-          tr.appendChild(tdPerf);
-
           body.appendChild(tr);
         });
       });
@@ -350,7 +328,7 @@
           <td><input type="text" id="st_name_${i}" placeholder="اسم الطالب"></td>
           <td style="text-align:center;"><input type="radio" name="st_${i}" value="correct"></td>
           <td style="text-align:center;"><input type="radio" name="st_${i}" value="partial"></td>
-          <td style="text-align:center;"><input type="radio" name="st_${i}" value="not"></td>
+          <td style="text-align:center;"><input type="radio" name="st_${i}": value="not"></td>
         `;
         wb.appendChild(tr);
       }
