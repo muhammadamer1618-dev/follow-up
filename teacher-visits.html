@@ -55,16 +55,15 @@
 
     <table id="visitsTable" style="display:none;">
       <thead>
-   <tr>
-  <th>اسم المعلم</th>
-  <th>التاريخ</th>
-  <th>رقم الزيارة</th>
-  <th>الصف</th>
-  <th>المادة</th>
-  <th>الدرجة</th>
-  <th>إجراءات</th>
-</tr>
-
+        <tr>
+          <th>اسم المعلم</th>
+          <th>التاريخ</th>
+          <th>رقم الزيارة</th>
+          <th>الصف</th>
+          <th>المادة</th>
+          <th>الدرجة</th>
+          <th>إجراءات</th>
+        </tr>
       </thead>
       <tbody></tbody>
     </table>
@@ -113,11 +112,7 @@
       }
 
       try{
-        const qy = query(
-          collection(db, "visits"),
-          where("teacherCode", "==", code)
-        );
-
+        const qy = query(collection(db, "visits"), where("teacherCode", "==", code));
         const snap = await getDocs(qy);
 
         const tbody = document.querySelector("#visitsTable tbody");
@@ -129,17 +124,13 @@
           return;
         }
 
-        // Convert to array then sort client-side (no index needed)
         const list = [];
-        snap.forEach(d => {
-          const v = d.data();
-          list.push({ id: d.id, ...v });
-        });
+        snap.forEach(d => list.push({ id: d.id, ...d.data() }));
 
         list.sort((a,b) => {
           const da = toSortableDate(a.visitDate);
           const dbb = toSortableDate(b.visitDate);
-          if (dbb !== da) return dbb - da; // newest date first
+          if (dbb !== da) return dbb - da;
           const va = Number(a.visitNumber || 0);
           const vb = Number(b.visitNumber || 0);
           return vb - va;
@@ -151,6 +142,7 @@
         list.forEach(v => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
+            <td>${esc(v.teacherName || "")}</td>
             <td>${esc(v.visitDate || "")}</td>
             <td style="text-align:center;">${esc(String(v.visitNumber || ""))}</td>
             <td>${esc(v.grade || "")}</td>
@@ -184,7 +176,7 @@
       }catch(err){
         el("visitsTable").style.display = "none";
         el("resultInfo").textContent = "";
-        el("errorInfo").textContent = "حصل خطأ في جلب الزيارات. لو أول مرة: تأكد من Rules أو من وجود بيانات محفوظة.";
+        el("errorInfo").textContent = "حصل خطأ في جلب الزيارات. تأكد من Rules أو من وجود زيارات محفوظة.";
         console.error(err);
       }
     }
@@ -236,6 +228,15 @@
     function buildEvaluationPrint(v){
       const grouped = groupAnswers(v.answers);
       let html = "";
+
+      if (!v.answers || !v.answers.length){
+        html += `
+          <div style="border:1px solid #c62828;border-radius:8px;padding:10px;margin-bottom:10px;font-weight:800;">
+            هذه الزيارة تم حفظها بدون بنود التقييم (answers). اطبع زيارات جديدة بعد تحديث الصفحة.
+          </div>
+        `;
+        return html;
+      }
 
       for (const [domain, items] of grouped.entries()){
         let rows = "";
