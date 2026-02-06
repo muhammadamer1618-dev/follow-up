@@ -10,9 +10,9 @@
 
     body{font-family:Arial,sans-serif;background:#f4f8fc;margin:0;padding:12px;color:#000}
     .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-    .title{margin:0;color:#0d47a1;font-size:22px;font-weight:800}
+    .title{margin:0;color:#0d47a1;font-size:22px;font-weight:900}
     .actions{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{border:0;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer;font-weight:700}
+    .btn{border:0;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer;font-weight:900}
     .btn.back{background:#607d8b;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
     .btn.save{background:#2e7d32;color:#fff}
     .btn.clear{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}
@@ -22,42 +22,34 @@
     .info{width:32%}
     .main{width:68%}
 
-    label{font-weight:800;display:block;margin-top:8px}
+    label{font-weight:900;display:block;margin-top:8px}
     input,textarea{width:100%;padding:8px;margin-top:4px;border:1px solid #cfcfcf;border-radius:8px;box-sizing:border-box}
     textarea{height:70px}
 
-    .domain{border:1px solid #90caf9;border-radius:12px;margin-bottom:12px;overflow:hidden}
-    .domain-head{background:#e3f2fd;padding:10px;font-weight:800;color:#0d47a1}
-    .domain-body{padding:10px;background:#fff}
-
+    .rubric{border:1px solid #000;border-radius:10px;overflow:hidden}
     table{width:100%;border-collapse:collapse;font-size:13px}
     th,td{border:1px solid #000;padding:6px;vertical-align:middle}
-    th{background:#e3f2fd;text-align:center}
+    th{background:#e3f2fd;text-align:center;font-weight:900}
 
-    .col-score{width:70px;text-align:center;font-weight:800}
-    .col-eval{width:300px}
-    .eval-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-    .opt{display:inline-flex;align-items:center;gap:6px}
+    .evalCell{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center}
+    .opt{display:flex;gap:6px;align-items:center;justify-content:flex-start;white-space:nowrap}
     .opt input{margin:0}
 
-    .summary{margin-top:10px;background:#f6fbff;border:1px solid #bbdefb;border-radius:12px;padding:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+    .summary{margin-top:12px;background:#f6fbff;border:1px solid #bbdefb;border-radius:12px;padding:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
     .summary b{color:#0d47a1}
-    .summary span{font-weight:800}
-
-    .sign-table{width:100%;border-collapse:collapse;margin-top:14px}
-    .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:800}
-    .sign-line{height:70px}
+    .summary span{font-weight:900}
 
     .workTable input[type="text"]{width:100%;padding:7px;border:1px solid #cfcfcf;border-radius:8px;box-sizing:border-box}
     .workTable input[type="radio"]{transform:scale(1.15)}
 
+    .sign-table{width:100%;border-collapse:collapse;margin-top:14px}
+    .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:900}
+    .sign-line{height:70px}
+
     @media print{
       body{background:#fff;padding:0}
-      .top,.btn{display:none !important}
+      .top{display:none !important}
       .box{border:1px solid #000}
-      .domain{border:1px solid #000}
-      .domain-head{background:#e3f2fd !important}
-      .summary{border:1px solid #000}
     }
   </style>
 </head>
@@ -100,23 +92,43 @@
     </div>
 
     <div class="box main">
-      <div id="domains"></div>
+      <div class="rubric">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:36px;">م</th>
+              <th style="width:120px;">المجال</th>
+              <th>العنصر</th>
+              <th style="width:330px;">التقييم</th>
+              <th style="width:80px;">درجة العنصر</th>
+              <th style="width:110px;">مستوى الأداء</th>
+            </tr>
+          </thead>
+          <tbody id="rubricBody"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4" style="text-align:left;font-weight:900;">الدرجة الكلية</td>
+              <td colspan="2" style="text-align:center;font-weight:900;">100</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
 
       <div class="summary">
-        <div><b>المجموع:</b> <span id="rawTotal">0</span> / <span id="rawMax">0</span></div>
+        <div><b>المجموع:</b> <span id="rawTotal">0</span> / <span id="rawMax">100</span></div>
         <div><b>النسبة:</b> <span id="percentage">0%</span></div>
         <div><b>الدرجة النهائية:</b> <span id="finalScore">0</span> / 100</div>
       </div>
 
-      <label style="margin-top:10px;">إيجابيات الحصة</label>
+      <label style="margin-top:12px;">إيجابيات الحصة</label>
       <textarea id="positives"></textarea>
 
       <label>توصيات وتوجيهات</label>
       <textarea id="recommendations"></textarea>
 
-      <div class="domain" style="margin-top:14px;">
-        <div class="domain-head">متابعة الأعمال التحريرية للطلاب (8 فقط)</div>
-        <div class="domain-body">
+      <div style="margin-top:14px;border:1px solid #000;border-radius:10px;overflow:hidden;">
+        <div style="background:#e3f2fd;padding:10px;font-weight:900;">متابعة الأعمال التحريرية للطلاب (8 فقط)</div>
+        <div style="padding:10px;">
           <table class="workTable" id="workTable">
             <thead>
               <tr>
@@ -126,7 +138,7 @@
                 <th>غير مصحح</th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody id="workBody"></tbody>
           </table>
 
           <table class="sign-table">
@@ -164,148 +176,147 @@
     const el = (id) => document.getElementById(id);
 
     const rubric = [
-      { title: "الرؤية", items: [
-        { label: "القيمة التربوية", max: 4, optTop: "مناسب", optMid: "إلى حد ما", optLow: "غير مناسب" }
+      { domainNo: 1, domain: "الرؤية", items: [
+        { label: "القيمة التربوية", optTop: "مناسب", optMid: "إلى حد ما", optLow: "غير مناسب" }
       ]},
-      { title: "التخطيط للدرس", items: [
-        { label: "التحضير المسبق للدرس", max: 4, optTop: "مكتمل", optMid: "غير مكتمل", optLow: "غير موجود" },
-        { label: "خطة الدرس", max: 4, optTop: "مكتملة ومفصلة", optMid: "غير مكتملة", optLow: "غير موجودة" },
-        { label: "أهداف الدرس", max: 4, optTop: "واضحة وقابلة للقياس", optMid: "أهداف عامة", optLow: "غير موجودة" },
-        { label: "المفاهيم والمصطلحات العلمية", max: 4, optTop: "محددة وواضحة", optMid: "غير محددة بدقة", optLow: "غير موجودة" },
-        { label: "تسلسل خطوات الدرس", max: 4, optTop: "متسلسلة ومصممة جيدًا", optMid: "بعض الشواهد", optLow: "لا توجد شواهد" },
-        { label: "إعدادات الفروق الفردية", max: 4, optTop: "موجود بقوة", optMid: "بعض الشواهد", optLow: "لا توجد شواهد" }
+
+      { domainNo: 2, domain: "التخطيط للدرس", items: [
+        { label: "التحضير بمنصة مدرستي", optTop: "مكتمل", optMid: "غير مكتمل", optLow: "غير موجود" },
+        { label: "خطة الدرس", optTop: "مكتملة ومفصلة", optMid: "غير مكتملة", optLow: "غير موجودة" },
+        { label: "أهداف الدرس", optTop: "واضحة قابلة للقياس", optMid: "أهداف عامة", optLow: "غير موجودة" },
+        { label: "المفاهيم والمصطلحات الهامة", optTop: "محددة وواضحة", optMid: "غير محددة بدقة", optLow: "غير موجودة" },
+        { label: "تسلسل خطوات الدرس", optTop: "متسلسلة ومعدة جيدا", optMid: "يوجد بعض خطوات", optLow: "خطوات قليلة" },
+        { label: "إعدادات الفروق الفردية", optTop: "موجود بقوة", optMid: "بعض الشواهد", optLow: "لا توجد شواهد" }
       ]},
-      { title: "إدارة الصف", items: [
-        { label: "تنظيم المقاعد", max: 3, optTop: "مجموعات", optMid: "خطوط", optLow: "مزعج" },
-        { label: "نظافة الفصل", max: 4, optTop: "اهتمام عال", optMid: "اهتمام مناسب", optLow: "لا يوجد اهتمام" },
-        { label: "البيئة الصفية", max: 4, optTop: "معززة وإيجابية", optMid: "مناسبة", optLow: "غير مناسبة" },
-        { label: "تنظيم مشاركة الطلاب", max: 4, optTop: "منظم", optMid: "إلى حد ما", optLow: "غير منظم" },
-        { label: "الإدارة الصفية", max: 4, optTop: "جيدة وفعالة", optMid: "متوسطة", optLow: "ضعيفة" },
-        { label: "تفعيل القوانين الصفية", max: 3, optTop: "مفعلة وفعالة", optMid: "مفعلة إلى حد ما", optLow: "لا مفعلة" }
+
+      { domainNo: 3, domain: "إدارة الصف", items: [
+        { label: "تنظيم المقاعد", optTop: "مجموعات", optMid: "خطوط", optLow: "مزعج" },
+        { label: "نظافة الفصل", optTop: "اهتمام عال بالنظافة", optMid: "اهتمام مناسب", optLow: "لا يوجد اهتمام" },
+        { label: "البيئة الصفية", optTop: "معززة وإيجابية", optMid: "مناسبة", optLow: "غير مناسبة" },
+        { label: "تنظيم إيجابيات الطلاب", optTop: "منظم", optMid: "إلى حد ما", optLow: "غير منظم" },
+        { label: "الإدارة الصفية", optTop: "جيدة وفعالة", optMid: "متوسطة", optLow: "ضعيفة" },
+        { label: "تفعيل القوانين الصفية", optTop: "مفعلة وفعالة", optMid: "مفعلة وغير مفعلة", optLow: "لا مفعلة" }
       ]},
-      { title: "دعم السلوك", items: [
-        { label: "تفاعل المعلم", max: 4, optTop: "ممتاز", optMid: "مقبول", optLow: "ضعيف" },
-        { label: "سلوك الطلاب", max: 3, optTop: "ممتاز", optMid: "مقبول", optLow: "ضعيف" },
-        { label: "تفاعل الطلاب", max: 4, optTop: "ممتاز وقوي", optMid: "إلى حد ما", optLow: "ضعيف" },
-        { label: "تحفيز المعلم وإلهامه للطلاب", max: 4, optTop: "فعال عال المستوى", optMid: "متوسط", optLow: "محدود" }
+
+      { domainNo: 4, domain: "دعم السلوك", items: [
+        { label: "توجيهات المعلم", optTop: "واضحة وجزائية", optMid: "مبهمة", optLow: "غير موجودة" },
+        { label: "سلوك الطلاب", optTop: "ممتاز", optMid: "مقبول", optLow: "ضعيف" },
+        { label: "تفاعل الطلاب", optTop: "ممتاز وقوي", optMid: "إلى حد ما", optLow: "ضعيف" },
+        { label: "صوت المعلم وتواصله مع الطلاب", optTop: "فعال عال المستوى", optMid: "متوسط", optLow: "محدود" }
       ]},
-      { title: "استراتيجيات التدريس", items: [
-        { label: "خصائص الأسئلة حسب المنظومة", max: 4, optTop: "مطابقة", optMid: "إلى حد ما", optLow: "غير مطابقة" },
-        { label: "تنفيذ استراتيجيات التدريس", max: 4, optTop: "ينفذ", optMid: "إلى حد ما", optLow: "لا ينفذ" },
-        { label: "ممارسة التفكير", max: 4, optTop: "ممارسة ممتازة", optMid: "ممارسة متوسطة", optLow: "ممارسة غير مناسبة" },
-        { label: "أهداف الدرس", max: 4, optTop: "معلنة وتناقش", optMid: "إما مدونة أو تناقش", optLow: "لا مدونة ولا تناقش" }
+
+      { domainNo: 5, domain: "استراتيجيات التدريس", items: [
+        { label: "خصائص الأسئلة حسب المنظومة", optTop: "مطابقة", optMid: "إلى حد ما", optLow: "غير مطابقة" },
+        { label: "تنفيذ استراتيجية التدريس", optTop: "ينفذ", optMid: "إلى حد ما", optLow: "لا ينفذ" },
+        { label: "ممارسة الفصحى", optTop: "ممارسة ممتازة", optMid: "ممارسة متوسطة", optLow: "ممارسة غير مناسبة" },
+        { label: "أهداف الدرس", optTop: "معلنة وتناقش بداية الحصة", optMid: "إما مدونة أو تناقش", optLow: "لا مدونة ولا تناقش" }
       ]},
-      { title: "أدوات مساندة للتعلم", items: [
-        { label: "الوسيلة التعليمية", max: 4, optTop: "مستخدمة", optMid: "محدودة", optLow: "غير مستخدمة" },
-        { label: "تفعيل السبورة", max: 4, optTop: "مناسب جدًا", optMid: "محدود", optLow: "لا يوجد تفعيل" },
-        { label: "تطبيق ما تم التدريب عليه", max: 4, optTop: "مستوى عال", optMid: "مستوى مناسب", optLow: "مستوى ضعيف" }
+
+      { domainNo: 6, domain: "أدوات مساندة للتعلم", items: [
+        { label: "الوسيلة التعليمية", optTop: "مستخدمة", optMid: "محدودة", optLow: "غير مستخدمة" },
+        { label: "تفعيل السبورة التفاعلية", optTop: "مناسب جدا", optMid: "محدود", optLow: "لا يوجد تفعيل" },
+        { label: "تطبيق ما تم التدريب عليه", optTop: "مستوى عال", optMid: "مستوى مناسب", optLow: "مستوى ضعيف" }
       ]},
-      { title: "التقويم الختامي", items: [
-        { label: "ملخص الدرس", max: 4, optTop: "خلاصة جيدة وواضحة", optMid: "خلاصة محدودة", optLow: "لا توجد خلاصة" }
+
+      { domainNo: 7, domain: "التقويم الصفي", items: [
+        { label: "ملخص الدرس", optTop: "خلاصة جيدة وواضحة", optMid: "خلاصة محدودة", optLow: "لا توجد خلاصة" }
       ]}
     ];
 
-    const domainsEl = el("domains");
     const qMeta = [];
+    const body = el("rubricBody");
 
-    function buildDomains(){
-      domainsEl.innerHTML = "";
+    function buildRubric(){
+      body.innerHTML = "";
       qMeta.length = 0;
-      let q = 0;
 
-      rubric.forEach(domain => {
-        const wrap = document.createElement("div");
-        wrap.className = "domain";
+      let idx = 0;
 
-        const head = document.createElement("div");
-        head.className = "domain-head";
-        head.textContent = domain.title;
+      rubric.forEach(group => {
+        const rowspan = group.items.length;
 
-        const body = document.createElement("div");
-        body.className = "domain-body";
-
-        const table = document.createElement("table");
-        table.innerHTML = `
-          <thead>
-            <tr>
-              <th class="col-score">الدرجة</th>
-              <th class="col-eval">التقييم</th>
-              <th>العنصر</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        `;
-        const tbody = table.querySelector("tbody");
-
-        domain.items.forEach(item => {
-          q += 1;
-          const name = "q" + q;
-          const scoreId = "s_" + name;
-
-          const topVal = item.max;
-          const midVal = item.max === 4 ? 3 : 2;
-          const lowVal = 1;
-
+        group.items.forEach((it, i) => {
+          idx += 1;
+          const name = "q" + idx;
           qMeta.push({
             name,
-            domain: domain.title,
-            label: item.label,
-            max: item.max,
-            optTop: item.optTop,
-            optMid: item.optMid,
-            optLow: item.optLow,
-            topVal,
-            midVal,
-            lowVal,
-            scoreId
+            domainNo: group.domainNo,
+            domain: group.domain,
+            label: it.label,
+            optTop: it.optTop,
+            optMid: it.optMid,
+            optLow: it.optLow
           });
 
           const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td class="col-score" id="${scoreId}">0</td>
-            <td class="col-eval">
-              <div class="eval-row">
-                <label class="opt"><input type="radio" name="${name}" value="${topVal}"><span>${item.optTop}</span></label>
-                <label class="opt"><input type="radio" name="${name}" value="${midVal}"><span>${item.optMid}</span></label>
-                <label class="opt"><input type="radio" name="${name}" value="${lowVal}"><span>${item.optLow}</span></label>
-              </div>
-            </td>
-            <td>${item.label}</td>
-          `;
-          tbody.appendChild(tr);
-        });
 
-        body.appendChild(table);
-        wrap.appendChild(head);
-        wrap.appendChild(body);
-        domainsEl.appendChild(wrap);
+          if (i === 0){
+            const tdNo = document.createElement("td");
+            tdNo.textContent = String(group.domainNo);
+            tdNo.style.textAlign = "center";
+            tdNo.style.fontWeight = "900";
+            tdNo.rowSpan = rowspan;
+            tr.appendChild(tdNo);
+
+            const tdDomain = document.createElement("td");
+            tdDomain.textContent = group.domain;
+            tdDomain.style.textAlign = "center";
+            tdDomain.style.fontWeight = "900";
+            tdDomain.rowSpan = rowspan;
+            tr.appendChild(tdDomain);
+          }
+
+          const tdItem = document.createElement("td");
+          tdItem.textContent = it.label;
+          tr.appendChild(tdItem);
+
+          const tdEval = document.createElement("td");
+          tdEval.innerHTML = `
+            <div class="evalCell">
+              <label class="opt"><input type="radio" name="${name}" value="4"><span>${it.optTop}</span></label>
+              <label class="opt"><input type="radio" name="${name}" value="3"><span>${it.optMid}</span></label>
+              <label class="opt"><input type="radio" name="${name}" value="1"><span>${it.optLow}</span></label>
+            </div>
+          `;
+          tr.appendChild(tdEval);
+
+          const tdDeg = document.createElement("td");
+          tdDeg.textContent = "4";
+          tdDeg.style.textAlign = "center";
+          tdDeg.style.fontWeight = "900";
+          tr.appendChild(tdDeg);
+
+          const tdPerf = document.createElement("td");
+          tdPerf.textContent = "";
+          tr.appendChild(tdPerf);
+
+          body.appendChild(tr);
+        });
       });
+
+      if (qMeta.length !== 25){
+        alert("عدد البنود الحالي ليس 25. راجع بيانات الاستمارة.");
+      }
     }
 
     function calcAll(){
       let raw = 0;
-      let rawMax = 0;
-
       qMeta.forEach(m => {
-        rawMax += m.max;
         const sel = document.querySelector(`input[name="${m.name}"]:checked`);
-        const val = sel ? Number(sel.value) : 0;
-        raw += val;
-        const cell = document.getElementById(m.scoreId);
-        if (cell) cell.textContent = String(val);
+        raw += sel ? Number(sel.value) : 0;
       });
 
       el("rawTotal").textContent = String(raw);
-      el("rawMax").textContent = String(rawMax);
+      el("rawMax").textContent = "100";
 
-      const finalScore = rawMax === 0 ? 0 : Math.round((raw / rawMax) * 100);
+      const finalScore = Math.round((raw / 100) * 100);
       el("finalScore").textContent = String(finalScore);
       el("percentage").textContent = String(finalScore) + "%";
     }
 
     function buildWorkRows(){
-      const tbody = document.querySelector("#workTable tbody");
-      tbody.innerHTML = "";
+      const wb = el("workBody");
+      wb.innerHTML = "";
       for (let i = 1; i <= 8; i++){
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -314,7 +325,7 @@
           <td style="text-align:center;"><input type="radio" name="st_${i}" value="partial"></td>
           <td style="text-align:center;"><input type="radio" name="st_${i}" value="not"></td>
         `;
-        tbody.appendChild(tr);
+        wb.appendChild(tr);
       }
     }
 
@@ -352,13 +363,14 @@
         const sel = document.querySelector(`input[name="${m.name}"]:checked`);
         const val = sel ? Number(sel.value) : 0;
         return {
+          domainNo: m.domainNo,
           domain: m.domain,
           itemLabel: m.label,
-          max: m.max,
           optTop: m.optTop,
           optMid: m.optMid,
           optLow: m.optLow,
-          selected: val
+          selected: val,
+          max: 4
         };
       });
 
@@ -374,7 +386,7 @@
         positives: el("positives").value,
         recommendations: el("recommendations").value,
         rawTotal: Number(el("rawTotal").textContent || 0),
-        rawMax: Number(el("rawMax").textContent || 0),
+        rawMax: 100,
         finalScore: Number(el("finalScore").textContent || 0),
         answers,
         writtenWork: getWorkData(),
@@ -391,7 +403,7 @@
       location.href = `teacher-visits.html?code=${encodeURIComponent(teacherCode)}`;
     }
 
-    buildDomains();
+    buildRubric();
     buildWorkRows();
     calcAll();
 
