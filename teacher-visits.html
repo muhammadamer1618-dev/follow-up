@@ -181,39 +181,40 @@
 
     function buildHeaderBlock(v){
       return `
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
-          <div style="font-weight:900;">مدارس الفلاح الأهلية</div>
-          <div style="font-weight:900;">تصميم محمد عامر أحمد</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+          <div style="font-weight:900;font-size:12px;">مدارس الفلاح الأهلية</div>
+          <div style="font-weight:900;font-size:12px;">تصميم محمد عامر أحمد</div>
         </div>
-        <h1 style="text-align:center;color:#0d47a1;margin:0 0 10px;">استمارة متابعة معلم</h1>
-        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <h1 style="text-align:center;color:#0d47a1;margin:0 0 6px;font-size:16px;">استمارة متابعة معلم</h1>
+
+        <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
           <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">كود المعلم</th>
-            <td style="border:1px solid #000;padding:6px;">${esc(v.teacherCode || "")}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم المعلم</th>
-            <td style="border:1px solid #000;padding:6px;">${esc(v.teacherName || "")}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:14%;">كود المعلم</th>
+            <td style="border:1px solid #000;padding:4px;width:16%;">${esc(v.teacherCode || "")}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:14%;">اسم المعلم</th>
+            <td style="border:1px solid #000;padding:4px;width:56%;">${esc(v.teacherName || "")}</td>
           </tr>
           <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">الصف</th>
-            <td style="border:1px solid #000;padding:6px;">${esc(v.grade || "")}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">المادة</th>
-            <td style="border:1px solid #000;padding:6px;">${esc(v.subject || "")}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">الصف</th>
+            <td style="border:1px solid #000;padding:4px;">${esc(v.grade || "")}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">المادة</th>
+            <td style="border:1px solid #000;padding:4px;">${esc(v.subject || "")}</td>
           </tr>
           <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">عنوان الدرس</th>
-            <td style="border:1px solid #000;padding:6px;" colspan="3">${esc(v.lessonTitle || "")}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">عنوان الدرس</th>
+            <td style="border:1px solid #000;padding:4px;" colspan="3">${esc(v.lessonTitle || "")}</td>
           </tr>
           <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">رقم الزيارة</th>
-            <td style="border:1px solid #000;padding:6px;">${esc(String(v.visitNumber || ""))}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم المشرف</th>
-            <td style="border:1px solid #000;padding:6px;">${esc(v.supervisorName || "")}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">رقم الزيارة</th>
+            <td style="border:1px solid #000;padding:4px;">${esc(String(v.visitNumber || ""))}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">اسم المشرف</th>
+            <td style="border:1px solid #000;padding:4px;">${esc(v.supervisorName || "")}</td>
           </tr>
           <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">التاريخ</th>
-            <td style="border:1px solid #000;padding:6px;">${esc(v.visitDate || "")}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">الدرجة النهائية</th>
-            <td style="border:1px solid #000;padding:6px;font-weight:900;">${esc(String(v.finalScore || 0))} / 100</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">التاريخ</th>
+            <td style="border:1px solid #000;padding:4px;">${esc(v.visitDate || "")}</td>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">الدرجة النهائية</th>
+            <td style="border:1px solid #000;padding:4px;font-weight:900;">${esc(String(v.finalScore || 0))} / 100</td>
           </tr>
         </table>
       `;
@@ -244,7 +245,7 @@
     function buildPaperRubricTable(v){
       const answers = Array.isArray(v.answers) ? v.answers : [];
       if (!answers.length){
-        return `<div style="border:1px solid #c62828;padding:10px;border-radius:8px;font-weight:900;">هذه الزيارة لا تحتوي على بنود محفوظة. اعمل زيارة جديدة بعد تحديث الاستمارة.</div>`;
+        return `<div style="border:1px solid #c62828;padding:10px;border-radius:8px;font-weight:900;font-size:12px;">هذه الزيارة لا تحتوي على بنود محفوظة. اعمل زيارة جديدة بعد تحديث الاستمارة.</div>`;
       }
 
       const grouped = new Map();
@@ -252,13 +253,6 @@
         const key = String(a.domainNo || "");
         if (!grouped.has(key)) grouped.set(key, []);
         grouped.get(key).push(a);
-      });
-
-      domainOrder.forEach(d => {
-        const key = String(d.no);
-        if (grouped.has(key)){
-          grouped.get(key).sort((x,y) => 0);
-        }
       });
 
       const rowsp = rowsPerDomain();
@@ -272,43 +266,38 @@
         list.forEach((a, i) => {
           const sel = Number(a.selected || 0);
 
-          const trStart = `<tr>`;
           let cells = "";
 
           if (i === 0){
             cells += `
-              <td rowspan="${rowspan}" style="border:1px solid #000;text-align:center;font-weight:900;width:36px;">${d.no}</td>
-              <td rowspan="${rowspan}" style="border:1px solid #000;text-align:center;font-weight:900;width:120px;">${esc(d.name)}</td>
+              <td rowspan="${rowspan}" style="border:1px solid #000;text-align:center;font-weight:900;width:26px;padding:4px;">${d.no}</td>
+              <td rowspan="${rowspan}" style="border:1px solid #000;text-align:center;font-weight:900;width:92px;padding:4px;">${esc(d.name)}</td>
             `;
           }
 
           cells += `
-            <td style="border:1px solid #000;padding:6px;">${esc(a.itemLabel || "")}</td>
-            <td style="border:1px solid #000;padding:6px;">
-              <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+            <td style="border:1px solid #000;padding:4px;width:220px;">${esc(a.itemLabel || "")}</td>
+            <td style="border:1px solid #000;padding:4px;">
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
                 <span>${circle(sel===4)} ${esc(a.optTop || "")}</span>
                 <span>${circle(sel===3)} ${esc(a.optMid || "")}</span>
                 <span>${circle(sel===1)} ${esc(a.optLow || "")}</span>
               </div>
             </td>
-            <td style="border:1px solid #000;text-align:center;font-weight:900;width:80px;">4</td>
-            <td style="border:1px solid #000;width:110px;"></td>
           `;
 
-          htmlRows += trStart + cells + `</tr>`;
+          htmlRows += `<tr>${cells}</tr>`;
         });
       });
 
       return `
-        <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;">
+        <table style="width:100%;border-collapse:collapse;font-size:11px;margin-top:6px;table-layout:fixed;">
           <thead>
             <tr>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:6px;width:36px;">م</th>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:6px;width:120px;">المجال</th>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">العنصر</th>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">التقييم</th>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:6px;width:80px;">درجة العنصر</th>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:6px;width:110px;">مستوى الأداء</th>
+              <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:26px;">م</th>
+              <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:92px;">المجال</th>
+              <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:220px;">العنصر</th>
+              <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">التقييم</th>
             </tr>
           </thead>
           <tbody>
@@ -316,8 +305,8 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="4" style="border:1px solid #000;text-align:left;font-weight:900;padding:6px;">الدرجة الكلية</td>
-              <td colspan="2" style="border:1px solid #000;text-align:center;font-weight:900;padding:6px;">100</td>
+              <td colspan="3" style="border:1px solid #000;text-align:left;font-weight:900;padding:4px;">الدرجة الكلية</td>
+              <td style="border:1px solid #000;text-align:center;font-weight:900;padding:4px;">100</td>
             </tr>
           </tfoot>
         </table>
@@ -326,22 +315,22 @@
 
     function buildNotesAndSigns(v){
       return `
-        <div style="margin-top:12px;border:1px solid #000;border-radius:10px;padding:10px;">
-          <div style="font-weight:900;margin-bottom:6px;">إيجابيات الحصة</div>
-          <div style="min-height:70px;border:1px solid #000;padding:8px;">${esc(v.positives || "").replaceAll("\n","<br>")}</div>
+        <div style="margin-top:6px;border:1px solid #000;border-radius:8px;padding:8px;">
+          <div style="font-weight:900;margin-bottom:4px;font-size:11px;">إيجابيات الحصة</div>
+          <div style="min-height:42px;border:1px solid #000;padding:6px;font-size:11px;">${esc(v.positives || "").replaceAll("\n","<br>")}</div>
 
-          <div style="font-weight:900;margin:10px 0 6px;">توصيات وتوجيهات</div>
-          <div style="min-height:70px;border:1px solid #000;padding:8px;">${esc(v.recommendations || "").replaceAll("\n","<br>")}</div>
+          <div style="font-weight:900;margin:6px 0 4px;font-size:11px;">توصيات وتوجيهات</div>
+          <div style="min-height:42px;border:1px solid #000;padding:6px;font-size:11px;">${esc(v.recommendations || "").replaceAll("\n","<br>")}</div>
         </div>
 
-        <table style="width:100%;border-collapse:collapse;margin-top:12px;">
+        <table style="width:100%;border-collapse:collapse;margin-top:6px;font-size:11px;">
           <tr>
-            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:900;">توقيع المعلم</td>
-            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:900;">توقيع المشرف</td>
+            <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المعلم</td>
+            <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المشرف</td>
           </tr>
           <tr>
-            <td style="border:1px solid #000;height:70px;"></td>
-            <td style="border:1px solid #000;height:70px;"></td>
+            <td style="border:1px solid #000;height:40px;"></td>
+            <td style="border:1px solid #000;height:40px;"></td>
           </tr>
         </table>
       `;
@@ -355,39 +344,40 @@
         const r = rows[i] || { name:"", status:"" };
         body += `
           <tr>
-            <td style="border:1px solid #000;height:28px;padding:6px;">${esc(r.name || "")}</td>
-            <td style="border:1px solid #000;text-align:center;">${r.status==="correct" ? "✓" : ""}</td>
-            <td style="border:1px solid #000;text-align:center;">${r.status==="partial" ? "✓" : ""}</td>
-            <td style="border:1px solid #000;text-align:center;">${r.status==="not" ? "✓" : ""}</td>
+            <td style="border:1px solid #000;height:26px;padding:5px;font-size:11px;">${esc(r.name || "")}</td>
+            <td style="border:1px solid #000;text-align:center;font-size:11px;">${r.status==="correct" ? "✓" : ""}</td>
+            <td style="border:1px solid #000;text-align:center;font-size:11px;">${r.status==="partial" ? "✓" : ""}</td>
+            <td style="border:1px solid #000;text-align:center;font-size:11px;">${r.status==="not" ? "✓" : ""}</td>
           </tr>
         `;
       }
 
       return `
         <div style="page-break-before:always;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
-          <div style="font-weight:900;">مدارس الفلاح الأهلية</div>
-          <div style="font-weight:900;">تصميم محمد عامر أحمد</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+          <div style="font-weight:900;font-size:12px;">مدارس الفلاح الأهلية</div>
+          <div style="font-weight:900;font-size:12px;">تصميم محمد عامر أحمد</div>
         </div>
-        <h2 style="margin:0 0 10px;color:#0d47a1;text-align:center;">متابعة الأعمال التحريرية للطلاب</h2>
-        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <h2 style="margin:0 0 6px;color:#0d47a1;text-align:center;font-size:15px;">متابعة الأعمال التحريرية للطلاب</h2>
+
+        <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
           <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">اسم الطالب</th>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">مصحح</th>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">غير مكتمل</th>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:6px;">غير مصحح</th>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">اسم الطالب</th>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:90px;">مصحح</th>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:90px;">غير مكتمل</th>
+            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:90px;">غير مصحح</th>
           </tr>
           ${body}
         </table>
 
-        <table style="width:100%;border-collapse:collapse;margin-top:12px;">
+        <table style="width:100%;border-collapse:collapse;margin-top:6px;font-size:11px;">
           <tr>
-            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:900;">توقيع المعلم</td>
-            <td style="border:1px solid #000;padding:10px;text-align:center;font-weight:900;">توقيع المشرف</td>
+            <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المعلم</td>
+            <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المشرف</td>
           </tr>
           <tr>
-            <td style="border:1px solid #000;height:70px;"></td>
-            <td style="border:1px solid #000;height:70px;"></td>
+            <td style="border:1px solid #000;height:40px;"></td>
+            <td style="border:1px solid #000;height:40px;"></td>
           </tr>
         </table>
       `;
@@ -414,10 +404,10 @@
           <meta charset="UTF-8" />
           <title>طباعة</title>
           <style>
-            @page { size: A4; margin: 12mm; }
+            @page { size: A4; margin: 10mm; }
             body{font-family:Arial,sans-serif;margin:0;color:#000}
-            table{width:100%;border-collapse:collapse;font-size:13px}
-            th,td{border:1px solid #000;padding:6px;vertical-align:middle}
+            table{width:100%;border-collapse:collapse}
+            th,td{border:1px solid #000;vertical-align:middle}
             th{background:#e3f2fd;text-align:center;font-weight:900}
           </style>
         </head>
