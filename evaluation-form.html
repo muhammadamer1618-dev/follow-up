@@ -168,6 +168,8 @@
 
     function buildDomains(){
       domainsEl.innerHTML = "";
+      questionMeta.length = 0;
+      qCounter = 0;
 
       rubric.forEach(domain => {
         const wrap = document.createElement("div");
@@ -352,6 +354,8 @@
         </div>
       `;
 
+      const printScript = "<scr" + "ipt>window.onload=function(){window.print();}</scr" + "ipt>";
+
       const html = `
         <!DOCTYPE html>
         <html lang="ar" dir="rtl">
@@ -374,7 +378,7 @@
           ${summaryHtml}
           ${notesHtml}
           ${buildWrittenWorkPrintPage()}
-          <script>window.onload=function(){window.print();}</script>
+          ${printScript}
         </body>
         </html>
       `;
