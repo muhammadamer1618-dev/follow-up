@@ -277,12 +277,19 @@
 
           cells += `
             <td style="border:1px solid #000;padding:4px;width:220px;">${esc(a.itemLabel || "")}</td>
-            <td style="border:1px solid #000;padding:4px;">
-              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-                <span>${circle(sel===4)} ${esc(a.optTop || "")}</span>
-                <span>${circle(sel===3)} ${esc(a.optMid || "")}</span>
-                <span>${circle(sel===1)} ${esc(a.optLow || "")}</span>
-              </div>
+            <td style="border:1px solid #000;padding:0;">
+              <table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:11px;">
+                <colgroup>
+                  <col style="width:34%">
+                  <col style="width:33%">
+                  <col style="width:33%">
+                </colgroup>
+                <tr>
+                  <td style="border-left:1px solid #000;padding:4px;">${circle(sel===4)} ${esc(a.optTop || "")}</td>
+                  <td style="border-left:1px solid #000;padding:4px;">${circle(sel===3)} ${esc(a.optMid || "")}</td>
+                  <td style="padding:4px;">${circle(sel===1)} ${esc(a.optLow || "")}</td>
+                </tr>
+              </table>
             </td>
           `;
 
