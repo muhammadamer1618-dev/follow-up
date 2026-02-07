@@ -6,437 +6,161 @@
   <title>زيارات المعلمين</title>
 
   <style>
-    body{font-family:Arial,sans-serif;background:#f4f8fc;margin:0;padding:12px;color:#000}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-    .title{margin:0;color:#0d47a1;font-size:22px;font-weight:900}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{border:0;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer;font-weight:900}
-    .btn.back{background:#607d8b;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
-    .btn.search{background:#1976d2;color:#fff}
-    .btn.print{background:#0d47a1;color:#fff}
-    .btn.del{background:#c62828;color:#fff}
+    body{
+      font-family:Arial,sans-serif;
+      background:#f4f8fc;
+      margin:0;
+      padding:12px;
+    }
 
-    .box{background:#fff;border:1px solid #bbdefb;border-radius:12px;padding:12px}
-    label{font-weight:900;display:block}
-    input{width:min(420px,100%);padding:10px;border:1px solid #cfcfcf;border-radius:10px;box-sizing:border-box;margin-top:6px}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+    h1{
+      color:#0d47a1;
+      margin:0 0 10px;
+      font-size:22px;
+      font-weight:900;
+    }
 
-    table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
-    th,td{border:1px solid #000;padding:8px;vertical-align:middle}
-    th{background:#e3f2fd;text-align:center;font-weight:900}
+    .box{
+      background:#fff;
+      border:1px solid #bbdefb;
+      border-radius:12px;
+      padding:12px;
+      margin-bottom:12px;
+    }
 
-    .muted{color:#607d8b;font-weight:800;margin-top:10px}
-    .err{color:#c62828;font-weight:900;margin-top:10px}
+    label{
+      font-weight:900;
+      display:block;
+      margin-bottom:4px;
+    }
+
+    input{
+      width:100%;
+      padding:8px;
+      border:1px solid #ccc;
+      border-radius:8px;
+      margin-bottom:8px;
+    }
+
+    button{
+      padding:8px 14px;
+      border:0;
+      border-radius:8px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .btn-show{background:#1976d2;color:#fff}
+    .btn-print{background:#2e7d32;color:#fff}
+    .btn-delete{background:#c62828;color:#fff}
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+    }
+
+    th,td{
+      border:1px solid #000;
+      padding:6px;
+      text-align:center;
+      font-size:14px;
+    }
+
+    th{
+      background:#e3f2fd;
+      font-weight:900;
+    }
   </style>
 </head>
 
 <body>
-  <div class="top">
-    <h1 class="title">زيارات المعلمين</h1>
-    <div class="actions">
-      <a class="btn back" href="index.html">الرجوع للرئيسية</a>
-      <a class="btn back" href="evaluation-form.html">استمارة التقييم</a>
-    </div>
+
+  <h1>زيارات المعلمين</h1>
+
+  <div class="box">
+    <label>كود المعلم</label>
+    <input id="teacherCode" placeholder="اكتب كود المعلم" />
+    <button class="btn-show" id="btnLoad">عرض الزيارات</button>
   </div>
 
   <div class="box">
-    <div class="row">
-      <div>
-        <label>كود المعلم</label>
-        <input id="teacherCode" placeholder="مثال: 12345" />
-      </div>
-      <button class="btn search" id="btnSearch">عرض زيارات المعلم</button>
-    </div>
-
-    <div class="muted" id="resultInfo"></div>
-    <div class="err" id="errorInfo"></div>
-
-    <table id="visitsTable" style="display:none;">
+    <table>
       <thead>
         <tr>
-          <th>اسم المعلم</th>
-          <th>التاريخ</th>
           <th>رقم الزيارة</th>
-          <th>الصف</th>
+          <th>اسم المعلم</th>
           <th>المادة</th>
+          <th>الصف</th>
+          <th>التاريخ</th>
           <th>الدرجة</th>
           <th>إجراءات</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody id="visitsBody"></tbody>
     </table>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-    import {
-      getFirestore, collection, query, where, getDocs, doc, getDoc, deleteDoc
-    } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
-      authDomain: "follow-up-2026.firebaseapp.com",
-      projectId: "follow-up-2026",
-      storageBucket: "follow-up-2026.firebasestorage.app",
-      messagingSenderId: "1077131515114",
-      appId: "1:1077131515114:web:d10d9c5228382d7cfdb393"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
+    authDomain: "follow-up-2026.firebaseapp.com",
+    projectId: "follow-up-2026",
+    storageBucket: "follow-up-2026.firebasestorage.app",
+    messagingSenderId: "1077131515114",
+    appId: "1:1077131515114:web:d10d9c5228382d7cfdb393"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-    const el = (id) => document.getElementById(id);
+  const body = document.getElementById("visitsBody");
+  const codeInput = document.getElementById("teacherCode");
 
-    function esc(s){
-      return (s || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
-    }
+  async function loadVisits(){
+    body.innerHTML = "";
+    const code = codeInput.value.trim();
+    if(!code) return;
 
-    function circle(on){
-      return on ? "◉" : "○";
-    }
+    const q = query(collection(db,"visits"), where("teacherCode","==",code));
+    const snap = await getDocs(q);
 
-    function toSortableDate(s){
-      if (!s) return 0;
-      const t = Date.parse(s);
-      return Number.isFinite(t) ? t : 0;
-    }
+    snap.forEach(d=>{
+      const v = d.data();
+      const tr = document.createElement("tr");
 
-    async function loadVisits(){
-      const code = el("teacherCode").value.trim();
-      el("errorInfo").textContent = "";
-      if (!code){
-        alert("اكتب كود المعلم");
-        return;
-      }
-
-      try{
-        const qy = query(collection(db, "visits"), where("teacherCode", "==", code));
-        const snap = await getDocs(qy);
-
-        const tbody = document.querySelector("#visitsTable tbody");
-        tbody.innerHTML = "";
-
-        if (snap.empty){
-          el("resultInfo").textContent = "لا توجد زيارات لهذا المعلم";
-          el("visitsTable").style.display = "none";
-          return;
-        }
-
-        const list = [];
-        snap.forEach(d => list.push({ id: d.id, ...d.data() }));
-
-        list.sort((a,b) => {
-          const da = toSortableDate(a.visitDate);
-          const dbb = toSortableDate(b.visitDate);
-          if (dbb !== da) return dbb - da;
-          const va = Number(a.visitNumber || 0);
-          const vb = Number(b.visitNumber || 0);
-          return vb - va;
-        });
-
-        el("resultInfo").textContent = `عدد الزيارات: ${list.length}`;
-        el("visitsTable").style.display = "table";
-
-        list.forEach(v => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${esc(v.teacherName || "")}</td>
-            <td>${esc(v.visitDate || "")}</td>
-            <td style="text-align:center;">${esc(String(v.visitNumber || ""))}</td>
-            <td>${esc(v.grade || "")}</td>
-            <td>${esc(v.subject || "")}</td>
-            <td style="text-align:center;font-weight:900;">${esc(String(v.finalScore || 0))} / 100</td>
-            <td style="text-align:center;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-              <button class="btn print" data-print="${esc(v.id)}">طباعة</button>
-              <button class="btn del" data-del="${esc(v.id)}">مسح</button>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
-
-        tbody.querySelectorAll("button[data-print]").forEach(btn => {
-          btn.addEventListener("click", async () => {
-            const id = btn.getAttribute("data-print");
-            await printVisit(id);
-          });
-        });
-
-        tbody.querySelectorAll("button[data-del]").forEach(btn => {
-          btn.addEventListener("click", async () => {
-            const id = btn.getAttribute("data-del");
-            const ok = confirm("تأكيد مسح هذه الزيارة نهائياً؟");
-            if (!ok) return;
-            await deleteDoc(doc(db, "visits", id));
-            await loadVisits();
-          });
-        });
-
-      }catch(err){
-        el("visitsTable").style.display = "none";
-        el("resultInfo").textContent = "";
-        el("errorInfo").textContent = "حصل خطأ في جلب الزيارات.";
-        console.error(err);
-      }
-    }
-
-    function buildHeaderBlock(v){
-      return `
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-          <div style="font-weight:900;font-size:12px;">مدارس الفلاح الأهلية</div>
-          <div style="font-weight:900;font-size:12px;">تصميم محمد عامر أحمد</div>
-        </div>
-        <h1 style="text-align:center;color:#0d47a1;margin:0 0 6px;font-size:16px;">استمارة متابعة معلم</h1>
-
-        <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:14%;">كود المعلم</th>
-            <td style="border:1px solid #000;padding:4px;width:16%;">${esc(v.teacherCode || "")}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:14%;">اسم المعلم</th>
-            <td style="border:1px solid #000;padding:4px;width:56%;">${esc(v.teacherName || "")}</td>
-          </tr>
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">الصف</th>
-            <td style="border:1px solid #000;padding:4px;">${esc(v.grade || "")}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">المادة</th>
-            <td style="border:1px solid #000;padding:4px;">${esc(v.subject || "")}</td>
-          </tr>
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">عنوان الدرس</th>
-            <td style="border:1px solid #000;padding:4px;" colspan="3">${esc(v.lessonTitle || "")}</td>
-          </tr>
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">رقم الزيارة</th>
-            <td style="border:1px solid #000;padding:4px;">${esc(String(v.visitNumber || ""))}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">اسم المشرف</th>
-            <td style="border:1px solid #000;padding:4px;">${esc(v.supervisorName || "")}</td>
-          </tr>
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">التاريخ</th>
-            <td style="border:1px solid #000;padding:4px;">${esc(v.visitDate || "")}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">الدرجة النهائية</th>
-            <td style="border:1px solid #000;padding:4px;font-weight:900;">${esc(String(v.finalScore || 0))} / 100</td>
-          </tr>
-        </table>
+      tr.innerHTML = `
+        <td>${v.visitNumber || ""}</td>
+        <td>${v.teacherName}</td>
+        <td>${v.subject}</td>
+        <td>${v.grade}</td>
+        <td>${v.visitDate || ""}</td>
+        <td>${v.finalScore || 0}</td>
+        <td>
+          <button class="btn-print" onclick="printVisit('${d.id}')">طباعة</button>
+          <button class="btn-delete" onclick="deleteVisit('${d.id}')">مسح</button>
+        </td>
       `;
+      body.appendChild(tr);
+    });
+  }
+
+  window.printVisit = (id)=>{
+    window.open(`print-visit.html?id=${id}`,"_blank");
+  }
+
+  window.deleteVisit = async(id)=>{
+    if(confirm("مسح الزيارة؟")){
+      await deleteDoc(doc(db,"visits",id));
+      loadVisits();
     }
+  }
 
-    const domainOrder = [
-      { no: 1, name: "الرؤية" },
-      { no: 2, name: "التخطيط للدرس" },
-      { no: 3, name: "إدارة الصف" },
-      { no: 4, name: "دعم السلوك" },
-      { no: 5, name: "استراتيجيات التدريس" },
-      { no: 6, name: "أدوات مساندة للتعلم" },
-      { no: 7, name: "التقويم الصفي" }
-    ];
+  document.getElementById("btnLoad").addEventListener("click", loadVisits);
+</script>
 
-    function rowsPerDomain(){
-      return new Map([
-        [1, 1],
-        [2, 6],
-        [3, 6],
-        [4, 4],
-        [5, 4],
-        [6, 3],
-        [7, 1]
-      ]);
-    }
-
-    function buildPaperRubricTable(v){
-      const answers = Array.isArray(v.answers) ? v.answers : [];
-      if (!answers.length){
-        return `<div style="border:1px solid #c62828;padding:10px;border-radius:8px;font-weight:900;font-size:12px;">هذه الزيارة لا تحتوي على بنود محفوظة. اعمل زيارة جديدة بعد تحديث الاستمارة.</div>`;
-      }
-
-      const grouped = new Map();
-      answers.forEach(a => {
-        const key = String(a.domainNo || "");
-        if (!grouped.has(key)) grouped.set(key, []);
-        grouped.get(key).push(a);
-      });
-
-      const rowsp = rowsPerDomain();
-      let htmlRows = "";
-
-      domainOrder.forEach(d => {
-        const key = String(d.no);
-        const list = grouped.get(key) || [];
-        const rowspan = rowsp.get(d.no) || list.length || 1;
-
-        list.forEach((a, i) => {
-          const sel = Number(a.selected || 0);
-
-          let cells = "";
-
-          if (i === 0){
-            cells += `
-              <td rowspan="${rowspan}" style="border:1px solid #000;text-align:center;font-weight:900;width:26px;padding:4px;">${d.no}</td>
-              <td rowspan="${rowspan}" style="border:1px solid #000;text-align:center;font-weight:900;width:92px;padding:4px;">${esc(d.name)}</td>
-            `;
-          }
-
-          cells += `
-            <td style="border:1px solid #000;padding:4px;width:220px;">${esc(a.itemLabel || "")}</td>
-            <td style="border:1px solid #000;padding:0;">
-              <table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:11px;">
-                <colgroup>
-                  <col style="width:34%">
-                  <col style="width:33%">
-                  <col style="width:33%">
-                </colgroup>
-                <tr>
-                  <td style="border-left:1px solid #000;padding:4px;">${circle(sel===4)} ${esc(a.optTop || "")}</td>
-                  <td style="border-left:1px solid #000;padding:4px;">${circle(sel===3)} ${esc(a.optMid || "")}</td>
-                  <td style="padding:4px;">${circle(sel===1)} ${esc(a.optLow || "")}</td>
-                </tr>
-              </table>
-            </td>
-          `;
-
-          htmlRows += `<tr>${cells}</tr>`;
-        });
-      });
-
-      return `
-        <table style="width:100%;border-collapse:collapse;font-size:11px;margin-top:6px;table-layout:fixed;">
-          <thead>
-            <tr>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:26px;">م</th>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:92px;">المجال</th>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:220px;">العنصر</th>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">التقييم</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${htmlRows}
-          </tbody>
-        </table>
-      `;
-    }
-
-    function buildNotesAndSigns(v){
-      return `
-        <div style="margin-top:6px;border:1px solid #000;border-radius:8px;padding:8px;">
-          <div style="font-weight:900;margin-bottom:4px;font-size:11px;">إيجابيات الحصة</div>
-          <div style="min-height:38px;border:1px solid #000;padding:6px;font-size:11px;">${esc(v.positives || "").replaceAll("\n","<br>")}</div>
-
-          <div style="font-weight:900;margin:6px 0 4px;font-size:11px;">توصيات وتوجيهات</div>
-          <div style="min-height:38px;border:1px solid #000;padding:6px;font-size:11px;">${esc(v.recommendations || "").replaceAll("\n","<br>")}</div>
-        </div>
-
-        <table style="width:100%;border-collapse:collapse;margin-top:6px;font-size:11px;">
-          <tr>
-            <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المعلم</td>
-            <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المشرف</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid #000;height:28px;"></td>
-            <td style="border:1px solid #000;height:28px;"></td>
-          </tr>
-        </table>
-      `;
-    }
-
-    function buildWorkPrint(v){
-      const rows = (v.writtenWork || []).slice(0,8);
-      let body = "";
-
-      for (let i = 0; i < 8; i++){
-        const r = rows[i] || { name:"", status:"" };
-        body += `
-          <tr>
-            <td style="border:1px solid #000;height:26px;padding:5px;font-size:11px;">${esc(r.name || "")}</td>
-            <td style="border:1px solid #000;text-align:center;font-size:11px;">${r.status==="correct" ? "✓" : ""}</td>
-            <td style="border:1px solid #000;text-align:center;font-size:11px;">${r.status==="partial" ? "✓" : ""}</td>
-            <td style="border:1px solid #000;text-align:center;font-size:11px;">${r.status==="not" ? "✓" : ""}</td>
-          </tr>
-        `;
-      }
-
-      return `
-        <div style="page-break-before:always;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-          <div style="font-weight:900;font-size:12px;">مدارس الفلاح الأهلية</div>
-          <div style="font-weight:900;font-size:12px;">تصميم محمد عامر أحمد</div>
-        </div>
-        <h2 style="margin:0 0 6px;color:#0d47a1;text-align:center;font-size:15px;">متابعة الأعمال التحريرية للطلاب</h2>
-
-        <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">اسم الطالب</th>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:90px;">مصحح</th>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:90px;">غير مكتمل</th>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:90px;">غير مصحح</th>
-          </tr>
-          ${body}
-        </table>
-
-        <table style="width:100%;border-collapse:collapse;margin-top:6px;font-size:11px;">
-          <tr>
-            <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المعلم</td>
-            <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المشرف</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid #000;height:28px;"></td>
-            <td style="border:1px solid #000;height:28px;"></td>
-          </tr>
-        </table>
-      `;
-    }
-
-    async function printVisit(id){
-      const snap = await getDoc(doc(db, "visits", id));
-      if (!snap.exists()){
-        alert("الزيارة غير موجودة");
-        return;
-      }
-
-      const v = snap.data();
-
-      const header = buildHeaderBlock(v);
-      const rubricTable = buildPaperRubricTable(v);
-      const notes = buildNotesAndSigns(v);
-      const work = buildWorkPrint(v);
-
-      const html = `
-        <!DOCTYPE html>
-        <html lang="ar" dir="rtl">
-        <head>
-          <meta charset="UTF-8" />
-          <title>طباعة</title>
-          <style>
-            @page { size: A4; margin: 10mm; }
-            body{font-family:Arial,sans-serif;margin:0;color:#000}
-            table{width:100%;border-collapse:collapse}
-            th,td{border:1px solid #000;vertical-align:middle}
-            th{background:#e3f2fd;text-align:center;font-weight:900}
-          </style>
-        </head>
-        <body>
-          ${header}
-          ${rubricTable}
-          ${notes}
-          ${work}
-        </body>
-        </html>
-      `;
-
-      const w = window.open("", "_blank");
-      w.document.open();
-      w.document.write(html);
-      w.document.close();
-      w.focus();
-      setTimeout(() => w.print(), 350);
-    }
-
-    el("btnSearch").addEventListener("click", loadVisits);
-
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    if (code){
-      el("teacherCode").value = code;
-      await loadVisits();
-    }
-  </script>
 </body>
 </html>
