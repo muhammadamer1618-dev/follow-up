@@ -887,8 +887,9 @@
         createdAt: serverTimestamp()
       };
 
-      await addDoc(collection(db, "visits"), payload);
-
+const docRef = await addDoc(collection(db, "visits"), payload);
+const visitId = docRef.id;
+      
       lastSavedVisitPayload = payload;
 
       el("btnSendWhats").disabled = false;
