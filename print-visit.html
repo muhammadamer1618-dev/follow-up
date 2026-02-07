@@ -2,128 +2,237 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>طباعة الزيارة</title>
+<title>طباعة استمارة تقييم</title>
 
 <style>
-@page{size:A4;margin:10mm}
-body{font-family:Arial,sans-serif;margin:0;color:#000}
-h1,h2{margin:4px 0;text-align:center}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th,td{border:1px solid #000;padding:6px;vertical-align:middle}
-th{background:#e3f2fd;font-weight:900;text-align:center}
-.section{margin-top:8px}
-.box{border:1px solid #000;padding:6px;min-height:45px}
-.sign td{height:35px}
-.circle{font-size:14px;font-weight:900}
-.page-break{page-break-before:always}
+@page{size:A4;margin:12mm}
+
+body{
+  font-family:Arial,sans-serif;
+  color:#000;
+  margin:0;
+}
+
+h1,h2{
+  text-align:center;
+  margin:4px 0;
+}
+
+.school{
+  text-align:center;
+  font-weight:900;
+  font-size:20px;
+}
+
+.designer{
+  text-align:center;
+  font-size:12px;
+  margin-bottom:8px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-bottom:8px;
+  font-size:13px;
+}
+
+th,td{
+  border:1px solid #000;
+  padding:5px;
+  vertical-align:middle;
+}
+
+th{
+  background:#eee;
+  font-weight:900;
+  text-align:center;
+}
+
+.center{text-align:center}
+
+.circle{
+  display:inline-block;
+  width:14px;
+  height:14px;
+  border:1px solid #000;
+  border-radius:50%;
+  margin-left:4px;
+}
+
+.fill{
+  background:#000;
+}
+
+.page-break{
+  page-break-before:always;
+}
+
+.sign{
+  height:60px;
+}
+
+.small{
+  font-size:12px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- ===== Header ===== -->
-<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:900">
-  <div>مدارس الفلاح الأهلية</div>
-  <div>تصميم محمد عامر أحمد</div>
-</div>
+<div class="school">مدارس الفلاح الأهلية</div>
+<div class="designer">تصميم محمد عامر أحمد</div>
 
-<h1>استمارة دعم وتطوير الهيئة التعليمية</h1>
-
-<!-- ===== Teacher Data ===== -->
+<!-- بيانات المعلم -->
 <table>
 <tr>
-  <th>كود المعلم</th><td>{{teacherCode}}</td>
-  <th>اسم المعلم</th><td>{{teacherName}}</td>
-  <th>رقم الزيارة</th><td>{{visitNumber}}</td>
+<th>اسم المعلم</th><td id="tName"></td>
+<th>كود المعلم</th><td id="tCode"></td>
 </tr>
-
 <tr>
-  <th>الصف</th><td>{{grade}}</td>
-  <th>المادة</th><td>{{subject}}</td>
-  <th></th><td></td>
+<th>المادة</th><td id="subject"></td>
+<th>الصف</th><td id="grade"></td>
 </tr>
-
 <tr>
-  <th>عنوان الدرس</th>
-  <td colspan="3">{{lessonTitle}}</td>
-  <th>تاريخ الزيارة</th>
-  <td>{{visitDate}}</td>
+<th>عنوان الدرس</th><td id="lesson" colspan="3"></td>
 </tr>
-
 <tr>
-  <th>اسم المشرف</th>
-  <td colspan="5">{{supervisorName}}</td>
+<th>رقم الزيارة</th><td id="visit"></td>
+<th>التاريخ</th><td id="date"></td>
+</tr>
+<tr>
+<th>اسم المشرف</th><td id="supervisor" colspan="3"></td>
 </tr>
 </table>
 
-<!-- ===== Rubric ===== -->
-<div class="section">
+<!-- جدول التقييم -->
 <table>
 <thead>
 <tr>
-  <th style="width:35px">م</th>
-  <th style="width:120px">المجال</th>
-  <th>العنصر</th>
-  <th style="width:33%">التقييم</th>
+<th>المجال</th>
+<th>العنصر</th>
+<th class="center">مناسب</th>
+<th class="center">إلى حد ما</th>
+<th class="center">غير مناسب</th>
 </tr>
 </thead>
-<tbody>
-
-{{RUBRIC_ROWS}}
-
-</tbody>
+<tbody id="rubric"></tbody>
 </table>
-</div>
-
-<!-- ===== Notes ===== -->
-<div class="section">
-<b>إيجابيات الحصة</b>
-<div class="box">{{positives}}</div>
-</div>
-
-<div class="section">
-<b>توصيات وتوجيهات</b>
-<div class="box">{{recommendations}}</div>
-</div>
-
-<table class="section sign">
-<tr>
-  <th>توقيع المعلم</th>
-  <th>توقيع المشرف</th>
-</tr>
-<tr>
-  <td></td>
-  <td></td>
-</tr>
-</table>
-
-<!-- ===== Page 2 ===== -->
-<div class="page-break"></div>
-
-<h2>متابعة الأعمال التحريرية للطلاب</h2>
 
 <table>
 <tr>
-  <th>اسم الطالب</th>
-  <th>مصحح</th>
-  <th>غير مكتمل</th>
-  <th>غير مصحح</th>
-</tr>
-
-{{WORK_ROWS}}
-
-</table>
-
-<table class="section sign">
-<tr>
-  <th>توقيع المعلم</th>
-  <th>توقيع المشرف</th>
+<th>إيجابيات الحصة</th>
 </tr>
 <tr>
-  <td></td>
-  <td></td>
+<td id="positives" style="height:70px"></td>
 </tr>
 </table>
+
+<table>
+<tr>
+<th>توصيات وتوجيهات</th>
+</tr>
+<tr>
+<td id="recommendations" style="height:70px"></td>
+</tr>
+</table>
+
+<table>
+<tr>
+<th>توقيع المعلم</th>
+<th>توقيع المشرف</th>
+</tr>
+<tr>
+<td class="sign"></td>
+<td class="sign"></td>
+</tr>
+</table>
+
+<!-- الصفحة الثانية -->
+<div class="page-break"></div>
+
+<h2>متابعة الأعمال التحريرية للطلاب (8 فقط)</h2>
+
+<table>
+<thead>
+<tr>
+<th>اسم الطالب</th>
+<th class="center">مصحح</th>
+<th class="center">غير مكتمل</th>
+<th class="center">غير مصحح</th>
+</tr>
+</thead>
+<tbody id="works"></tbody>
+</table>
+
+<table>
+<tr>
+<th>توقيع المعلم</th>
+<th>توقيع المشرف</th>
+</tr>
+<tr>
+<td class="sign"></td>
+<td class="sign"></td>
+</tr>
+</table>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
+  authDomain: "follow-up-2026.firebaseapp.com",
+  projectId: "follow-up-2026"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const id = new URLSearchParams(location.search).get("id");
+const snap = await getDoc(doc(db,"visits",id));
+const v = snap.data();
+
+const byId = i => document.getElementById(i);
+
+byId("tName").textContent = v.teacherName;
+byId("tCode").textContent = v.teacherCode;
+byId("subject").textContent = v.subject;
+byId("grade").textContent = v.grade;
+byId("lesson").textContent = v.lessonTitle;
+byId("visit").textContent = v.visitNumber;
+byId("date").textContent = v.visitDate;
+byId("supervisor").textContent = v.supervisorName;
+byId("positives").textContent = v.positives;
+byId("recommendations").textContent = v.recommendations;
+
+const rb = byId("rubric");
+v.answers.forEach(a=>{
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${a.domain}</td>
+    <td>${a.itemLabel}</td>
+    <td class="center"><span class="circle ${a.selected==4?'fill':''}"></span></td>
+    <td class="center"><span class="circle ${a.selected==3?'fill':''}"></span></td>
+    <td class="center"><span class="circle ${a.selected==1?'fill':''}"></span></td>
+  `;
+  rb.appendChild(tr);
+});
+
+const wb = byId("works");
+v.writtenWork.forEach(r=>{
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${r.name}</td>
+    <td class="center"><span class="circle ${r.status=='correct'?'fill':''}"></span></td>
+    <td class="center"><span class="circle ${r.status=='partial'?'fill':''}"></span></td>
+    <td class="center"><span class="circle ${r.status=='not'?'fill':''}"></span></td>
+  `;
+  wb.appendChild(tr);
+});
+
+setTimeout(()=>window.print(),500);
+</script>
 
 </body>
 </html>
