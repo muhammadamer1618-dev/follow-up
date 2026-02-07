@@ -28,109 +28,28 @@
 
     .rubric{border:1px solid #000;border-radius:10px;overflow:hidden}
     table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{border:1px solid #000;padding:8px;vertical-align:middle}
+    th,td{border:1px solid #000;padding:6px;vertical-align:middle}
     th{background:#e3f2fd;text-align:center;font-weight:900}
+
+    .evalCell{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center}
+    .opt{display:flex;gap:6px;align-items:center;justify-content:flex-start;white-space:nowrap}
+    .opt input{margin:0}
 
     .summary{margin-top:12px;background:#f6fbff;border:1px solid #bbdefb;border-radius:12px;padding:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
     .summary b{color:#0d47a1}
     .summary span{font-weight:900}
 
-    /* Radio (print-safe dot) */
-    input[type="radio"]{
-      -webkit-appearance:none;
-      appearance:none;
-      width:18px;height:18px;
-      border:2px solid #666;
-      border-radius:50%;
-      display:inline-grid;
-      place-content:center;
-      background:#fff;
-      margin:0;
-      flex:0 0 auto;
-    }
-    input[type="radio"]::before{
-      content:"";
-      width:9px;height:9px;
-      border-radius:50%;
-      transform:scale(0);
-      background:#111;
-    }
-    input[type="radio"]:checked::before{ transform:scale(1); }
-
-    /* Evaluation as a mini-table with fixed 3 columns */
-    .evalTable{width:100%;border-collapse:collapse;table-layout:fixed}
-    .evalTable td{border:0;padding:0}
-    .evalCell{
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      gap:0;
-      border:1px solid #000;
-      border-right:0;
-      border-left:0;
-      background:#fff;
-    }
-    .evalOpt{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding:10px 6px;
-      border-left:1px solid #000;
-      text-align:center;
-      white-space:nowrap;
-      font-weight:900;
-    }
-    .evalOpt:last-child{border-left:0}
-
-    /* Written work */
-    .workWrap{margin-top:14px;border:1px solid #000;border-radius:10px;overflow:hidden}
-    .workHdr{background:#e3f2fd;padding:10px;font-weight:900;text-align:center}
-    .workInner{padding:10px}
-    .workTable{width:100%;border-collapse:collapse;font-size:13px}
-    .workTable th,.workTable td{border:1px solid #000;padding:10px;vertical-align:middle}
-    .workTable th{background:#e3f2fd;text-align:center;font-weight:900}
-    .workTable input[type="text"]{width:100%;padding:8px;border:1px solid #cfcfcf;border-radius:10px;box-sizing:border-box}
-    .workChoice{
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      align-items:center;
-      gap:0;
-      width:100%;
-    }
-    .workOpt{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      font-weight:900;
-      white-space:nowrap;
-    }
+    .workTable input[type="text"]{width:100%;padding:7px;border:1px solid #cfcfcf;border-radius:8px;box-sizing:border-box}
+    .workTable input[type="radio"]{transform:scale(1.15)}
 
     .sign-table{width:100%;border-collapse:collapse;margin-top:14px}
     .sign-table td{border:1px solid #000;padding:10px;text-align:center;font-weight:900}
     .sign-line{height:70px}
 
-    @media (max-width: 900px){
-      .layout{flex-direction:column}
-      .info,.main{width:100%}
-    }
-
-    /* Mobile: keep everything intact with horizontal scroll (no breaking layout) */
-    @media (max-width: 700px){
-      .rubric{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
-      .rubric table{min-width:980px}
-      .workScroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
-      .workScroll table{min-width:820px}
-    }
-
     @media print{
       body{background:#fff;padding:0}
       .top{display:none !important}
       .box{border:1px solid #000}
-      .rubric{overflow:visible}
-      .rubric table{min-width:auto}
-      .workScroll{overflow:visible}
-      .workScroll table{min-width:auto}
     }
   </style>
 </head>
@@ -177,12 +96,21 @@
         <table>
           <thead>
             <tr>
-              <th style="width:160px;">المجال</th>
-              <th style="width:220px;">العنصر</th>
-              <th>التقييم</th>
+              <th style="width:36px;">م</th>
+              <th style="width:120px;">المجال</th>
+              <th>العنصر</th>
+              <th style="width:330px;">التقييم</th>
+              <th style="width:80px;">درجة العنصر</th>
+              <th style="width:110px;">مستوى الأداء</th>
             </tr>
           </thead>
           <tbody id="rubricBody"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4" style="text-align:left;font-weight:900;">الدرجة الكلية</td>
+              <td colspan="2" style="text-align:center;font-weight:900;">100</td>
+            </tr>
+          </tfoot>
         </table>
       </div>
 
@@ -198,22 +126,20 @@
       <label>توصيات وتوجيهات</label>
       <textarea id="recommendations"></textarea>
 
-      <div class="workWrap">
-        <div class="workHdr">متابعة الأعمال التحريرية للطلاب (8 فقط)</div>
-        <div class="workInner">
-          <div class="workScroll">
-            <table class="workTable">
-              <thead>
-                <tr>
-                  <th style="width:45%;">اسم الطالب</th>
-                  <th>مصحح</th>
-                  <th>غير مكتمل</th>
-                  <th>غير مصحح</th>
-                </tr>
-              </thead>
-              <tbody id="workBody"></tbody>
-            </table>
-          </div>
+      <div style="margin-top:14px;border:1px solid #000;border-radius:10px;overflow:hidden;">
+        <div style="background:#e3f2fd;padding:10px;font-weight:900;">متابعة الأعمال التحريرية للطلاب (8 فقط)</div>
+        <div style="padding:10px;">
+          <table class="workTable" id="workTable">
+            <thead>
+              <tr>
+                <th style="width:45%;">اسم الطالب</th>
+                <th>مصحح</th>
+                <th>غير مكتمل</th>
+                <th>غير مصحح</th>
+              </tr>
+            </thead>
+            <tbody id="workBody"></tbody>
+          </table>
 
           <table class="sign-table">
             <tr>
@@ -250,11 +176,11 @@
     const el = (id) => document.getElementById(id);
 
     const rubric = [
-      { domain: "الرؤية", items: [
+      { domainNo: 1, domain: "الرؤية", items: [
         { label: "القيمة التربوية", optTop: "مناسب", optMid: "إلى حد ما", optLow: "غير مناسب" }
       ]},
 
-      { domain: "التخطيط للدرس", items: [
+      { domainNo: 2, domain: "التخطيط للدرس", items: [
         { label: "التحضير بمنصة مدرستي", optTop: "مكتمل", optMid: "غير مكتمل", optLow: "غير موجود" },
         { label: "خطة الدرس", optTop: "مكتملة ومفصلة", optMid: "غير مكتملة", optLow: "غير موجودة" },
         { label: "أهداف الدرس", optTop: "واضحة قابلة للقياس", optMid: "أهداف عامة", optLow: "غير موجودة" },
@@ -263,7 +189,7 @@
         { label: "إعدادات الفروق الفردية", optTop: "موجود بقوة", optMid: "بعض الشواهد", optLow: "لا توجد شواهد" }
       ]},
 
-      { domain: "إدارة الصف", items: [
+      { domainNo: 3, domain: "إدارة الصف", items: [
         { label: "تنظيم المقاعد", optTop: "مجموعات", optMid: "خطوط", optLow: "مزعج" },
         { label: "نظافة الفصل", optTop: "اهتمام عال بالنظافة", optMid: "اهتمام مناسب", optLow: "لا يوجد اهتمام" },
         { label: "البيئة الصفية", optTop: "معززة وإيجابية", optMid: "مناسبة", optLow: "غير مناسبة" },
@@ -272,27 +198,27 @@
         { label: "تفعيل القوانين الصفية", optTop: "مفعلة وفعالة", optMid: "مفعلة وغير مفعلة", optLow: "لا مفعلة" }
       ]},
 
-      { domain: "دعم السلوك", items: [
+      { domainNo: 4, domain: "دعم السلوك", items: [
         { label: "توجيهات المعلم", optTop: "واضحة وجزائية", optMid: "مبهمة", optLow: "غير موجودة" },
         { label: "سلوك الطلاب", optTop: "ممتاز", optMid: "مقبول", optLow: "ضعيف" },
         { label: "تفاعل الطلاب", optTop: "ممتاز وقوي", optMid: "إلى حد ما", optLow: "ضعيف" },
         { label: "صوت المعلم وتواصله مع الطلاب", optTop: "فعال عال المستوى", optMid: "متوسط", optLow: "محدود" }
       ]},
 
-      { domain: "استراتيجيات التدريس", items: [
+      { domainNo: 5, domain: "استراتيجيات التدريس", items: [
         { label: "خصائص الأسئلة حسب المنظومة", optTop: "مطابقة", optMid: "إلى حد ما", optLow: "غير مطابقة" },
         { label: "تنفيذ استراتيجية التدريس", optTop: "ينفذ", optMid: "إلى حد ما", optLow: "لا ينفذ" },
         { label: "ممارسة الفصحى", optTop: "ممارسة ممتازة", optMid: "ممارسة متوسطة", optLow: "ممارسة غير مناسبة" },
         { label: "أهداف الدرس", optTop: "معلنة وتناقش بداية الحصة", optMid: "إما مدونة أو تناقش", optLow: "لا مدونة ولا تناقش" }
       ]},
 
-      { domain: "أدوات مساندة للتعلم", items: [
+      { domainNo: 6, domain: "أدوات مساندة للتعلم", items: [
         { label: "الوسيلة التعليمية", optTop: "مستخدمة", optMid: "محدودة", optLow: "غير مستخدمة" },
         { label: "تفعيل السبورة التفاعلية", optTop: "مناسب جدا", optMid: "محدود", optLow: "لا يوجد تفعيل" },
         { label: "تطبيق ما تم التدريب عليه", optTop: "مستوى عال", optMid: "مستوى مناسب", optLow: "مستوى ضعيف" }
       ]},
 
-      { domain: "التقويم الصفي", items: [
+      { domainNo: 7, domain: "التقويم الصفي", items: [
         { label: "ملخص الدرس", optTop: "خلاصة جيدة وواضحة", optMid: "خلاصة محدودة", optLow: "لا توجد خلاصة" }
       ]}
     ];
@@ -312,9 +238,9 @@
         group.items.forEach((it, i) => {
           idx += 1;
           const name = "q" + idx;
-
           qMeta.push({
             name,
+            domainNo: group.domainNo,
             domain: group.domain,
             label: it.label,
             optTop: it.optTop,
@@ -325,6 +251,13 @@
           const tr = document.createElement("tr");
 
           if (i === 0){
+            const tdNo = document.createElement("td");
+            tdNo.textContent = String(group.domainNo);
+            tdNo.style.textAlign = "center";
+            tdNo.style.fontWeight = "900";
+            tdNo.rowSpan = rowspan;
+            tr.appendChild(tdNo);
+
             const tdDomain = document.createElement("td");
             tdDomain.textContent = group.domain;
             tdDomain.style.textAlign = "center";
@@ -335,19 +268,27 @@
 
           const tdItem = document.createElement("td");
           tdItem.textContent = it.label;
-          tdItem.style.textAlign = "center";
-          tdItem.style.fontWeight = "900";
           tr.appendChild(tdItem);
 
           const tdEval = document.createElement("td");
           tdEval.innerHTML = `
             <div class="evalCell">
-              <label class="evalOpt"><span>${it.optTop}</span><input type="radio" name="${name}" value="4"></label>
-              <label class="evalOpt"><span>${it.optMid}</span><input type="radio" name="${name}" value="3"></label>
-              <label class="evalOpt"><span>${it.optLow}</span><input type="radio" name="${name}" value="1"></label>
+              <label class="opt"><input type="radio" name="${name}" value="4"><span>${it.optTop}</span></label>
+              <label class="opt"><input type="radio" name="${name}" value="3"><span>${it.optMid}</span></label>
+              <label class="opt"><input type="radio" name="${name}" value="1"><span>${it.optLow}</span></label>
             </div>
           `;
           tr.appendChild(tdEval);
+
+          const tdDeg = document.createElement("td");
+          tdDeg.textContent = "4";
+          tdDeg.style.textAlign = "center";
+          tdDeg.style.fontWeight = "900";
+          tr.appendChild(tdDeg);
+
+          const tdPerf = document.createElement("td");
+          tdPerf.textContent = "";
+          tr.appendChild(tdPerf);
 
           body.appendChild(tr);
         });
@@ -422,6 +363,7 @@
         const sel = document.querySelector(`input[name="${m.name}"]:checked`);
         const val = sel ? Number(sel.value) : 0;
         return {
+          domainNo: m.domainNo,
           domain: m.domain,
           itemLabel: m.label,
           optTop: m.optTop,
