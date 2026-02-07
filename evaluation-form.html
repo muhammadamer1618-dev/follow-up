@@ -14,6 +14,9 @@
       --border:#000;
       --soft:#bbdefb;
       --head:#e3f2fd;
+      --purple:#6a1b9a;
+      --danger:#c62828;
+      --ok:#2e7d32;
     }
 
     body{
@@ -75,11 +78,16 @@
       justify-content:center;
       gap:6px;
       user-select:none;
+      white-space:nowrap;
     }
     .btn.back{background:#607d8b;color:#fff}
-    .btn.save{background:#2e7d32;color:#fff}
+    .btn.save{background:var(--ok);color:#fff}
     .btn.clear{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}
     .btn.print{background:#1976d2;color:#fff}
+    .btn.manage{background:#455a64;color:#fff}
+    .btn.send{background:var(--purple);color:#fff;opacity:.55;cursor:not-allowed}
+    .btn.send.enabled{opacity:1;cursor:pointer}
+    .btn.danger{background:var(--danger);color:#fff}
 
     .layout{
       display:flex;
@@ -142,11 +150,6 @@
 
     .cellCenter{ text-align:center; }
     .cellBold{ font-weight:900; }
-
-    .evalHead{
-      text-align:center;
-      font-weight:900;
-    }
 
     .evalGrid{
       display:grid;
@@ -295,9 +298,7 @@
       .info, .main{ width:100%; }
       .hintScroll{ display:block; }
       .rubricWrap{ overflow:auto; -webkit-overflow-scrolling: touch; }
-      .rubricMin{
-        min-width: 920px;
-      }
+      .rubricMin{ min-width: 920px; }
     }
 
     .pageBreak{
@@ -333,11 +334,13 @@
         border-radius:0;
       }
 
-      .rubricWrap{
-        border-radius:0;
-      }
+      .rubricWrap{ border-radius:0; }
 
-      th{ background:var(--head) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      th{
+        background:var(--head) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
 
       .hintScroll{ display:none !important; }
 
@@ -351,9 +354,84 @@
       .sign-line{ height:45px; }
 
       .pageBreak{ break-before: page; page-break-before: always; }
+
+      .modalOverlay{ display:none !important; }
     }
 
     .printHeader{ display:none; }
+
+    /* Teacher Modal */
+    .modalOverlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:9999;
+    }
+    .modal{
+      width:min(520px, 100%);
+      background:#fff;
+      border:1px solid #cfd8dc;
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 10px 35px rgba(0,0,0,.25);
+    }
+    .modalHeader{
+      background:var(--head);
+      padding:12px 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .modalTitle{
+      font-weight:900;
+      color:#000;
+    }
+    .modalBody{ padding:14px; }
+    .row2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .smallHint{
+      margin-top:8px;
+      font-size:12px;
+      font-weight:900;
+      color:#333;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:12px;
+      background:#f6fbff;
+      border:1px solid var(--soft);
+      color:#0d47a1;
+    }
+    .toggleLine{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:10px;
+      font-weight:900;
+    }
+    .toggleLine input{ width:auto; margin:0; }
+    .modalFooter{
+      padding:12px 14px;
+      display:flex;
+      gap:8px;
+      justify-content:flex-start;
+      flex-wrap:wrap;
+      border-top:1px solid #e0e0e0;
+      background:#fff;
+    }
   </style>
 </head>
 
@@ -367,8 +445,10 @@
 
     <div class="actions">
       <a class="btn back" href="index.html">الرجوع للرئيسية</a>
+      <button class="btn manage" id="btnManageTeacher" type="button">بيانات المعلم (كود/إيميل)</button>
       <button class="btn print" id="btnPrint" type="button">طباعة (صفحتين)</button>
       <button class="btn save" id="btnSave" type="button">حفظ</button>
+      <button class="btn send" id="btnSend" type="button" disabled>إرسال تقرير الزيارة</button>
       <button class="btn clear" id="btnClear" type="button">تفريغ</button>
     </div>
   </div>
@@ -383,7 +463,7 @@
   <div class="layout">
     <div class="box info">
       <label>كود المعلم</label>
-      <input id="teacherCode" />
+      <input id="teacherCode" inputmode="numeric" />
 
       <label>اسم المعلم</label>
       <input id="teacherName" />
@@ -405,6 +485,14 @@
 
       <label>التاريخ</label>
       <input type="date" id="visitDate" />
+
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="pill" id="teacherStatusPill">المعلم: غير محدد</span>
+      </div>
+
+      <div class="smallHint">
+        إذا كتبت كود معلم موجود، الاسم يظهر تلقائيًا ويتقفل.
+      </div>
     </div>
 
     <div class="box main">
@@ -481,9 +569,58 @@
     </div>
   </div>
 
+  <!-- Teacher Manage Modal (No design impact on main page) -->
+  <div class="modalOverlay" id="teacherModal">
+    <div class="modal">
+      <div class="modalHeader">
+        <div class="modalTitle">تسجيل/تعديل بيانات المعلم</div>
+        <button class="btn clear" id="btnCloseModal" type="button">إغلاق</button>
+      </div>
+
+      <div class="modalBody">
+        <div class="row2">
+          <div>
+            <label>كود المعلم (ID)</label>
+            <input id="m_code" inputmode="numeric" placeholder="مثال: 1" />
+          </div>
+          <div>
+            <label>اسم المعلم</label>
+            <input id="m_name" placeholder="اسم المعلم" />
+          </div>
+        </div>
+
+        <label>إيميل المعلم</label>
+        <input id="m_email" type="email" placeholder="teacher@email.com" />
+
+        <div class="toggleLine">
+          <input id="m_active" type="checkbox" checked />
+          <span>مفعل</span>
+        </div>
+
+        <div class="smallHint">
+          يتم الحفظ داخل Firestore Collection: <b>teachers</b>، والـ Document ID = كود المعلم.
+        </div>
+      </div>
+
+      <div class="modalFooter">
+        <button class="btn save" id="btnSaveTeacher" type="button">حفظ بيانات المعلم</button>
+        <button class="btn manage" id="btnLoadTeacher" type="button">تحميل بيانات بالكود</button>
+        <button class="btn danger" id="btnClearTeacherModal" type="button">تفريغ</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      serverTimestamp,
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
@@ -549,6 +686,65 @@
 
     const qMeta = [];
     const rubricBody = el("rubricBody");
+
+    let lastSavedVisitId = null;
+    let lastSavedTeacherCode = "";
+    let lastSavedTeacherEmail = "";
+    let lastSavedTeacherName = "";
+    let lastSavedVisitDate = "";
+    let lastSavedVisitNumber = 0;
+
+    function setTeacherPill(text){
+      el("teacherStatusPill").textContent = text;
+    }
+
+    function enableSendBtn(){
+      const b = el("btnSend");
+      b.disabled = false;
+      b.classList.add("enabled");
+    }
+
+    function disableSendBtn(){
+      const b = el("btnSend");
+      b.disabled = true;
+      b.classList.remove("enabled");
+    }
+
+    function lockTeacherName(locked){
+      el("teacherName").readOnly = locked;
+    }
+
+    async function loadTeacherByCodeToForm(code){
+      if (!code){
+        setTeacherPill("المعلم: غير محدد");
+        lockTeacherName(false);
+        lastSavedTeacherEmail = "";
+        return;
+      }
+
+      const ref = doc(db, "teachers", code);
+      const snap = await getDoc(ref);
+
+      if (!snap.exists()){
+        setTeacherPill("المعلم: كود غير مسجل");
+        lockTeacherName(false);
+        return;
+      }
+
+      const data = snap.data();
+      if (data && data.name){
+        el("teacherName").value = data.name;
+        lockTeacherName(true);
+      } else {
+        lockTeacherName(false);
+      }
+
+      if (data && data.active === false){
+        setTeacherPill("المعلم: غير مفعل");
+      } else {
+        setTeacherPill("المعلم: مسجل ومفعل");
+      }
+    }
 
     function buildRubric(){
       rubricBody.innerHTML = "";
@@ -625,10 +821,6 @@
           rubricBody.appendChild(tr);
         });
       });
-
-      if (qMeta.length !== 25){
-        alert("عدد البنود الحالي ليس 25. راجع بيانات الاستمارة.");
-      }
     }
 
     function selectedLabelFor(name){
@@ -687,7 +879,7 @@
             </div>
           </td>
         `;
-        el("workBody").appendChild(tr);
+        wb.appendChild(tr);
       }
     }
 
@@ -710,14 +902,39 @@
         el("st_name_" + i).value = "";
       }
       calcAll();
+      disableSendBtn();
+      lastSavedVisitId = null;
     }
 
     async function saveVisit(){
       const teacherCode = el("teacherCode").value.trim();
-      const teacherName = el("teacherName").value.trim();
+      if (!teacherCode){
+        alert("اكتب كود المعلم");
+        return;
+      }
 
-      if (!teacherCode || !teacherName){
-        alert("اكتب كود المعلم واسم المعلم");
+      const teacherRef = doc(db, "teachers", teacherCode);
+      const teacherSnap = await getDoc(teacherRef);
+      if (!teacherSnap.exists()){
+        alert("كود المعلم غير مسجل في النظام");
+        return;
+      }
+
+      const teacherData = teacherSnap.data() || {};
+      if (teacherData.active === false){
+        alert("هذا المعلم غير مفعل");
+        return;
+      }
+
+      const teacherName = (teacherData.name || el("teacherName").value.trim());
+      if (!teacherName){
+        alert("اكتب اسم المعلم");
+        return;
+      }
+
+      const teacherEmail = (teacherData.email || "").trim();
+      if (!teacherEmail){
+        alert("لا يوجد إيميل لهذا المعلم");
         return;
       }
 
@@ -736,15 +953,19 @@
         };
       });
 
+      const visitNumber = Number(el("visitNumber").value || 0);
+      const visitDate = el("visitDate").value || "";
+
       const payload = {
         teacherCode,
         teacherName,
+        teacherEmail,
         grade: el("grade").value.trim(),
         subject: el("subject").value.trim(),
         lessonTitle: el("lessonTitle").value.trim(),
-        visitNumber: Number(el("visitNumber").value || 0),
+        visitNumber,
         supervisorName: el("supervisorName").value.trim(),
-        visitDate: el("visitDate").value,
+        visitDate,
         positives: el("positives").value,
         recommendations: el("recommendations").value,
         rawTotal: Number(el("rawTotal").textContent || 0),
@@ -755,11 +976,21 @@
         createdAt: serverTimestamp()
       };
 
-      await addDoc(collection(db, "visits"), payload);
+      const ref = await addDoc(collection(db, "visits"), payload);
+
+      lastSavedVisitId = ref.id;
+      lastSavedTeacherCode = teacherCode;
+      lastSavedTeacherEmail = teacherEmail;
+      lastSavedTeacherName = teacherName;
+      lastSavedVisitDate = visitDate;
+      lastSavedVisitNumber = visitNumber;
+
+      enableSendBtn();
 
       clearAll();
       el("visitNumber").value = "";
       el("lessonTitle").value = "";
+
       alert("تم الحفظ");
       location.href = `teacher-visits.html?code=${encodeURIComponent(teacherCode)}`;
     }
@@ -768,17 +999,119 @@
       window.print();
     }
 
+    async function queueSendEmail(){
+      if (!lastSavedVisitId){
+        alert("احفظ الزيارة أولاً");
+        return;
+      }
+
+      const mailPayload = {
+        visitId: lastSavedVisitId,
+        teacherCode: lastSavedTeacherCode,
+        teacherName: lastSavedTeacherName,
+        teacherEmail: lastSavedTeacherEmail,
+        visitNumber: lastSavedVisitNumber,
+        visitDate: lastSavedVisitDate,
+        status: "pending",
+        createdAt: serverTimestamp()
+      };
+
+      await addDoc(collection(db, "mailQueue"), mailPayload);
+      alert("تم إنشاء طلب الإرسال (Pending)");
+    }
+
+    function openModal(){
+      el("teacherModal").style.display = "flex";
+    }
+    function closeModal(){
+      el("teacherModal").style.display = "none";
+    }
+    function clearTeacherModal(){
+      el("m_code").value = "";
+      el("m_name").value = "";
+      el("m_email").value = "";
+      el("m_active").checked = true;
+    }
+
+    async function loadTeacherModal(){
+      const code = el("m_code").value.trim();
+      if (!code){
+        alert("اكتب كود المعلم");
+        return;
+      }
+
+      const ref = doc(db, "teachers", code);
+      const snap = await getDoc(ref);
+
+      if (!snap.exists()){
+        alert("لا يوجد معلم بهذا الكود");
+        return;
+      }
+
+      const data = snap.data() || {};
+      el("m_name").value = data.name || "";
+      el("m_email").value = data.email || "";
+      el("m_active").checked = data.active !== false;
+    }
+
+    async function saveTeacherModal(){
+      const code = el("m_code").value.trim();
+      const name = el("m_name").value.trim();
+      const email = el("m_email").value.trim();
+      const active = el("m_active").checked;
+
+      if (!code || !name || !email){
+        alert("اكتب الكود والاسم والإيميل");
+        return;
+      }
+
+      await setDoc(doc(db, "teachers", code), {
+        name,
+        email,
+        active,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      alert("تم حفظ بيانات المعلم");
+
+      if (el("teacherCode").value.trim() === code){
+        el("teacherName").value = name;
+        lockTeacherName(true);
+        setTeacherPill(active ? "المعلم: مسجل ومفعل" : "المعلم: غير مفعل");
+      }
+    }
+
     buildRubric();
     buildWorkRows();
     calcAll();
+    disableSendBtn();
 
     document.addEventListener("change", (e) => {
       if (e.target && e.target.matches('input[type="radio"]')) calcAll();
     });
 
+    el("teacherCode").addEventListener("blur", async () => {
+      const code = el("teacherCode").value.trim();
+      await loadTeacherByCodeToForm(code);
+    });
+
     el("btnSave").addEventListener("click", saveVisit);
     el("btnClear").addEventListener("click", clearAll);
     el("btnPrint").addEventListener("click", printTwoPages);
+    el("btnSend").addEventListener("click", queueSendEmail);
+
+    el("btnManageTeacher").addEventListener("click", () => {
+      el("m_code").value = el("teacherCode").value.trim();
+      openModal();
+    });
+    el("btnCloseModal").addEventListener("click", closeModal);
+    el("btnClearTeacherModal").addEventListener("click", clearTeacherModal);
+    el("btnLoadTeacher").addEventListener("click", loadTeacherModal);
+    el("btnSaveTeacher").addEventListener("click", saveTeacherModal);
+
+    el("teacherModal").addEventListener("click", (e) => {
+      if (e.target && e.target.id === "teacherModal") closeModal();
+    });
   </script>
 </body>
 </html>
