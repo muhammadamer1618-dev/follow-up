@@ -955,7 +955,11 @@ alert("تم حفظ الزيارة، يمكنك الآن إرسال التقري�
       if (e.target && e.target.matches('input[type="radio"]')) calcAll();
     });
 
-    el("btnSave").addEventListener("click", saveVisit);
+el("btnSave").addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  saveVisit();
+});
     el("btnClear").addEventListener("click", clearAll);
     el("btnPrint").addEventListener("click", printTwoPages);
     el("btnSendWhats").addEventListener("click", sendWhats);
