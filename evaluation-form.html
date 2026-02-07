@@ -902,8 +902,8 @@ alert("تم حفظ الزيارة، يمكنك الآن إرسال التقري�
     }
 
     function buildWhatsMessage(p){
-      const d = p.visitDate ? p.visitDate : "";
-      const msg =
+  const d = p.visitDate ? p.visitDate : "";
+  const msg =
 `السلام عليكم ورحمة الله وبركاته
 تمت زيارة للمعلم: ${p.teacherName}
 كود المعلم: ${p.teacherCode}
@@ -913,9 +913,13 @@ alert("تم حفظ الزيارة، يمكنك الآن إرسال التقري�
 عنوان الدرس: ${p.lessonTitle || "-"}
 رقم الزيارة: ${p.visitNumber || 0}
 اسم المشرف: ${p.supervisorName || "-"}
-الدرجة النهائية: ${p.finalScore || 0} / 100`;
-      return msg;
-    }
+الدرجة النهائية: ${p.finalScore || 0} / 100
+
+📄 للاطلاع على تقرير الزيارة كامل:
+${location.origin}/teacher-visits.html?code=${encodeURIComponent(p.teacherCode)}
+`;
+  return msg;
+}
 
     function sendWhats(){
       if (!lastSavedVisitPayload){
