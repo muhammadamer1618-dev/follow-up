@@ -14,7 +14,6 @@
       --border:#000;
       --soft:#bbdefb;
       --head:#e3f2fd;
-      --wa:#6a1b9a;
     }
 
     body{
@@ -81,8 +80,20 @@
     .btn.save{background:#2e7d32;color:#fff}
     .btn.clear{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}
     .btn.print{background:#1976d2;color:#fff}
-    .btn.send{background:var(--wa);color:#fff}
-    .btn:disabled{opacity:.55;cursor:not-allowed}
+
+    .btn.whats{
+      background:#7b1fa2;
+      color:#fff;
+    }
+    .btn.whats:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .btn.teacher{
+      background:#0d47a1;
+      color:#fff;
+    }
 
     .layout{
       display:flex;
@@ -119,7 +130,6 @@
 
     input[readonly]{
       background:#f7f7f7;
-      color:#000;
     }
 
     textarea{height:70px; resize:vertical}
@@ -298,9 +308,7 @@
       .info, .main{ width:100%; }
       .hintScroll{ display:block; }
       .rubricWrap{ overflow:auto; -webkit-overflow-scrolling: touch; }
-      .rubricMin{
-        min-width: 920px;
-      }
+      .rubricMin{ min-width: 920px; }
     }
 
     .pageBreak{
@@ -336,9 +344,7 @@
         border-radius:0;
       }
 
-      .rubricWrap{
-        border-radius:0;
-      }
+      .rubricWrap{ border-radius:0; }
 
       th{ background:var(--head) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
@@ -350,13 +356,26 @@
       .btn, .actions{ display:none !important; }
 
       textarea{ height:55px; }
-
       .sign-line{ height:45px; }
-
       .pageBreak{ break-before: page; page-break-before: always; }
     }
 
     .printHeader{ display:none; }
+
+    .miniActions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+      align-items:center;
+    }
+    .miniNote{
+      margin-top:8px;
+      font-size:12px;
+      font-weight:900;
+      color:#333;
+      line-height:1.4;
+    }
   </style>
 </head>
 
@@ -372,7 +391,7 @@
       <a class="btn back" href="index.html">الرجوع للرئيسية</a>
       <button class="btn print" id="btnPrint" type="button">طباعة (صفحتين)</button>
       <button class="btn save" id="btnSave" type="button">حفظ</button>
-      <button class="btn send" id="btnSend" type="button" disabled style="display:none;">إرسال تقرير الزيارة</button>
+      <button class="btn whats" id="btnSendWhats" type="button" disabled>إرسال تقرير الزيارة</button>
       <button class="btn clear" id="btnClear" type="button">تفريغ</button>
     </div>
   </div>
@@ -387,13 +406,22 @@
   <div class="layout">
     <div class="box info">
       <label>كود المعلم</label>
-      <input id="teacherCode" />
+      <input id="teacherCode" inputmode="numeric" />
 
       <label>اسم المعلم</label>
-      <input id="teacherName" />
+      <input id="teacherName" readonly />
 
       <label>رقم الجوال</label>
-      <input id="teacherPhone" readonly placeholder="يظهر تلقائيًا من قاعدة البيانات" />
+      <input id="teacherPhone" readonly inputmode="tel" />
+
+      <div class="miniActions">
+        <button class="btn teacher" id="btnEditTeacher" type="button">تعديل بيانات المعلم</button>
+        <button class="btn teacher" id="btnSaveTeacher" type="button" style="display:none;">حفظ بيانات المعلم</button>
+      </div>
+
+      <div class="miniNote" id="teacherHint">
+        اكتب كود المعلم وسيظهر الاسم ورقم الجوال تلقائيًا. لو المعلم جديد اضغط "تعديل بيانات المعلم" ثم "حفظ بيانات المعلم".
+      </div>
 
       <label>الصف</label>
       <input id="grade" />
@@ -490,18 +518,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      serverTimestamp,
-      doc,
-      getDoc,
-      query,
-      where,
-      getDocs,
-      limit
-    } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
@@ -568,66 +585,92 @@
     const qMeta = [];
     const rubricBody = el("rubricBody");
 
-    let lastSaved = null;
+    let lastSavedVisitPayload = null;
+    let lastSavedTeacherPhone = "";
+    let teacherEditMode = false;
 
-    function normalizePhone(input){
-      const digits = String(input || "").replace(/\D/g, "");
+    function setTeacherReadonlyMode(){
+      el("teacherName").readOnly = true;
+      el("teacherPhone").readOnly = true;
+      el("btnSaveTeacher").style.display = "none";
+      teacherEditMode = false;
+    }
+
+    function setTeacherEditMode(){
+      el("teacherName").readOnly = false;
+      el("teacherPhone").readOnly = false;
+      el("btnSaveTeacher").style.display = "inline-flex";
+      teacherEditMode = true;
+      el("teacherName").focus();
+    }
+
+    function normalizePhoneToWhatsApp(raw){
+      const x = String(raw || "").trim();
+      if (!x) return "";
+      let digits = x.replace(/[^\d]/g, "");
       if (!digits) return "";
-
-      if (digits.startsWith("966") && digits.length >= 12) return digits;
-      if (digits.startsWith("05") && digits.length === 10) return "966" + digits.slice(1);
-      if (digits.startsWith("5") && digits.length === 9) return "966" + digits;
-      if (digits.startsWith("0") && digits.length > 1) return digits.replace(/^0+/, "");
+      if (digits.startsWith("00")) digits = digits.slice(2);
+      if (digits.startsWith("0") && digits.length === 10) {
+        digits = "966" + digits.slice(1);
+      }
+      if (digits.startsWith("5") && digits.length === 9) {
+        digits = "966" + digits;
+      }
       return digits;
     }
 
-    function setSendState(enabled){
-      const btn = el("btnSend");
-      btn.style.display = "inline-flex";
-      btn.disabled = !enabled;
-    }
-
-    async function fetchTeacherByCode(code){
-      const c = (code || "").trim();
-      if (!c) return null;
-
-      const directRef = doc(db, "teachers", c);
-      const directSnap = await getDoc(directRef);
-      if (directSnap.exists()){
-        return { id: directSnap.id, ...directSnap.data() };
-      }
-
-      const q = query(collection(db, "teachers"), where("code", "==", c), limit(1));
-      const qs = await getDocs(q);
-      if (!qs.empty){
-        const d = qs.docs[0];
-        return { id: d.id, ...d.data() };
-      }
-
-      return null;
-    }
-
-    async function fillTeacherPhone(){
-      const code = el("teacherCode").value.trim();
+    async function loadTeacherByCode(code){
+      const c = String(code || "").trim();
+      el("teacherName").value = "";
       el("teacherPhone").value = "";
-      setSendState(false);
+      lastSavedTeacherPhone = "";
+      el("btnSendWhats").disabled = true;
 
-      if (!code){
-        el("btnSave").disabled = false;
+      if (!c) return;
+
+      const ref = doc(db, "teachers", c);
+      const snap = await getDoc(ref);
+
+      if (!snap.exists()){
         return;
       }
 
-      const t = await fetchTeacherByCode(code);
-      const phone = t && (t.phone || t.mobile || t.whatsapp || "");
-      const normalized = normalizePhone(phone);
+      const data = snap.data() || {};
+      el("teacherName").value = data.name || "";
+      el("teacherPhone").value = data.phone || "";
+      lastSavedTeacherPhone = data.phone || "";
 
-      if (normalized){
-        el("teacherPhone").value = normalized;
-        el("btnSave").disabled = false;
-      } else {
-        el("btnSave").disabled = true;
-        alert("لا يمكن الحفظ: رقم الجوال غير موجود لهذا الكود في قاعدة بيانات المعلمين.");
+      setTeacherReadonlyMode();
+    }
+
+    async function saveTeacher(){
+      const code = el("teacherCode").value.trim();
+      const name = el("teacherName").value.trim();
+      const phone = el("teacherPhone").value.trim();
+
+      if (!code){
+        alert("اكتب كود المعلم");
+        return;
       }
+      if (!name){
+        alert("اكتب اسم المعلم");
+        return;
+      }
+      if (!phone){
+        alert("اكتب رقم الجوال");
+        return;
+      }
+
+      await setDoc(doc(db, "teachers", code), {
+        code,
+        name,
+        phone,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      lastSavedTeacherPhone = phone;
+      setTeacherReadonlyMode();
+      alert("تم حفظ بيانات المعلم");
     }
 
     function buildRubric(){
@@ -789,23 +832,23 @@
       for (let i = 1; i <= 8; i++){
         el("st_name_" + i).value = "";
       }
-      lastSaved = null;
-      setSendState(false);
       calcAll();
+      lastSavedVisitPayload = null;
+      el("btnSendWhats").disabled = true;
     }
 
     async function saveVisit(){
       const teacherCode = el("teacherCode").value.trim();
       const teacherName = el("teacherName").value.trim();
-      const teacherPhone = normalizePhone(el("teacherPhone").value.trim());
+      const teacherPhone = el("teacherPhone").value.trim();
 
-      if (!teacherCode || !teacherName){
-        alert("اكتب كود المعلم واسم المعلم");
+      if (!teacherCode){
+        alert("اكتب كود المعلم");
         return;
       }
 
-      if (!teacherPhone){
-        alert("لا يمكن الحفظ: رقم الجوال غير موجود.");
+      if (!teacherName || !teacherPhone){
+        alert("بيانات المعلم غير مكتملة. اكتب الكود الصحيح أو عدّل بيانات المعلم ثم احفظها.");
         return;
       }
 
@@ -844,72 +887,88 @@
         createdAt: serverTimestamp()
       };
 
-      const ref = await addDoc(collection(db, "visits"), payload);
+      await addDoc(collection(db, "visits"), payload);
 
-      lastSaved = {
-        id: ref.id,
-        ...payload
-      };
+      lastSavedVisitPayload = payload;
 
-      setSendState(true);
-      alert("تم الحفظ. يمكنك الآن إرسال تقرير الزيارة عبر واتساب.");
-    }
-
-    function buildWhatsAppMessage(v){
-      const dateTxt = v.visitDate ? v.visitDate : "";
-      const msg =
-`السلام عليكم ورحمة الله وبركاته
-
-تم تنفيذ زيارة صفية للمعلم/ ${v.teacherName}
-كود المعلم: ${v.teacherCode}
-التاريخ: ${dateTxt}
-المادة: ${v.subject || "-"}
-الصف: ${v.grade || "-"}
-عنوان الدرس: ${v.lessonTitle || "-"}
-
-الدرجة النهائية: ${v.finalScore} / 100
-
-يرجى الاطلاع على الملاحظات والتوصيات، ويمكنك طلب نسخة PDF مطبوعة من الإدارة.`;
-      return msg;
-    }
-
-    function sendWhatsApp(){
-      if (!lastSaved){
-        alert("احفظ الزيارة أولاً ثم اضغط إرسال تقرير الزيارة.");
-        return;
-      }
-
-      const phone = normalizePhone(lastSaved.teacherPhone);
-      if (!phone){
-        alert("رقم الجوال غير متوفر.");
-        return;
-      }
-
-      const text = buildWhatsAppMessage(lastSaved);
-      const url = `https://wa.me/${encodeURIComponent(phone)}?text=${encodeURIComponent(text)}`;
-      window.open(url, "_blank");
+      el("btnSendWhats").disabled = false;
+      alert("تم الحفظ");
+      location.href = `teacher-visits.html?code=${encodeURIComponent(teacherCode)}`;
     }
 
     function printTwoPages(){
       window.print();
     }
 
+    function buildWhatsMessage(p){
+      const d = p.visitDate ? p.visitDate : "";
+      const msg =
+`السلام عليكم ورحمة الله وبركاته
+تمت زيارة للمعلم: ${p.teacherName}
+كود المعلم: ${p.teacherCode}
+تاريخ الزيارة: ${d}
+الصف: ${p.grade || "-"}
+المادة: ${p.subject || "-"}
+عنوان الدرس: ${p.lessonTitle || "-"}
+رقم الزيارة: ${p.visitNumber || 0}
+اسم المشرف: ${p.supervisorName || "-"}
+الدرجة النهائية: ${p.finalScore || 0} / 100`;
+      return msg;
+    }
+
+    function sendWhats(){
+      if (!lastSavedVisitPayload){
+        alert("احفظ الزيارة أولاً");
+        return;
+      }
+
+      const phoneRaw = lastSavedVisitPayload.teacherPhone || el("teacherPhone").value.trim();
+      const phone = normalizePhoneToWhatsApp(phoneRaw);
+
+      if (!phone){
+        alert("رقم الجوال غير صحيح");
+        return;
+      }
+
+      const text = buildWhatsMessage(lastSavedVisitPayload);
+      const url = "https://wa.me/" + encodeURIComponent(phone) + "?text=" + encodeURIComponent(text);
+      window.open(url, "_blank");
+    }
+
     buildRubric();
     buildWorkRows();
     calcAll();
-    setSendState(false);
+    setTeacherReadonlyMode();
+
+    el("teacherCode").addEventListener("input", async () => {
+      const code = el("teacherCode").value.trim();
+      if (code.length >= 3) {
+        await loadTeacherByCode(code);
+      }
+    });
+
+    el("teacherCode").addEventListener("blur", async () => {
+      await loadTeacherByCode(el("teacherCode").value.trim());
+    });
 
     document.addEventListener("change", (e) => {
       if (e.target && e.target.matches('input[type="radio"]')) calcAll();
     });
 
-    el("teacherCode").addEventListener("blur", fillTeacherPhone);
-    el("teacherCode").addEventListener("change", fillTeacherPhone);
-
     el("btnSave").addEventListener("click", saveVisit);
-    el("btnSend").addEventListener("click", sendWhatsApp);
     el("btnClear").addEventListener("click", clearAll);
     el("btnPrint").addEventListener("click", printTwoPages);
+    el("btnSendWhats").addEventListener("click", sendWhats);
+
+    el("btnEditTeacher").addEventListener("click", () => {
+      if (!el("teacherCode").value.trim()){
+        alert("اكتب كود المعلم أولاً");
+        return;
+      }
+      setTeacherEditMode();
+    });
+
+    el("btnSaveTeacher").addEventListener("click", saveTeacher);
   </script>
 </body>
 </html>
