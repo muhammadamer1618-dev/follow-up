@@ -920,25 +920,36 @@ ${location.origin}/teacher-visits.html?code=${encodeURIComponent(p.teacherCode)}
   return msg;
 }
 
-    function sendWhats(){
-      if (!lastSavedVisitPayload){
-        alert("احفظ الزيارة أولاً");
-        return;
-      }
+    function sendWhats(e){
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
 
-      const phoneRaw = lastSavedVisitPayload.teacherPhone || el("teacherPhone").value.trim();
-      const phone = normalizePhoneToWhatsApp(phoneRaw);
+  if (!lastSavedVisitPayload){
+    alert("احفظ الزيارة أولاً");
+    return;
+  }
 
-      if (!phone){
-        alert("رقم الجوال غير صحيح");
-        return;
-      }
+  const phoneRaw = lastSavedVisitPayload.teacherPhone || el("teacherPhone").value.trim();
+  const phone = normalizePhoneToWhatsApp(phoneRaw);
 
-      const text = buildWhatsMessage(lastSavedVisitPayload);
-      const url = "https://wa.me/" + encodeURIComponent(phone) + "?text=" + encodeURIComponent(text);
-      window.open(url, "_blank");
-    }
+  if (!phone){
+    alert("رقم الجوال غير صحيح");
+    return;
+  }
 
+  const text = buildWhatsMessage(lastSavedVisitPayload);
+
+  const url =
+    "https://wa.me/" +
+    phone +
+    "?text=" +
+    encodeURIComponent(text);
+
+  // 🔥 فتح مباشر بدون أي async
+  window.location.href = url;
+}
     buildRubric();
     buildWorkRows();
     calcAll();
