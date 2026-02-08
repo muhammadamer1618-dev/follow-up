@@ -900,10 +900,9 @@ alert("تم حفظ الزيارة، يمكنك الآن إرسال التقري�
       window.print();
     }
 
-    function buildWhatsMessage(p){
-  const d = p.visitDate ? p.visitDate : "";
-  const msg =
-`السلام عليكم ورحمة الله وبركاته
+    function buildWhatsMessage(p, visitId){
+  const d = p.visitDate || "";
+  return `السلام عليكم ورحمة الله وبركاته
 تمت زيارة للمعلم: ${p.teacherName}
 كود المعلم: ${p.teacherCode}
 تاريخ الزيارة: ${d}
@@ -917,7 +916,6 @@ alert("تم حفظ الزيارة، يمكنك الآن إرسال التقري�
 📄 للاطلاع على تقرير الزيارة كامل:
 ${location.origin}/visit-view.html?id=${visitId}
 `;
-  return msg;
 }
 
     function sendWhats(e){
