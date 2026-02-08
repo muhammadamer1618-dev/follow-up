@@ -232,15 +232,23 @@ async function loadVisit(){
 
   // الأعمال التحريرية
   const wb = document.getElementById("workBody");
-  (d.writtenWork || []).forEach(w => {
-    if (!w.name) return;
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${w.name}</td>
-      <td>${w.status}</td>
-    `;
-    wb.appendChild(tr);
-  });
+  function mapWorkStatus(status){
+  if (status === "correct") return "✅ مكتمل";
+  if (status === "partial") return "⚠️ ناقص";
+  if (status === "not") return "❌ غير موجود";
+  return "";
+}
+
+(d.writtenWork || []).forEach(w => {
+  if (!w.name) return;
+
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${w.name}</td>
+    <td>${mapWorkStatus(w.status)}</td>
+  `;
+  wb.appendChild(tr);
+});
 }
 
 loadVisit();
