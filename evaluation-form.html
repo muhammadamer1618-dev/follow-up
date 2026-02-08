@@ -888,7 +888,7 @@
       };
 
 const docRef = await addDoc(collection(db, "visits"), payload);
-const visitId = docRef.id;
+lastSavedVisitId = docRef.id;
       
       lastSavedVisitPayload = payload;
 
