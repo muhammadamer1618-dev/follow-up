@@ -939,8 +939,9 @@ ${location.origin}/visit-view.html?id=${visitId}
     return;
   }
 
-  const text = buildWhatsMessage(lastSavedVisitPayload);
+const text = buildWhatsMessage(lastSavedVisitPayload, lastSavedVisitId);
 
+      
   const url =
     "https://wa.me/" +
     phone +
