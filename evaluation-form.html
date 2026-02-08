@@ -915,7 +915,7 @@ alert("تم حفظ الزيارة، يمكنك الآن إرسال التقري�
 الدرجة النهائية: ${p.finalScore || 0} / 100
 
 📄 للاطلاع على تقرير الزيارة كامل:
-${location.origin}/teacher-visits.html?code=${encodeURIComponent(p.teacherCode)}
+${location.origin}${location.pathname.replace(/\/[^\/]*$/, '')}/teacher-visits.html?code=${encodeURIComponent(p.teacherCode)}
 `;
   return msg;
 }
