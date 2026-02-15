@@ -22,6 +22,33 @@
       padding:16px;
     }
 
+    .top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-bottom:12px;
+    }
+
+    .btn{
+      border:0;
+      border-radius:10px;
+      padding:10px 14px;
+      font-size:14px;
+      cursor:pointer;
+      font-weight:900;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      user-select:none;
+    }
+
+    .btn.print{ background:#1976d2; color:#fff; }
+    .btn.edit{ background:#2e7d32; color:#fff; }
+
     h1{
       text-align:center;
       margin:0;
@@ -64,6 +91,7 @@
       padding:8px;
       min-height:40px;
       font-size:13px;
+      white-space:pre-wrap;
     }
 
     .scoreBox{
@@ -82,8 +110,17 @@
       font-weight:900;
     }
 
+    .statusBadge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      justify-content:center;
+      font-weight:900;
+    }
+
     @media print{
       body{ background:#fff; }
+      .top{ display:none !important; }
     }
   </style>
 </head>
@@ -92,10 +129,17 @@
 
 <div class="container">
 
+  <div class="top">
+    <div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn print" id="btnPrint" type="button">طباعة</button>
+      <a class="btn edit" id="btnEdit" href="#">تعديل الزيارة</a>
+    </div>
+  </div>
+
   <h1>مدارس الفلاح الأهلية</h1>
   <div class="designer">تقرير زيارة صفية – للاطلاع فقط</div>
 
-  <!-- بيانات المعلم -->
   <table>
     <tr>
       <th>اسم المعلم</th>
@@ -123,13 +167,11 @@
     </tr>
   </table>
 
-  <!-- الدرجة -->
   <div class="section-title">نتيجة التقييم</div>
   <div class="scoreBox">
     الدرجة النهائية: <span id="finalScore"></span> / 100
   </div>
 
-  <!-- بنود التقييم -->
   <div class="section-title">بنود التقييم</div>
   <table>
     <thead>
@@ -144,15 +186,12 @@
     <tbody id="itemsBody"></tbody>
   </table>
 
-  <!-- الإيجابيات -->
   <div class="section-title">إيجابيات الحصة</div>
   <div class="box" id="positives"></div>
 
-  <!-- التوصيات -->
   <div class="section-title">توصيات وتوجيهات</div>
   <div class="box" id="recommendations"></div>
 
-  <!-- الأعمال التحريرية -->
   <div class="section-title">متابعة الأعمال التحريرية</div>
   <table>
     <thead>
@@ -187,12 +226,21 @@ function qs(name){
   return new URLSearchParams(window.location.search).get(name);
 }
 
+function statusLabel(val){
+  if (val === "correct") return { text: "مكتمل", icon: "✅" };
+  if (val === "partial") return { text: "ناقص", icon: "⚠️" };
+  if (val === "not") return { text: "غير موجود", icon: "❌" };
+  return { text: "-", icon: "" };
+}
+
 async function loadVisit(){
   const visitId = qs("id");
   if (!visitId){
     document.body.innerHTML = "لا يوجد تقرير";
     return;
   }
+
+  document.getElementById("btnEdit").href = "report.html?id=" + encodeURIComponent(visitId);
 
   const ref = doc(db, "visits", visitId);
   const snap = await getDoc(ref);
@@ -202,7 +250,7 @@ async function loadVisit(){
     return;
   }
 
-  const d = snap.data();
+  const d = snap.data() || {};
 
   document.getElementById("teacherName").textContent = d.teacherName || "";
   document.getElementById("teacherCode").textContent = d.teacherCode || "";
@@ -216,40 +264,35 @@ async function loadVisit(){
   document.getElementById("positives").textContent = d.positives || "";
   document.getElementById("recommendations").textContent = d.recommendations || "";
 
-  // بنود التقييم
   const tbody = document.getElementById("itemsBody");
+  tbody.innerHTML = "";
   (d.answers || []).forEach((a, i) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${i + 1}</td>
-      <td>${a.domain}</td>
-      <td>${a.itemLabel}</td>
-      <td>${a.selectedText}</td>
-      <td>${a.selected}</td>
+      <td>${a.domain || ""}</td>
+      <td>${a.itemLabel || ""}</td>
+      <td>${a.selectedText || ""}</td>
+      <td>${a.selected || 0}</td>
     `;
     tbody.appendChild(tr);
   });
 
-  // الأعمال التحريرية
   const wb = document.getElementById("workBody");
-  function mapWorkStatus(status){
-  if (status === "correct") return "✅ مكتمل";
-  if (status === "partial") return "⚠️ ناقص";
-  if (status === "not") return "❌ غير موجود";
-  return "";
+  wb.innerHTML = "";
+  (d.writtenWork || []).forEach(w => {
+    if (!w || !w.name) return;
+    const s = statusLabel(w.status || "");
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${w.name}</td>
+      <td><span class="statusBadge">${s.icon} ${s.text}</span></td>
+    `;
+    wb.appendChild(tr);
+  });
 }
 
-(d.writtenWork || []).forEach(w => {
-  if (!w.name) return;
-
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td>${w.name}</td>
-    <td>${mapWorkStatus(w.status)}</td>
-  `;
-  wb.appendChild(tr);
-});
-}
+document.getElementById("btnPrint").addEventListener("click", () => window.print());
 
 loadVisit();
 </script>
