@@ -53,24 +53,6 @@
       font-weight:900;
       color:#333;
       line-height:1.2;
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:4px 10px;
-      border-radius:999px;
-      border:1px solid #90caf9;
-      background:#e3f2fd;
-      color:#0d47a1;
-      font-size:12px;
-      font-weight:900;
-      display:none;
     }
 
     .actions{
@@ -402,10 +384,7 @@
   <div class="topbar">
     <div class="brand">
       <h1 class="school">مدارس الفلاح الأهلية</h1>
-      <p class="designer">
-        تصميم محمد عامر أحمد
-        <span class="badge" id="editBadge">وضع تعديل الزيارة</span>
-      </p>
+      <p class="designer">تصميم محمد عامر أحمد</p>
     </div>
 
     <div class="actions">
@@ -554,16 +533,6 @@
 
     const el = (id) => document.getElementById(id);
 
-    function qs(name){
-      return new URLSearchParams(window.location.search).get(name);
-    }
-
-    function getBaseUrl(){
-      const path = window.location.pathname;
-      const dir = path.substring(0, path.lastIndexOf("/") + 1);
-      return window.location.origin + dir;
-    }
-
     const rubric = [
       { domainNo: 1, domain: "الرؤية", items: [
         { label: "القيمة التربوية", optTop: "مناسب", optMid: "إلى حد ما", optLow: "غير مناسب" }
@@ -582,13 +551,13 @@
         { label: "تنظيم المقاعد", optTop: "مجموعات", optMid: "خطوط", optLow: "مزعج" },
         { label: "نظافة الفصل", optTop: "اهتمام عال بالنظافة", optMid: "اهتمام مناسب", optLow: "لا يوجد اهتمام" },
         { label: "البيئة الصفية", optTop: "معززة وإيجابية", optMid: "مناسبة", optLow: "غير مناسبة" },
-        { label: "تنظيم إيجابيات الطلاب", optTop: "منظم", optMid: "إلى حد ما", optLow: "غير منظم" },
+        { label: "تنظيم إجابات الطلاب", optTop: "منظم", optMid: "إلى حد ما", optLow: "غير منظم" },
         { label: "الإدارة الصفية", optTop: "جيدة وفعالة", optMid: "متوسطة", optLow: "ضعيفة" },
         { label: "تفعيل القوانين الصفية", optTop: "مفعلة وفعالة", optMid: "مفعلة إلى حد ما", optLow: "غير مفعلة" }
       ]},
 
       { domainNo: 4, domain: "دعم السلوك", items: [
-        { label: "توجيهات المعلم", optTop: "واضحة وجزائية", optMid: "مبهمة", optLow: "غير موجودة" },
+        { label: "توجيهات المعلم", optTop: "واضحة وإجرائية", optMid: "مبهمة", optLow: "غير موجودة" },
         { label: "سلوك الطلاب", optTop: "ممتاز", optMid: "مقبول", optLow: "ضعيف" },
         { label: "تفاعل الطلاب", optTop: "ممتاز وقوي", optMid: "إلى حد ما", optLow: "ضعيف" },
         { label: "صوت المعلم وتواصله مع الطلاب", optTop: "فعال عال المستوى", optMid: "متوسط", optLow: "محدود" }
@@ -617,8 +586,6 @@
 
     let lastSavedVisitPayload = null;
     let lastSavedVisitId = null;
-    let isEditMode = false;
-
     let lastSavedTeacherPhone = "";
     let teacherEditMode = false;
 
@@ -781,6 +748,10 @@
           rubricBody.appendChild(tr);
         });
       });
+
+      if (qMeta.length !== 25){
+        alert("عدد البنود الحالي ليس 25. راجع بيانات الاستمارة.");
+      }
     }
 
     function selectedLabelFor(name){
@@ -833,9 +804,9 @@
           </td>
           <td>
             <div class="workChoices">
-              ${makeChoice(i, "correct", "مكتمل")}
-              ${makeChoice(i, "partial", "ناقص")}
-              ${makeChoice(i, "not", "غير موجود")}
+              ${makeChoice(i, "correct", "مصحح")}
+              ${makeChoice(i, "partial", "غير مكتمل")}
+              ${makeChoice(i, "not", "غير مصحح")}
             </div>
           </td>
         `;
@@ -860,14 +831,10 @@
       el("recommendations").value = "";
       for (let i = 1; i <= 8; i++){
         el("st_name_" + i).value = "";
-        const checked = document.querySelector(`input[name="st_${i}"]:checked`);
-        if (checked) checked.checked = false;
       }
       calcAll();
       lastSavedVisitPayload = null;
       lastSavedVisitId = null;
-      isEditMode = false;
-      el("editBadge").style.display = "none";
       el("btnSendWhats").disabled = true;
     }
 
@@ -918,29 +885,25 @@
         finalScore: Number(el("finalScore").textContent || 0),
         answers,
         writtenWork: getWorkData(),
-        updatedAt: serverTimestamp()
+        createdAt: serverTimestamp()
       };
 
-      if (isEditMode && lastSavedVisitId){
-        await setDoc(doc(db, "visits", lastSavedVisitId), payload, { merge: true });
-        lastSavedVisitPayload = payload;
-        el("btnSendWhats").disabled = false;
-        alert("تم تحديث الزيارة، يمكنك الآن إعادة إرسال التقرير");
-        return;
-      }
-
-      const docRef = await addDoc(collection(db, "visits"), { ...payload, createdAt: serverTimestamp() });
-      lastSavedVisitId = docRef.id;
+const docRef = await addDoc(collection(db, "visits"), payload);
+lastSavedVisitId = docRef.id;
+      
       lastSavedVisitPayload = payload;
 
       el("btnSendWhats").disabled = false;
-      alert("تم حفظ الزيارة، يمكنك الآن إرسال التقرير");
+alert("تم حفظ الزيارة، يمكنك الآن إرسال التقرير");
+    }
+
+    function printTwoPages(){
+      window.print();
     }
 
     function buildWhatsMessage(p, visitId){
-      const d = p.visitDate || "";
-      const link = getBaseUrl() + "visit-view.html?id=" + encodeURIComponent(visitId || "");
-      return `السلام عليكم ورحمة الله وبركاته
+  const d = p.visitDate || "";
+  return `السلام عليكم ورحمة الله وبركاته
 تمت زيارة للمعلم: ${p.teacherName}
 كود المعلم: ${p.teacherCode}
 تاريخ الزيارة: ${d}
@@ -952,121 +915,54 @@
 الدرجة النهائية: ${p.finalScore || 0} / 100
 
 📄 للاطلاع على تقرير الزيارة كامل:
-${link}
+${location.origin}/follow-up/visit-view.html?id=${visitId}
 `;
-    }
+}
 
     function sendWhats(e){
-      if (e) { e.preventDefault(); e.stopPropagation(); }
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
 
-      if (!lastSavedVisitPayload || !lastSavedVisitId){
-        alert("احفظ الزيارة أولاً");
-        return;
-      }
+  if (!lastSavedVisitPayload){
+    alert("احفظ الزيارة أولاً");
+    return;
+  }
 
-      const phoneRaw = lastSavedVisitPayload.teacherPhone || el("teacherPhone").value.trim();
-      const phone = normalizePhoneToWhatsApp(phoneRaw);
+  const phoneRaw = lastSavedVisitPayload.teacherPhone || el("teacherPhone").value.trim();
+  const phone = normalizePhoneToWhatsApp(phoneRaw);
 
-      if (!phone){
-        alert("رقم الجوال غير صحيح");
-        return;
-      }
+  if (!phone){
+    alert("رقم الجوال غير صحيح");
+    return;
+  }
 
-      const text = buildWhatsMessage(lastSavedVisitPayload, lastSavedVisitId);
-      const url = "https://wa.me/" + encodeURIComponent(phone) + "?text=" + encodeURIComponent(text);
-      window.open(url, "_blank");
-    }
+const text = buildWhatsMessage(lastSavedVisitPayload, lastSavedVisitId);
 
-    async function loadVisitForEdit(visitId){
-      const ref = doc(db, "visits", visitId);
-      const snap = await getDoc(ref);
-      if (!snap.exists()){
-        alert("الزيارة غير موجودة");
-        return;
-      }
+      
+  const url =
+    "https://wa.me/" +
+    phone +
+    "?text=" +
+    encodeURIComponent(text);
 
-      const d = snap.data() || {};
-
-      lastSavedVisitId = visitId;
-      isEditMode = true;
-      el("editBadge").style.display = "inline-flex";
-
-      el("teacherCode").value = d.teacherCode || "";
-      el("teacherName").value = d.teacherName || "";
-      el("teacherPhone").value = d.teacherPhone || "";
-
-      el("grade").value = d.grade || "";
-      el("subject").value = d.subject || "";
-      el("lessonTitle").value = d.lessonTitle || "";
-      el("visitNumber").value = d.visitNumber || "";
-      el("supervisorName").value = d.supervisorName || "";
-      el("visitDate").value = d.visitDate || "";
-      el("positives").value = d.positives || "";
-      el("recommendations").value = d.recommendations || "";
-
-      const ansMap = new Map();
-      (d.answers || []).forEach(a => {
-        const key = String(a.domainNo) + "|" + String(a.itemLabel || "");
-        ansMap.set(key, Number(a.selected || 0));
-      });
-
-      qMeta.forEach(m => {
-        const key = String(m.domainNo) + "|" + String(m.label || "");
-        const val = ansMap.get(key);
-        if (!val) return;
-        const radio = document.querySelector(`input[name="${m.name}"][value="${val}"]`);
-        if (radio) radio.checked = true;
-      });
-
-      const ww = Array.isArray(d.writtenWork) ? d.writtenWork : [];
-      for (let i = 1; i <= 8; i++){
-        const row = ww[i - 1] || {};
-        el("st_name_" + i).value = row.name || "";
-        if (row.status){
-          const r = document.querySelector(`input[name="st_${i}"][value="${row.status}"]`);
-          if (r) r.checked = true;
-        }
-      }
-
-      setTeacherReadonlyMode();
-      calcAll();
-
-      lastSavedVisitPayload = {
-        teacherCode: el("teacherCode").value.trim(),
-        teacherName: el("teacherName").value.trim(),
-        teacherPhone: el("teacherPhone").value.trim(),
-        grade: el("grade").value.trim(),
-        subject: el("subject").value.trim(),
-        lessonTitle: el("lessonTitle").value.trim(),
-        visitNumber: Number(el("visitNumber").value || 0),
-        supervisorName: el("supervisorName").value.trim(),
-        visitDate: el("visitDate").value,
-        finalScore: Number(el("finalScore").textContent || 0)
-      };
-
-      el("btnSendWhats").disabled = false;
-    }
-
+  // 🔥 فتح مباشر بدون أي async
+  window.location.href = url;
+}
     buildRubric();
     buildWorkRows();
     calcAll();
     setTeacherReadonlyMode();
 
-    const editId = qs("id");
-    if (editId){
-      loadVisitForEdit(editId);
-    }
-
     el("teacherCode").addEventListener("input", async () => {
-      if (isEditMode) return;
       const code = el("teacherCode").value.trim();
-      if (code.length >= 1) {
+      if (code.length >= 3) {
         await loadTeacherByCode(code);
       }
     });
 
     el("teacherCode").addEventListener("blur", async () => {
-      if (isEditMode) return;
       await loadTeacherByCode(el("teacherCode").value.trim());
     });
 
@@ -1074,17 +970,15 @@ ${link}
       if (e.target && e.target.matches('input[type="radio"]')) calcAll();
     });
 
-    el("btnSave").addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      saveVisit();
-    });
-
+el("btnSave").addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  saveVisit();
+});
     el("btnClear").addEventListener("click", clearAll);
     el("btnSendWhats").addEventListener("click", sendWhats);
 
     el("btnEditTeacher").addEventListener("click", () => {
-      if (isEditMode) return;
       if (!el("teacherCode").value.trim()){
         alert("اكتب كود المعلم أولاً");
         return;
