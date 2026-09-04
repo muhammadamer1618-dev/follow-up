@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>نظام الإشراف التربوي - مدارس الفلاح الأهلية</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -15,128 +16,187 @@
 
       --gold:#c89a3b;
       --gold-dark:#a87921;
-      --gold-soft:#faf1df;
+      --gold-soft:#faf2e3;
 
-      --cream:#faf8f3;
+      --bg:#f6f7f4;
       --white:#ffffff;
-      --text:#1f2926;
-      --muted:#6f7773;
-      --border:#e5e4df;
 
-      --shadow:0 22px 65px rgba(21,51,43,.14);
+      --text:#1f2926;
+      --muted:#737b77;
+
+      --border:#e2e5e2;
+
+      --shadow:0 18px 50px rgba(16,52,43,.10);
     }
 
     *{
       box-sizing:border-box;
-      font-family:'Cairo',sans-serif;
+      font-family:"Cairo",sans-serif;
     }
 
-    html,body{
+    html,
+    body{
       margin:0;
       min-height:100%;
     }
 
     body{
       min-height:100vh;
+
       background:
-        radial-gradient(circle at top right, rgba(200,154,59,.13), transparent 30%),
-        radial-gradient(circle at bottom left, rgba(11,74,63,.11), transparent 30%),
-        linear-gradient(135deg,#f7f4ec,#ffffff 52%,#f2f7f4);
+        radial-gradient(
+          circle at top right,
+          rgba(200,154,59,.13),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at bottom left,
+          rgba(11,74,63,.10),
+          transparent 30%
+        ),
+        linear-gradient(
+          135deg,
+          #f7f6f0,
+          #ffffff 55%,
+          #f1f6f3
+        );
+
       color:var(--text);
     }
 
-    .page{
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-    }
 
-    /* ================= HEADER ================= */
+    /* ==============================
+       HEADER
+    ============================== */
 
-    .header{
+    header{
       background:rgba(255,255,255,.96);
-      border-bottom:1px solid var(--border);
-      box-shadow:0 4px 20px rgba(0,0,0,.04);
+
+      border-bottom:
+        1px solid var(--border);
+
+      box-shadow:
+        0 4px 18px rgba(0,0,0,.03);
     }
 
     .header-inner{
-      max-width:1250px;
+      width:min(1250px,calc(100% - 30px));
+
       margin:auto;
-      padding:12px 20px;
+
+      min-height:82px;
+
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:16px;
+
+      gap:20px;
     }
 
     .brand{
       display:flex;
       align-items:center;
-      gap:14px;
+      gap:13px;
     }
 
-    .logo{
-      width:70px;
-      height:70px;
+    .brand img{
+      width:65px;
+      height:65px;
+
       object-fit:contain;
-      display:block;
     }
 
-    .brand-text h1{
+    .brand h1{
       margin:0;
-      font-size:20px;
-      line-height:1.4;
+
       color:var(--green);
-      font-weight:800;
+
+      font-size:19px;
+      font-weight:900;
     }
 
-    .brand-text p{
+    .brand p{
       margin:3px 0 0;
-      font-size:12px;
+
       color:var(--gold-dark);
+
+      font-size:11px;
       font-weight:700;
     }
 
-    /* ================= HERO ================= */
+    .system-badge{
+      padding:7px 12px;
 
-    .main{
-      flex:1;
-      width:100%;
-      max-width:1250px;
-      margin:auto;
-      padding:42px 20px 50px;
+      border-radius:30px;
+
+      background:var(--green-soft);
+
+      color:var(--green);
+
+      font-size:10px;
+      font-weight:800;
     }
+
+
+    /* ==============================
+       MAIN
+    ============================== */
+
+    main{
+      width:min(1250px,calc(100% - 30px));
+
+      margin:auto;
+
+      padding:46px 0 45px;
+    }
+
+
+    /* ==============================
+       HERO
+    ============================== */
 
     .hero{
       display:grid;
-      grid-template-columns:1.1fr .9fr;
+
+      grid-template-columns:
+        1.1fr .9fr;
+
       gap:35px;
+
       align-items:center;
+
       margin-bottom:38px;
     }
 
-    .hero-content{
-      padding:10px 0;
-    }
-
-    .eyebrow{
+    .hero-text .small-title{
       display:inline-block;
-      background:var(--gold-soft);
-      color:var(--gold-dark);
-      border:1px solid rgba(200,154,59,.22);
+
       padding:6px 12px;
-      border-radius:50px;
-      font-size:12px;
-      font-weight:800;
-      margin-bottom:14px;
+
+      border-radius:40px;
+
+      background:var(--gold-soft);
+
+      color:var(--gold-dark);
+
+      border:
+        1px solid rgba(200,154,59,.20);
+
+      font-size:10px;
+      font-weight:900;
+
+      margin-bottom:13px;
     }
 
     .hero h2{
       margin:0;
+
       color:var(--green);
+
       font-size:38px;
-      line-height:1.45;
-      font-weight:800;
+      line-height:1.5;
+
+      font-weight:900;
     }
 
     .hero h2 span{
@@ -144,422 +204,663 @@
     }
 
     .hero p{
-      margin:15px 0 0;
-      color:var(--muted);
-      line-height:1.9;
-      font-size:15px;
       max-width:650px;
+
+      margin:13px 0 0;
+
+      color:var(--muted);
+
+      font-size:13px;
+      line-height:2;
     }
 
-    .hero-visual{
+
+    /* HERO LOGO */
+
+    .hero-logo{
+      min-height:290px;
+
       background:#fff;
-      border:1px solid rgba(200,154,59,.22);
+
+      border:
+        1px solid rgba(200,154,59,.22);
+
       border-radius:28px;
-      padding:28px;
+
       box-shadow:var(--shadow);
+
       position:relative;
+
       overflow:hidden;
-      min-height:280px;
+
       display:flex;
       align-items:center;
       justify-content:center;
     }
 
-    .hero-visual::before{
+    .hero-logo::before{
       content:"";
+
       position:absolute;
-      width:220px;
-      height:220px;
+
+      width:250px;
+      height:250px;
+
+      top:-95px;
+      right:-80px;
+
       border-radius:50%;
-      background:rgba(11,74,63,.06);
-      top:-60px;
-      right:-60px;
+
+      background:
+        rgba(11,74,63,.055);
     }
 
-    .hero-visual::after{
+    .hero-logo::after{
       content:"";
+
       position:absolute;
-      width:170px;
-      height:170px;
+
+      width:200px;
+      height:200px;
+
+      bottom:-95px;
+      left:-70px;
+
       border-radius:50%;
-      background:rgba(200,154,59,.08);
-      bottom:-55px;
-      left:-45px;
+
+      background:
+        rgba(200,154,59,.09);
     }
 
-    .hero-visual img{
-      width:220px;
-      max-width:75%;
+    .hero-logo img{
+      width:230px;
+
+      max-width:70%;
+
       object-fit:contain;
+
       position:relative;
+
       z-index:2;
     }
 
-    /* ================= SECTION TITLE ================= */
+
+    /* ==============================
+       SECTION
+    ============================== */
 
     .section-title{
-      margin-bottom:18px;
+      margin-bottom:17px;
     }
 
     .section-title h3{
       margin:0;
+
       color:var(--green);
-      font-size:24px;
-      font-weight:800;
+
+      font-size:21px;
+      font-weight:900;
     }
 
     .section-title p{
-      margin:5px 0 0;
+      margin:4px 0 0;
+
       color:var(--muted);
-      font-size:13px;
+
+      font-size:11px;
     }
 
-    /* ================= CARDS ================= */
 
-    .cards{
+    /* ==============================
+       PORTAL CARDS
+    ============================== */
+
+    .portal-grid{
       display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:16px;
+
+      grid-template-columns:
+        repeat(2,1fr);
+
+      gap:17px;
     }
 
-    .card{
+    .portal{
       background:#fff;
-      border:1px solid var(--border);
-      border-radius:20px;
-      padding:20px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius:21px;
+
+      padding:22px;
+
+      min-height:220px;
+
+      box-shadow:var(--shadow);
+
       text-decoration:none;
+
       color:inherit;
-      box-shadow:0 12px 35px rgba(25,54,46,.08);
-      transition:.25s ease;
+
       position:relative;
+
       overflow:hidden;
-      min-height:190px;
+
+      transition:.25s ease;
+
       display:flex;
       flex-direction:column;
       justify-content:space-between;
     }
 
-    .card:hover{
-      transform:translateY(-4px);
-      box-shadow:0 18px 45px rgba(25,54,46,.13);
-      border-color:rgba(200,154,59,.38);
+    .portal:hover{
+      transform:
+        translateY(-4px);
+
+      border-color:
+        rgba(200,154,59,.45);
+
+      box-shadow:
+        0 22px 55px rgba(16,52,43,.14);
     }
 
-    .card::before{
+    .portal::before{
       content:"";
+
       position:absolute;
+
       top:0;
       right:0;
+
       width:100%;
       height:5px;
-      background:linear-gradient(90deg,var(--green),var(--gold));
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--green),
+          var(--gold)
+        );
     }
 
-    .icon{
-      width:52px;
-      height:52px;
+    .portal-icon{
+      width:54px;
+      height:54px;
+
       border-radius:15px;
+
+      background:var(--green-soft);
+
+      color:var(--green);
+
       display:flex;
       align-items:center;
       justify-content:center;
+
       font-size:23px;
-      margin-bottom:14px;
+
+      margin-bottom:15px;
     }
 
-    .icon.green{
-      background:var(--green-soft);
-      color:var(--green);
-    }
-
-    .icon.gold{
+    .portal.teacher .portal-icon{
       background:var(--gold-soft);
       color:var(--gold-dark);
     }
 
-    .card h4{
+    .portal h4{
       margin:0;
-      font-size:18px;
+
       color:var(--green);
-      font-weight:800;
-    }
 
-    .card p{
-      margin:8px 0 0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
-    }
-
-    .open{
-      margin-top:18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      color:var(--gold-dark);
-      font-size:12px;
-      font-weight:800;
-    }
-
-    .open span{
       font-size:18px;
+      font-weight:900;
     }
 
-    /* ================= QUICK INFO ================= */
+    .portal p{
+      margin:7px 0 0;
 
-    .bottom-panel{
-      margin-top:20px;
-      background:linear-gradient(135deg,var(--green),var(--green-dark));
-      border-radius:20px;
-      padding:18px 20px;
-      color:#fff;
+      color:var(--muted);
+
+      font-size:11px;
+      line-height:1.9;
+    }
+
+    .portal-footer{
+      margin-top:18px;
+
+      padding-top:13px;
+
+      border-top:
+        1px solid #edf0ee;
+
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:20px;
-      flex-wrap:wrap;
+
+      color:var(--gold-dark);
+
+      font-size:10px;
+      font-weight:900;
     }
 
-    .bottom-panel strong{
-      font-size:15px;
+    .arrow{
+      font-size:19px;
     }
 
-    .bottom-panel p{
-      margin:3px 0 0;
-      font-size:12px;
-      opacity:.85;
+
+    /* ==============================
+       EXPLANATION
+    ============================== */
+
+    .info-panel{
+      margin-top:22px;
+
+      border-radius:19px;
+
+      padding:18px 20px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--green),
+          var(--green-dark)
+        );
+
+      color:#fff;
+
+      display:grid;
+
+      grid-template-columns:
+        repeat(3,1fr);
+
+      gap:15px;
+
+      box-shadow:var(--shadow);
     }
 
-    .bottom-logo{
-      color:#f7dfaa;
-      font-size:12px;
-      font-weight:700;
+    .info-item{
+      padding:4px 12px;
+
+      border-left:
+        1px solid rgba(255,255,255,.13);
     }
 
-    /* ================= FOOTER ================= */
+    .info-item:last-child{
+      border-left:0;
+    }
 
-    .footer{
+    .info-item strong{
+      display:block;
+
+      color:#f5dca8;
+
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .info-item span{
+      display:block;
+
+      margin-top:4px;
+
+      color:
+        rgba(255,255,255,.78);
+
+      font-size:9px;
+      line-height:1.7;
+    }
+
+
+    /* ==============================
+       FOOTER
+    ============================== */
+
+    footer{
+      padding:20px 15px 25px;
+
       text-align:center;
-      padding:18px;
-      color:#777f7b;
-      font-size:12px;
+
+      color:#8c928f;
+
+      font-size:9px;
       font-weight:600;
     }
 
-    /* ================= RESPONSIVE ================= */
+    footer strong{
+      color:var(--green);
+    }
 
-    @media(max-width:950px){
+
+    /* ==============================
+       RESPONSIVE
+    ============================== */
+
+    @media(max-width:900px){
+
       .hero{
         grid-template-columns:1fr;
       }
 
-      .hero-visual{
+      .hero-logo{
         min-height:220px;
       }
 
-      .hero-visual img{
+      .hero-logo img{
         width:180px;
       }
 
-      .cards{
-        grid-template-columns:1fr 1fr;
-      }
     }
 
-    @media(max-width:650px){
+    @media(max-width:700px){
+
       .header-inner{
-        padding:10px 13px;
+        min-height:72px;
       }
 
-      .logo{
-        width:56px;
-        height:56px;
+      .brand img{
+        width:55px;
+        height:55px;
       }
 
-      .brand-text h1{
-        font-size:16px;
+      .brand h1{
+        font-size:15px;
       }
 
-      .brand-text p{
-        font-size:10px;
+      .system-badge{
+        display:none;
       }
 
-      .main{
-        padding:28px 13px 40px;
+      main{
+        padding-top:30px;
       }
 
       .hero{
-        gap:20px;
+        gap:22px;
       }
 
       .hero h2{
-        font-size:28px;
+        font-size:27px;
       }
 
-      .hero p{
-        font-size:13px;
-      }
-
-      .hero-visual{
-        padding:20px;
-      }
-
-      .cards{
+      .portal-grid{
         grid-template-columns:1fr;
       }
+
+      .info-panel{
+        grid-template-columns:1fr;
+      }
+
+      .info-item{
+        border-left:0;
+
+        border-bottom:
+          1px solid rgba(255,255,255,.12);
+
+        padding:8px 2px 13px;
+      }
+
+      .info-item:last-child{
+        border-bottom:0;
+      }
+
     }
   </style>
 </head>
 
+
 <body>
 
-<div class="page">
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="header-inner">
+<header>
 
-      <div class="brand">
-        <img src="logo.jpeg" alt="شعار مدارس الفلاح الأهلية" class="logo">
+  <div class="header-inner">
 
-        <div class="brand-text">
-          <h1>مدارس الفلاح الأهلية</h1>
-          <p>نظام الإشراف التربوي</p>
-        </div>
-      </div>
+    <div class="brand">
 
-    </div>
-  </header>
+      <img
+        src="logo.jpeg"
+        alt="شعار مدارس الفلاح الأهلية"
+      >
 
+      <div>
 
-  <!-- MAIN -->
-  <main class="main">
-
-    <section class="hero">
-
-      <div class="hero-content">
-
-        <div class="eyebrow">
-          الإشراف والتطوير المهني
-        </div>
-
-        <h2>
-          منصة متابعة
-          <span>الزيارات التربوية</span>
-        </h2>
+        <h1>
+          مدارس الفلاح الأهلية
+        </h1>
 
         <p>
-          نظام مبسط ومنظم لإدارة بيانات المعلمين،
-          وتنفيذ الزيارات الصفية، ومتابعة التقارير
-          وسجل الزيارات بصورة احترافية وسهلة.
+          نظام الإشراف التربوي
         </p>
 
       </div>
 
+    </div>
 
-      <div class="hero-visual">
-        <img src="logo.jpeg" alt="شعار مدارس الفلاح الأهلية">
+
+    <div class="system-badge">
+      منصة المتابعة والتطوير
+    </div>
+
+  </div>
+
+</header>
+
+
+
+<main>
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="hero-text">
+
+      <div class="small-title">
+        الإشراف والتطوير المهني
       </div>
 
-    </section>
+      <h2>
+        نظام متكامل لإدارة
+        <span>الزيارات التربوية</span>
+      </h2>
 
+      <p>
+        منصة موحدة لمدارس الفلاح الأهلية تساعد الإدارة
+        والمشرفين على تنظيم المعلمين وتنفيذ الزيارات
+        ومتابعة التقارير، مع توفير بوابة خاصة للمعلم
+        للاطلاع على زياراته وتأكيد الاطلاع عليها.
+      </p>
+
+    </div>
+
+
+    <div class="hero-logo">
+
+      <img
+        src="logo.jpeg"
+        alt="مدارس الفلاح الأهلية"
+      >
+
+    </div>
+
+  </section>
+
+
+
+  <!-- PORTALS -->
+
+  <section>
 
     <div class="section-title">
-      <h3>الخدمات الرئيسية</h3>
-      <p>اختر الخدمة التي تريد الوصول إليها.</p>
-    </div>
 
+      <h3>
+        الدخول إلى النظام
+      </h3>
 
-    <section class="cards">
-
-      <!-- EVALUATION -->
-      <a href="evaluation-form.html" class="card">
-
-        <div>
-          <div class="icon green">✓</div>
-
-          <h4>زيارة جديدة</h4>
-
-          <p>
-            تنفيذ استمارة تقييم جديدة وتسجيل
-            بيانات الزيارة والدرجة والتوصيات.
-          </p>
-        </div>
-
-        <div class="open">
-          فتح الاستمارة
-          <span>←</span>
-        </div>
-
-      </a>
-
-
-      <!-- TEACHERS -->
-      <a href="teachers.html" class="card">
-
-        <div>
-          <div class="icon gold">♟</div>
-
-          <h4>إدارة المعلمين</h4>
-
-          <p>
-            إضافة المعلمين وتعديل بياناتهم
-            ومتابعة عدد الزيارات الخاصة بكل معلم.
-          </p>
-        </div>
-
-        <div class="open">
-          إدارة البيانات
-          <span>←</span>
-        </div>
-
-      </a>
-
-
-      <!-- VISITS -->
-      <a href="teacher-visits.html" class="card">
-
-        <div>
-          <div class="icon green">▤</div>
-
-          <h4>سجل الزيارات</h4>
-
-          <p>
-            البحث في الزيارات السابقة،
-            وعرض النتائج والطباعة وحفظ السجل.
-          </p>
-        </div>
-
-        <div class="open">
-          عرض الزيارات
-          <span>←</span>
-        </div>
-
-      </a>
-
-    </section>
-
-
-    <div class="bottom-panel">
-
-      <div>
-        <strong>مدارس الفلاح الأهلية</strong>
-        <p>متابعة وتطوير الأداء التربوي</p>
-      </div>
-
-      <div class="bottom-logo">
-        تصميم محمد عامر أحمد
-      </div>
+      <p>
+        اختر البوابة المناسبة لحسابك.
+      </p>
 
     </div>
 
-  </main>
+
+    <div class="portal-grid">
 
 
-  <footer class="footer">
-    جميع الحقوق محفوظة لمدارس الفلاح الأهلية
-  </footer>
+      <!-- SUPERVISORS + ADMIN -->
 
-</div>
+      <a
+        href="supervisor-login.html"
+        class="portal"
+      >
+
+        <div>
+
+          <div class="portal-icon">
+            👨‍💼
+          </div>
+
+          <h4>
+            الإدارة والمشرفون
+          </h4>
+
+          <p>
+            دخول مدير النظام والمشرفين التربويين.
+            يحصل كل مشرف على لوحة خاصة بمعلميه
+            وزياراته، بينما يمتلك مدير النظام
+            صلاحية إدارة جميع المشرفين والمعلمين.
+          </p>
+
+        </div>
+
+
+        <div class="portal-footer">
+
+          <span>
+            تسجيل الدخول
+          </span>
+
+          <span class="arrow">
+            ←
+          </span>
+
+        </div>
+
+      </a>
+
+
+
+      <!-- TEACHER -->
+
+      <a
+        href="teacher-portal.html"
+        class="portal teacher"
+      >
+
+        <div>
+
+          <div class="portal-icon">
+            👨‍🏫
+          </div>
+
+          <h4>
+            بوابة المعلم
+          </h4>
+
+          <p>
+            دخول المعلم للاطلاع على الزيارات
+            والتقارير الخاصة به ومراجعة التوصيات
+            والنتائج وتأكيد الاطلاع على كل زيارة.
+          </p>
+
+        </div>
+
+
+        <div class="portal-footer">
+
+          <span>
+            دخول المعلم
+          </span>
+
+          <span class="arrow">
+            ←
+          </span>
+
+        </div>
+
+      </a>
+
+
+    </div>
+
+  </section>
+
+
+
+  <!-- SYSTEM STRUCTURE -->
+
+  <section class="info-panel">
+
+    <div class="info-item">
+
+      <strong>
+        مدير النظام
+      </strong>
+
+      <span>
+        يتحكم في المشرفين ويوزع المعلمين
+        ويشاهد جميع بيانات النظام.
+      </span>
+
+    </div>
+
+
+    <div class="info-item">
+
+      <strong>
+        المشرف التربوي
+      </strong>
+
+      <span>
+        يدير معلميه فقط وينفذ زياراتهم
+        ويتابع حالة الاطلاع على التقارير.
+      </span>
+
+    </div>
+
+
+    <div class="info-item">
+
+      <strong>
+        المعلم
+      </strong>
+
+      <span>
+        يشاهد زياراته وتقاريره فقط
+        ويؤكد الاطلاع عليها.
+      </span>
+
+    </div>
+
+  </section>
+
+
+</main>
+
+
+
+<footer>
+
+  جميع الحقوق محفوظة لمدارس الفلاح الأهلية
+  <br>
+
+  <strong>
+    تصميم محمد عامر أحمد
+  </strong>
+
+</footer>
+
 
 </body>
 </html>
