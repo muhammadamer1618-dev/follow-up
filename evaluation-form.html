@@ -12,17 +12,14 @@
       --green:#0b4a3f;
       --green-dark:#07372f;
       --green-soft:#edf5f1;
-
       --gold:#c89a3b;
       --gold-dark:#a87921;
       --gold-soft:#faf2e3;
-
       --bg:#f7f8f6;
       --white:#ffffff;
       --text:#1f2926;
       --muted:#727a76;
       --border:#e1e5e2;
-
       --red:#b3261e;
       --shadow:0 12px 35px rgba(16,55,45,.08);
     }
@@ -50,8 +47,6 @@
     button{
       cursor:pointer;
     }
-
-    /* ================= HEADER ================= */
 
     .header{
       position:sticky;
@@ -150,8 +145,6 @@
       color:var(--gold-dark);
       border:1px solid rgba(200,154,59,.22);
     }
-
-    /* ================= PAGE ================= */
 
     .page{
       max-width:1450px;
@@ -267,8 +260,6 @@
       box-shadow:0 0 0 3px rgba(11,74,63,.08);
     }
 
-    /* ================= TEACHER PICKER ================= */
-
     .teacher-picker{
       position:relative;
     }
@@ -382,17 +373,6 @@
       font-weight:800;
     }
 
-    .teacher-manage{
-      display:block;
-      margin-top:8px;
-      text-decoration:none;
-      color:var(--gold-dark);
-      font-size:10px;
-      font-weight:800;
-    }
-
-    /* ================= MAIN FORM ================= */
-
     .main-card{
       padding:17px;
       overflow:hidden;
@@ -491,14 +471,9 @@
       background:#fff;
     }
 
-    .choice:hover{
-      background:#f7faf8;
-    }
-
     .choice input{
       position:absolute;
       opacity:0;
-      pointer-events:none;
     }
 
     .choice:has(input:checked){
@@ -506,7 +481,6 @@
       border-color:var(--green);
       color:var(--green);
       font-weight:900;
-      box-shadow:inset 0 0 0 1px var(--green);
     }
 
     .scoreCell{
@@ -515,8 +489,6 @@
       color:var(--green);
       font-weight:900;
     }
-
-    /* ================= SCORE ================= */
 
     .summary{
       margin-top:14px;
@@ -542,95 +514,55 @@
 
     .score-box strong{
       display:block;
-      margin-top:3px;
+      margin-top:2px;
       color:var(--green);
-      font-size:20px;
+      font-size:23px;
       font-weight:900;
     }
 
-    /* ================= NOTES ================= */
-
     .notes-grid{
-      margin-top:17px;
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:12px;
+      margin-top:14px;
     }
 
-    .note-box label{
-      display:block;
-      color:var(--green);
-      font-size:12px;
-      font-weight:900;
-      margin-bottom:6px;
-    }
-
-    .note-box textarea{
-      width:100%;
+    textarea{
       min-height:110px;
       resize:vertical;
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:10px;
-      outline:none;
-      font-size:11px;
     }
-
-    .note-box textarea:focus{
-      border-color:var(--green);
-    }
-
-    /* ================= WORK ================= */
 
     .work-card{
-      margin-top:18px;
-      border:1px solid var(--border);
-      border-radius:14px;
-      overflow:hidden;
+      margin-top:15px;
+      padding:17px;
     }
 
-    .work-title{
-      padding:11px 14px;
-      background:linear-gradient(135deg,var(--green),var(--green-dark));
-      color:#fff;
-      font-size:12px;
-      font-weight:900;
+    .workTable{
+      min-width:650px;
     }
 
-    .work-inner{
-      padding:12px;
-    }
-
-    .work-table th{
-      background:var(--gold-soft);
-      color:var(--gold-dark);
-    }
-
-    .work-table input[type="text"]{
+    .workTable input[type="text"]{
       width:100%;
-      min-width:150px;
       border:1px solid var(--border);
       border-radius:8px;
       padding:7px;
-      font-size:10px;
     }
 
     .workChoices{
-      display:flex;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
       gap:5px;
-      justify-content:center;
-      flex-wrap:wrap;
     }
 
     .workChoice{
       position:relative;
+      padding:6px;
+      border:1px solid var(--border);
+      border-radius:8px;
+      text-align:center;
       cursor:pointer;
-      border:1px solid #e0e4e2;
-      border-radius:7px;
-      padding:5px 9px;
       font-size:9px;
       font-weight:700;
-      background:#fff;
     }
 
     .workChoice input{
@@ -645,53 +577,30 @@
       font-weight:900;
     }
 
-    .signatures{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-
-    .signature{
-      min-height:78px;
-      border:1px dashed #b9c0bc;
-      border-radius:10px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:center;
-      padding:10px;
-      font-size:10px;
-      font-weight:800;
-      color:#68716c;
-    }
-
-    /* ================= MESSAGE ================= */
-
     .save-message{
       position:fixed;
       left:20px;
       bottom:20px;
-      z-index:100;
-      background:var(--green-dark);
+      z-index:200;
+      background:var(--green);
       color:#fff;
-      border-radius:13px;
+      border-radius:12px;
       padding:12px 16px;
-      box-shadow:0 15px 40px rgba(0,0,0,.2);
-      font-size:11px;
+      font-size:12px;
       font-weight:800;
-      transform:translateY(120px);
+      box-shadow:0 12px 35px rgba(0,0,0,.18);
       opacity:0;
-      transition:.3s;
+      pointer-events:none;
+      transform:translateY(15px);
+      transition:.25s;
     }
 
     .save-message.show{
-      transform:translateY(0);
       opacity:1;
+      transform:none;
     }
 
-    /* ================= RESPONSIVE ================= */
-
-    @media(max-width:1050px){
+    @media(max-width:1000px){
       .layout{
         grid-template-columns:1fr;
       }
@@ -702,51 +611,13 @@
     }
 
     @media(max-width:700px){
-      .header-inner{
-        align-items:flex-start;
-      }
-
-      .brand img{
-        width:48px;
-        height:48px;
-      }
-
-      .brand-text h1{
-        font-size:14px;
-      }
-
-      .top-actions{
-        width:100%;
-      }
-
-      .header-inner{
-        flex-wrap:wrap;
-      }
-
-      .top-actions .btn{
-        flex:1;
-        padding:8px 5px;
-        font-size:10px;
-      }
-
-      .page{
-        padding:18px 10px 35px;
-      }
-
-      .page-title h2{
-        font-size:21px;
-      }
-
-      .summary{
-        grid-template-columns:1fr;
-      }
-
+      .summary,
       .notes-grid{
         grid-template-columns:1fr;
       }
 
-      .signatures{
-        grid-template-columns:1fr;
+      .header-inner{
+        align-items:flex-start;
       }
     }
   </style>
@@ -758,7 +629,7 @@
   <div class="header-inner">
 
     <div class="brand">
-      <img src="logo.jpeg" alt="شعار مدارس الفلاح الأهلية">
+      <img src="logo.jpeg" alt="شعار مدارس الفلاح">
 
       <div class="brand-text">
         <h1>مدارس الفلاح الأهلية</h1>
@@ -767,19 +638,23 @@
     </div>
 
     <div class="top-actions">
-      <a href="index.html" class="btn btn-back">الرئيسية</a>
 
-      <button type="button" id="btnSave" class="btn btn-save">
+      <a href="supervisor-dashboard.html" class="btn btn-back" id="backBtn">
+        لوحة التحكم
+      </a>
+
+      <button class="btn btn-clear" id="btnClear">
+        تفريغ
+      </button>
+
+      <button class="btn btn-save" id="btnSave">
         حفظ الزيارة
       </button>
 
-      <button type="button" id="btnSendWhats" class="btn btn-whats" disabled>
-        إرسال التقرير
+      <button class="btn btn-whats" id="btnSendWhats" disabled>
+        واتساب
       </button>
 
-      <button type="button" id="btnClear" class="btn btn-clear">
-        تفريغ
-      </button>
     </div>
 
   </div>
@@ -789,82 +664,77 @@
 <main class="page">
 
   <div class="page-title">
+
     <div>
-      <h2>تسجيل زيارة تربوية جديدة</h2>
-      <p>اختر المعلم ثم أكمل بيانات الزيارة وعناصر التقييم.</p>
+      <h2>زيارة تربوية جديدة</h2>
+      <p>اختر المعلم وسجل بيانات الزيارة والتقييم.</p>
     </div>
 
     <div class="status-chip" id="formStatus">
       زيارة جديدة
     </div>
+
   </div>
 
 
   <div class="layout">
 
-    <!-- ================= SIDEBAR ================= -->
-
     <aside class="card sidebar">
 
       <div class="section-head">
-        <div class="section-icon">👤</div>
-        <h3>بيانات المعلم والزيارة</h3>
+        <div class="section-icon">1</div>
+        <h3>بيانات الزيارة</h3>
       </div>
 
 
-      <div class="field">
-        <label>اختيار المعلم</label>
+      <div class="field teacher-picker">
 
-        <div class="teacher-picker">
+        <label>المعلم</label>
 
-          <div class="teacher-search">
-            <input
-              type="text"
-              id="teacherSearch"
-              autocomplete="off"
-              placeholder="ابحث باسم المعلم..."
-            >
-            <span class="teacher-search-icon">⌕</span>
-          </div>
+        <div class="teacher-search">
 
-          <div class="teacher-results" id="teacherResults"></div>
+          <input
+            type="text"
+            id="teacherSearch"
+            placeholder="ابحث باسم المعلم..."
+            autocomplete="off"
+          >
+
+          <span class="teacher-search-icon">⌕</span>
 
         </div>
+
+        <div class="teacher-results" id="teacherResults"></div>
+
 
         <div class="selected-teacher" id="selectedTeacherBox">
+
           <div class="selected-teacher-name" id="selectedTeacherName"></div>
 
-          <div class="selected-teacher-meta">
-            <div id="selectedTeacherPhone"></div>
+          <div class="selected-teacher-meta" id="selectedTeacherMeta"></div>
 
-            <span
-              class="selected-teacher-code"
-              id="selectedTeacherCode"
-            ></span>
-          </div>
+          <div class="selected-teacher-code" id="selectedTeacherCode"></div>
+
         </div>
 
-        <a href="teachers.html" class="teacher-manage">
-          إدارة المعلمين ←
-        </a>
       </div>
 
 
       <div class="field">
         <label>الصف</label>
-        <input id="grade" placeholder="مثال: السادس الابتدائي">
+        <input type="text" id="grade">
       </div>
 
 
       <div class="field">
         <label>المادة</label>
-        <input id="subject" placeholder="اسم المادة">
+        <input type="text" id="subject">
       </div>
 
 
       <div class="field">
         <label>عنوان الدرس</label>
-        <input id="lessonTitle" placeholder="عنوان الدرس">
+        <input type="text" id="lessonTitle">
       </div>
 
 
@@ -876,7 +746,7 @@
 
       <div class="field">
         <label>اسم المشرف</label>
-        <input id="supervisorName" placeholder="اسم المشرف">
+        <input type="text" id="supervisorName" readonly>
       </div>
 
 
@@ -888,34 +758,36 @@
     </aside>
 
 
-    <!-- ================= MAIN ================= -->
-
     <section class="card main-card">
 
       <div class="rubric-header">
+
         <div>
-          <h3>عناصر التقييم</h3>
-          <p>اختر مستوى الأداء المناسب لكل عنصر.</p>
+          <h3>نموذج تقييم الزيارة</h3>
+          <p>الدرجة القصوى 100 درجة</p>
         </div>
+
       </div>
 
 
       <div class="rubricWrap">
+
         <table class="rubricTable">
 
           <thead>
             <tr>
-              <th style="width:42px;">م</th>
-              <th style="width:145px;">المجال</th>
+              <th>م</th>
+              <th>المجال</th>
               <th>العنصر</th>
-              <th style="width:400px;">التقييم</th>
-              <th style="width:60px;">الدرجة</th>
+              <th>التقييم</th>
+              <th>الدرجة</th>
             </tr>
           </thead>
 
           <tbody id="rubricBody"></tbody>
 
         </table>
+
       </div>
 
 
@@ -923,10 +795,12 @@
 
         <div class="score-box">
           <span>المجموع</span>
-          <strong>
-            <span id="rawTotal">0</span>
-            <small style="font-size:10px;">/ 100</small>
-          </strong>
+          <strong id="rawTotal">0</strong>
+        </div>
+
+        <div class="score-box">
+          <span>الدرجة النهائية</span>
+          <strong id="finalScore">0</strong>
         </div>
 
         <div class="score-box">
@@ -934,77 +808,53 @@
           <strong id="percentage">0%</strong>
         </div>
 
-        <div class="score-box">
-          <span>الدرجة النهائية</span>
-          <strong>
-            <span id="finalScore">0</span>
-            <small style="font-size:10px;">/ 100</small>
-          </strong>
-        </div>
-
       </div>
 
 
       <div class="notes-grid">
 
-        <div class="note-box">
+        <div class="field">
           <label>إيجابيات الحصة</label>
           <textarea id="positives"></textarea>
         </div>
 
-        <div class="note-box">
-          <label>توصيات وتوجيهات</label>
+        <div class="field">
+          <label>التوصيات والتوجيهات</label>
           <textarea id="recommendations"></textarea>
         </div>
 
       </div>
 
-
-      <!-- ================= WRITTEN WORK ================= -->
-
-      <div class="work-card">
-
-        <div class="work-title">
-          متابعة الأعمال التحريرية للطلاب
-        </div>
-
-        <div class="work-inner">
-
-          <div style="
-            font-size:10px;
-            color:#727a76;
-            margin-bottom:8px;
-          ">
-            يتم تسجيل بيانات 8 طلاب فقط.
-          </div>
-
-          <div style="overflow:auto;">
-            <table class="work-table">
-
-              <thead>
-                <tr>
-                  <th style="width:45%;">اسم الطالب</th>
-                  <th>حالة الأعمال التحريرية</th>
-                </tr>
-              </thead>
-
-              <tbody id="workBody"></tbody>
-
-            </table>
-          </div>
-
-
-          <div class="signatures">
-            <div class="signature">توقيع المعلم</div>
-            <div class="signature">توقيع المشرف</div>
-          </div>
-
-        </div>
-      </div>
-
     </section>
 
   </div>
+
+
+  <section class="card work-card">
+
+    <div class="section-head">
+      <div class="section-icon">2</div>
+      <h3>متابعة الأعمال التحريرية للطلاب</h3>
+    </div>
+
+    <div style="overflow:auto">
+
+      <table class="workTable">
+
+        <thead>
+          <tr>
+            <th>اسم الطالب</th>
+            <th>حالة العمل</th>
+          </tr>
+        </thead>
+
+        <tbody id="workBody"></tbody>
+
+      </table>
+
+    </div>
+
+  </section>
 
 </main>
 
@@ -1016,483 +866,623 @@
 
 <script type="module">
 
-  import { db } from "./firebase.js";
+import { db } from "./firebase.js";
 
-  import {
-    collection,
-    getDocs,
-    addDoc,
-    serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
-
-
-  const el = id => document.getElementById(id);
+import {
+  collection,
+  getDocs,
+  addDoc,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 
-  /* ======================================================
-     TEACHERS
-  ====================================================== */
-
-  let teachers = [];
-
-  let selectedTeacher = null;
-
-  let lastSavedVisitPayload = null;
-  let lastSavedVisitId = null;
+const el = id => document.getElementById(id);
 
 
-  async function loadTeachers(){
+/* ======================================================
+   SESSION
+====================================================== */
 
-    try{
+const rawSession =
+  localStorage.getItem("currentSupervisor") ||
+  sessionStorage.getItem("currentSupervisor");
 
-      const snap = await getDocs(collection(db,"teachers"));
 
-      teachers = snap.docs.map(d => {
+if(!rawSession){
+  location.href = "supervisor-login.html";
+  throw new Error("No session");
+}
 
-        const x = d.data() || {};
 
-        return {
-          id:d.id,
-          code:String(x.code || d.id),
-          name:String(x.name || ""),
-          phone:String(x.phone || "")
-        };
+const currentUser = JSON.parse(rawSession);
 
-      });
+const isAdmin =
+  currentUser.role === "admin";
 
-      teachers.sort((a,b) =>
-        a.name.localeCompare(b.name,"ar")
+
+el("supervisorName").value =
+  currentUser.name || "";
+
+
+el("backBtn").href =
+  isAdmin
+  ? "admin-dashboard.html"
+  : "supervisor-dashboard.html";
+
+
+/* ======================================================
+   TEACHERS
+====================================================== */
+
+let allTeachers = [];
+let visibleTeachers = [];
+let selectedTeacher = null;
+
+let lastSavedVisitId = null;
+let lastSavedVisitPayload = null;
+
+
+async function loadTeachers(){
+
+  try{
+
+    const snap =
+      await getDocs(
+        collection(db,"teachers")
       );
 
-    }catch(err){
 
-      console.error(err);
+    allTeachers =
+      snap.docs.map(d=>({
+        id:d.id,
+        ...d.data()
+      }));
 
-      alert("تعذر تحميل بيانات المعلمين");
+
+    if(isAdmin){
+
+      visibleTeachers =
+        [...allTeachers];
+
+    }else{
+
+      visibleTeachers =
+        allTeachers.filter(
+          teacher =>
+            String(teacher.supervisorId || "") ===
+            String(currentUser.id || "")
+        );
 
     }
 
+
+    visibleTeachers.sort(
+      (a,b)=>
+        String(a.name || "")
+        .localeCompare(
+          String(b.name || ""),
+          "ar"
+        )
+    );
+
+
+    renderTeacherResults(
+      visibleTeachers
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    el("teacherResults").innerHTML = `
+      <div class="teacher-empty">
+        تعذر تحميل المعلمين
+      </div>
+    `;
+
   }
 
-
-  function renderTeacherResults(search=""){
-
-    const box = el("teacherResults");
-
-    const term =
-      String(search || "")
-      .trim()
-      .toLowerCase();
+}
 
 
-    const filtered = teachers.filter(t => {
+function renderTeacherResults(list){
 
-      return (
-        t.name.toLowerCase().includes(term) ||
-        t.code.toLowerCase().includes(term) ||
-        t.phone.toLowerCase().includes(term)
-      );
-
-    });
+  const box =
+    el("teacherResults");
 
 
-    box.innerHTML = "";
+  box.innerHTML = "";
 
 
-    if(!filtered.length){
+  if(!list.length){
 
-      box.innerHTML = `
-        <div class="teacher-empty">
-          لا يوجد معلم مطابق
-        </div>
-      `;
+    box.innerHTML = `
+      <div class="teacher-empty">
+        لا يوجد معلمون مطابقون
+      </div>
+    `;
 
-      box.classList.add("show");
-
-      return;
-    }
-
-
-    filtered.forEach(t => {
-
-      const item = document.createElement("div");
-
-      item.className = "teacher-option";
-
-      item.innerHTML = `
-        <strong>${escapeHtml(t.name)}</strong>
-        <small>
-          ${t.phone ? escapeHtml(t.phone) : "بدون رقم جوال"}
-        </small>
-      `;
-
-      item.addEventListener("click",()=>{
-
-        chooseTeacher(t);
-
-      });
-
-      box.appendChild(item);
-
-    });
-
-
-    box.classList.add("show");
+    return;
 
   }
 
 
-  function chooseTeacher(t){
+  list.forEach(teacher=>{
 
-    selectedTeacher = t;
-
-    el("teacherSearch").value = t.name;
-
-    el("teacherResults").classList.remove("show");
+    const item =
+      document.createElement("div");
 
 
-    el("selectedTeacherName").textContent =
-      t.name;
+    item.className =
+      "teacher-option";
 
 
-    el("selectedTeacherPhone").textContent =
-      t.phone
-      ? "الجوال: " + t.phone
-      : "لا يوجد رقم جوال";
+    item.innerHTML = `
+
+      <strong>
+        ${escapeHtml(
+          teacher.name || ""
+        )}
+      </strong>
+
+      <small>
+        ${
+          teacher.phone
+          ? "الجوال: " +
+            escapeHtml(
+              teacher.phone
+            )
+          : ""
+        }
+      </small>
+
+    `;
 
 
-    el("selectedTeacherCode").textContent =
-      "رمز المعلم: " + t.code;
+    item.addEventListener(
+      "click",
+      ()=>selectTeacher(teacher)
+    );
 
 
-    el("selectedTeacherBox")
-      .classList.add("show");
+    box.appendChild(item);
 
+  });
+
+}
+
+
+function selectTeacher(teacher){
+
+  if(
+    !isAdmin &&
+    String(teacher.supervisorId || "") !==
+    String(currentUser.id || "")
+  ){
+    alert("هذا المعلم غير تابع لك");
+    return;
   }
 
 
-  el("teacherSearch")
-    .addEventListener("focus",()=>{
+  selectedTeacher = teacher;
+
+
+  el("teacherSearch").value =
+    teacher.name || "";
+
+
+  el("selectedTeacherName").textContent =
+    teacher.name || "";
+
+
+  el("selectedTeacherMeta").textContent =
+    teacher.phone
+    ? "رقم الجوال: " + teacher.phone
+    : "لا يوجد رقم جوال";
+
+
+  el("selectedTeacherCode").textContent =
+    "رمز المعلم: " +
+    (teacher.code || teacher.id || "");
+
+
+  el("selectedTeacherBox")
+    .classList
+    .add("show");
+
+
+  el("teacherResults")
+    .classList
+    .remove("show");
+
+}
+
+
+/* ======================================================
+   SEARCH
+====================================================== */
+
+el("teacherSearch")
+  .addEventListener(
+    "focus",
+    ()=>{
+
+      el("teacherResults")
+        .classList
+        .add("show");
 
       renderTeacherResults(
-        el("teacherSearch").value
+        visibleTeachers
       );
 
-    });
+    }
+  );
 
 
-  el("teacherSearch")
-    .addEventListener("input",()=>{
+el("teacherSearch")
+  .addEventListener(
+    "input",
+    ()=>{
 
       selectedTeacher = null;
 
       el("selectedTeacherBox")
-        .classList.remove("show");
+        .classList
+        .remove("show");
+
+
+      const term =
+        el("teacherSearch")
+        .value
+        .trim()
+        .toLowerCase();
+
+
+      const filtered =
+        visibleTeachers.filter(
+          teacher=>{
+
+            const text =
+              (
+                String(
+                  teacher.name || ""
+                )
+                +
+                " "
+                +
+                String(
+                  teacher.code || teacher.id || ""
+                )
+              )
+              .toLowerCase();
+
+
+            return text.includes(term);
+
+          }
+        );
+
 
       renderTeacherResults(
-        el("teacherSearch").value
+        filtered
       );
 
-    });
+
+      el("teacherResults")
+        .classList
+        .add("show");
+
+    }
+  );
 
 
-  document.addEventListener("click",e=>{
+document.addEventListener(
+  "click",
+  e=>{
 
     if(
-      !e.target.closest(".teacher-picker")
+      !e.target.closest(
+        ".teacher-picker"
+      )
     ){
 
       el("teacherResults")
-        .classList.remove("show");
+        .classList
+        .remove("show");
 
     }
 
-  });
+  }
+);
 
 
+/* ======================================================
+   RUBRIC
+====================================================== */
 
-  /* ======================================================
-     RUBRIC
-  ====================================================== */
+const domains = [
 
-  const rubric = [
+  {
+    no:1,
+    name:"الرؤية",
+    items:[
+      {
+        label:"القيمة التربوية",
+        top:"مناسب",
+        mid:"إلى حد ما",
+        low:"غير مناسب"
+      }
+    ]
+  },
 
-    {
-      domainNo:1,
-      domain:"الرؤية",
-      items:[
-        {
-          label:"القيمة التربوية",
-          optTop:"مناسب",
-          optMid:"إلى حد ما",
-          optLow:"غير مناسب"
-        }
-      ]
-    },
+  {
+    no:2,
+    name:"التخطيط للدرس",
+    items:[
 
+      {
+        label:"التحضير بمنصة مدرستي",
+        top:"مكتمل",
+        mid:"غير مكتمل",
+        low:"غير موجود"
+      },
 
-    {
-      domainNo:2,
-      domain:"التخطيط للدرس",
-      items:[
+      {
+        label:"خطة الدرس",
+        top:"مكتملة ومفصلة",
+        mid:"غير مكتملة",
+        low:"غير موجودة"
+      },
 
-        {
-          label:"التحضير بمنصة مدرستي",
-          optTop:"مكتمل",
-          optMid:"غير مكتمل",
-          optLow:"غير موجود"
-        },
+      {
+        label:"أهداف الدرس",
+        top:"واضحة قابلة للقياس",
+        mid:"أهداف عامة",
+        low:"غير موجودة"
+      },
 
-        {
-          label:"خطة الدرس",
-          optTop:"مكتملة ومفصلة",
-          optMid:"غير مكتملة",
-          optLow:"غير موجودة"
-        },
+      {
+        label:"المفاهيم والمصطلحات الهامة",
+        top:"محددة وواضحة",
+        mid:"غير محددة بدقة",
+        low:"غير موجودة"
+      },
 
-        {
-          label:"أهداف الدرس",
-          optTop:"واضحة قابلة للقياس",
-          optMid:"أهداف عامة",
-          optLow:"غير موجودة"
-        },
+      {
+        label:"تسلسل خطوات الدرس",
+        top:"متسلسلة ومعدة جيدا",
+        mid:"يوجد بعض خطوات",
+        low:"خطوات قليلة"
+      },
 
-        {
-          label:"المفاهيم والمصطلحات الهامة",
-          optTop:"محددة وواضحة",
-          optMid:"غير محددة بدقة",
-          optLow:"غير موجودة"
-        },
+      {
+        label:"إعدادات الفروق الفردية",
+        top:"موجود بقوة",
+        mid:"بعض الشواهد",
+        low:"لا توجد شواهد"
+      }
 
-        {
-          label:"تسلسل خطوات الدرس",
-          optTop:"متسلسلة ومعدة جيدا",
-          optMid:"يوجد بعض خطوات",
-          optLow:"خطوات قليلة"
-        },
+    ]
+  },
 
-        {
-          label:"إعدادات الفروق الفردية",
-          optTop:"موجود بقوة",
-          optMid:"بعض الشواهد",
-          optLow:"لا توجد شواهد"
-        }
+  {
+    no:3,
+    name:"إدارة الصف",
+    items:[
 
-      ]
-    },
+      {
+        label:"تنظيم المقاعد",
+        top:"مجموعات",
+        mid:"خطوط",
+        low:"مزعج"
+      },
 
+      {
+        label:"نظافة الفصل",
+        top:"اهتمام عال بالنظافة",
+        mid:"اهتمام مناسب",
+        low:"لا يوجد اهتمام"
+      },
 
-    {
-      domainNo:3,
-      domain:"إدارة الصف",
-      items:[
+      {
+        label:"البيئة الصفية",
+        top:"معززة وإيجابية",
+        mid:"مناسبة",
+        low:"غير مناسبة"
+      },
 
-        {
-          label:"تنظيم المقاعد",
-          optTop:"مجموعات",
-          optMid:"خطوط",
-          optLow:"مزعج"
-        },
+      {
+        label:"تنظيم إجابات الطلاب",
+        top:"منظم",
+        mid:"إلى حد ما",
+        low:"غير منظم"
+      },
 
-        {
-          label:"نظافة الفصل",
-          optTop:"اهتمام عال بالنظافة",
-          optMid:"اهتمام مناسب",
-          optLow:"لا يوجد اهتمام"
-        },
+      {
+        label:"الإدارة الصفية",
+        top:"جيدة وفعالة",
+        mid:"متوسطة",
+        low:"ضعيفة"
+      },
 
-        {
-          label:"البيئة الصفية",
-          optTop:"معززة وإيجابية",
-          optMid:"مناسبة",
-          optLow:"غير مناسبة"
-        },
+      {
+        label:"تفعيل القوانين الصفية",
+        top:"مفعلة وفعالة",
+        mid:"مفعلة إلى حد ما",
+        low:"غير مفعلة"
+      }
 
-        {
-          label:"تنظيم إجابات الطلاب",
-          optTop:"منظم",
-          optMid:"إلى حد ما",
-          optLow:"غير منظم"
-        },
+    ]
+  },
 
-        {
-          label:"الإدارة الصفية",
-          optTop:"جيدة وفعالة",
-          optMid:"متوسطة",
-          optLow:"ضعيفة"
-        },
+  {
+    no:4,
+    name:"دعم السلوك",
+    items:[
 
-        {
-          label:"تفعيل القوانين الصفية",
-          optTop:"مفعلة وفعالة",
-          optMid:"مفعلة إلى حد ما",
-          optLow:"غير مفعلة"
-        }
+      {
+        label:"توجيهات المعلم",
+        top:"واضحة وإجرائية",
+        mid:"مبهمة",
+        low:"غير موجودة"
+      },
 
-      ]
-    },
+      {
+        label:"سلوك الطلاب",
+        top:"ممتاز",
+        mid:"مقبول",
+        low:"ضعيف"
+      },
 
+      {
+        label:"تفاعل الطلاب",
+        top:"ممتاز وقوي",
+        mid:"إلى حد ما",
+        low:"ضعيف"
+      },
 
-    {
-      domainNo:4,
-      domain:"دعم السلوك",
-      items:[
+      {
+        label:"صوت المعلم وتواصله مع الطلاب",
+        top:"فعال عال المستوى",
+        mid:"متوسط",
+        low:"محدود"
+      }
 
-        {
-          label:"توجيهات المعلم",
-          optTop:"واضحة وإجرائية",
-          optMid:"مبهمة",
-          optLow:"غير موجودة"
-        },
+    ]
+  },
 
-        {
-          label:"سلوك الطلاب",
-          optTop:"ممتاز",
-          optMid:"مقبول",
-          optLow:"ضعيف"
-        },
+  {
+    no:5,
+    name:"استراتيجيات التدريس",
+    items:[
 
-        {
-          label:"تفاعل الطلاب",
-          optTop:"ممتاز وقوي",
-          optMid:"إلى حد ما",
-          optLow:"ضعيف"
-        },
+      {
+        label:"خصائص الأسئلة حسب المنظومة",
+        top:"مطابقة",
+        mid:"إلى حد ما",
+        low:"غير مطابقة"
+      },
 
-        {
-          label:"صوت المعلم وتواصله مع الطلاب",
-          optTop:"فعال عال المستوى",
-          optMid:"متوسط",
-          optLow:"محدود"
-        }
+      {
+        label:"تنفيذ استراتيجية التدريس",
+        top:"ينفذ",
+        mid:"إلى حد ما",
+        low:"لا ينفذ"
+      },
 
-      ]
-    },
+      {
+        label:"ممارسة الفصحى",
+        top:"ممارسة ممتازة",
+        mid:"ممارسة متوسطة",
+        low:"ممارسة غير مناسبة"
+      },
 
+      {
+        label:"إعلان أهداف الدرس",
+        top:"معلنة وتناقش بداية الحصة",
+        mid:"إما مدونة أو تناقش",
+        low:"لا مدونة ولا تناقش"
+      }
 
-    {
-      domainNo:5,
-      domain:"استراتيجيات التدريس",
-      items:[
+    ]
+  },
 
-        {
-          label:"خصائص الأسئلة حسب المنظومة",
-          optTop:"مطابقة",
-          optMid:"إلى حد ما",
-          optLow:"غير مطابقة"
-        },
+  {
+    no:6,
+    name:"أدوات مساندة للتعلم",
+    items:[
 
-        {
-          label:"تنفيذ استراتيجية التدريس",
-          optTop:"ينفذ",
-          optMid:"إلى حد ما",
-          optLow:"لا ينفذ"
-        },
+      {
+        label:"الوسيلة التعليمية",
+        top:"مستخدمة",
+        mid:"محدودة",
+        low:"غير مستخدمة"
+      },
 
-        {
-          label:"ممارسة الفصحى",
-          optTop:"ممارسة ممتازة",
-          optMid:"ممارسة متوسطة",
-          optLow:"ممارسة غير مناسبة"
-        },
+      {
+        label:"تفعيل السبورة التفاعلية",
+        top:"مناسب جدا",
+        mid:"محدود",
+        low:"لا يوجد تفعيل"
+      },
 
-        {
-          label:"إعلان أهداف الدرس",
-          optTop:"معلنة وتناقش بداية الحصة",
-          optMid:"إما مدونة أو تناقش",
-          optLow:"لا مدونة ولا تناقش"
-        }
+      {
+        label:"تطبيق ما تم التدريب عليه",
+        top:"مستوى عال",
+        mid:"مستوى مناسب",
+        low:"مستوى ضعيف"
+      }
 
-      ]
-    },
+    ]
+  },
 
+  {
+    no:7,
+    name:"التقويم الصفي",
+    items:[
 
-    {
-      domainNo:6,
-      domain:"أدوات مساندة للتعلم",
-      items:[
+      {
+        label:"ملخص الدرس",
+        top:"خلاصة جيدة وواضحة",
+        mid:"خلاصة محدودة",
+        low:"لا توجد خلاصة"
+      }
 
-        {
-          label:"الوسيلة التعليمية",
-          optTop:"مستخدمة",
-          optMid:"محدودة",
-          optLow:"غير مستخدمة"
-        },
+    ]
+  }
 
-        {
-          label:"تفعيل السبورة التفاعلية",
-          optTop:"مناسب جدا",
-          optMid:"محدود",
-          optLow:"لا يوجد تفعيل"
-        },
-
-        {
-          label:"تطبيق ما تم التدريب عليه",
-          optTop:"مستوى عال",
-          optMid:"مستوى مناسب",
-          optLow:"مستوى ضعيف"
-        }
-
-      ]
-    },
-
-
-    {
-      domainNo:7,
-      domain:"التقويم الصفي",
-      items:[
-
-        {
-          label:"ملخص الدرس",
-          optTop:"خلاصة جيدة وواضحة",
-          optMid:"خلاصة محدودة",
-          optLow:"لا توجد خلاصة"
-        }
-
-      ]
-    }
-
-  ];
+];
 
 
-  const qMeta = [];
+let qMeta = [];
 
 
-  function buildRubric(){
+function buildRubric(){
 
-    const body = el("rubricBody");
-
-    body.innerHTML = "";
-
-    qMeta.length = 0;
-
-    let index = 0;
+  const body =
+    el("rubricBody");
 
 
-    rubric.forEach(group=>{
+  body.innerHTML = "";
 
-      group.items.forEach((item,i)=>{
+  qMeta = [];
 
-        index++;
 
-        const name = "q" + index;
+  let itemNumber = 1;
+
+
+  domains.forEach(domain=>{
+
+    domain.items.forEach(
+      (item,index)=>{
+
+        const qName =
+          "q_" + itemNumber;
 
 
         qMeta.push({
 
-          name,
+          name:qName,
 
-          domainNo:group.domainNo,
+          domainNo:
+            domain.no,
 
-          domain:group.domain,
+          domain:
+            domain.name,
 
-          label:item.label,
+          label:
+            item.label,
 
-          optTop:item.optTop,
+          optTop:
+            item.top,
 
-          optMid:item.optMid,
+          optMid:
+            item.mid,
 
-          optLow:item.optLow
+          optLow:
+            item.low
 
         });
 
@@ -1501,36 +1491,39 @@
           document.createElement("tr");
 
 
-        if(i === 0){
+        const no =
+          document.createElement("td");
 
-          const no =
+        no.className =
+          "number-cell";
+
+        no.textContent =
+          itemNumber;
+
+        tr.appendChild(no);
+
+
+        if(index === 0){
+
+          const domainTd =
             document.createElement("td");
 
-          no.className =
-            "number-cell";
 
-          no.rowSpan =
-            group.items.length;
-
-          no.textContent =
-            group.domainNo;
-
-          tr.appendChild(no);
-
-
-          const domain =
-            document.createElement("td");
-
-          domain.className =
+          domainTd.className =
             "domain-cell";
 
-          domain.rowSpan =
-            group.items.length;
 
-          domain.textContent =
-            group.domain;
+          domainTd.rowSpan =
+            domain.items.length;
 
-          tr.appendChild(domain);
+
+          domainTd.textContent =
+            domain.name;
+
+
+          tr.appendChild(
+            domainTd
+          );
 
         }
 
@@ -1550,6 +1543,7 @@
         const evalTd =
           document.createElement("td");
 
+
         evalTd.innerHTML = `
 
           <div class="evalGrid">
@@ -1558,13 +1552,11 @@
 
               <input
                 type="radio"
-                name="${name}"
+                name="${qName}"
                 value="4"
               >
 
-              <span>
-                ${escapeHtml(item.optTop)}
-              </span>
+              ${item.top}
 
             </label>
 
@@ -1573,13 +1565,11 @@
 
               <input
                 type="radio"
-                name="${name}"
+                name="${qName}"
                 value="3"
               >
 
-              <span>
-                ${escapeHtml(item.optMid)}
-              </span>
+              ${item.mid}
 
             </label>
 
@@ -1588,13 +1578,11 @@
 
               <input
                 type="radio"
-                name="${name}"
+                name="${qName}"
                 value="1"
               >
 
-              <span>
-                ${escapeHtml(item.optLow)}
-              </span>
+              ${item.low}
 
             </label>
 
@@ -1602,497 +1590,523 @@
 
         `;
 
+
         tr.appendChild(evalTd);
 
 
         const score =
           document.createElement("td");
 
+
         score.id =
-          "score_" + name;
+          "score_" + qName;
+
 
         score.className =
           "scoreCell";
 
+
         score.textContent =
           "0";
+
 
         tr.appendChild(score);
 
 
         body.appendChild(tr);
 
-      });
 
-    });
+        itemNumber++;
+
+      }
+    );
+
+  });
 
 
-    if(qMeta.length !== 25){
+  if(qMeta.length !== 25){
 
-      alert(
-        "خطأ: عدد عناصر التقييم ليس 25"
-      );
-
-    }
+    alert(
+      "خطأ: عدد عناصر التقييم ليس 25"
+    );
 
   }
 
-
-  function selectedValue(name){
-
-    const input =
-      document.querySelector(
-        `input[name="${name}"]:checked`
-      );
+}
 
 
-    if(!input){
+function selectedValue(name){
 
-      return {
-        value:0,
-        text:""
-      };
-
-    }
+  const input =
+    document.querySelector(
+      `input[name="${name}"]:checked`
+    );
 
 
-    const value =
-      Number(input.value);
-
-
-    const meta =
-      qMeta.find(
-        x=>x.name === name
-      );
-
-
-    let text = "";
-
-
-    if(value === 4)
-      text = meta.optTop;
-
-    else if(value === 3)
-      text = meta.optMid;
-
-    else if(value === 1)
-      text = meta.optLow;
-
+  if(!input){
 
     return {
-      value,
-      text
+      value:0,
+      text:""
     };
 
   }
 
 
-  function calculateScore(){
+  const value =
+    Number(input.value);
 
-    let total = 0;
+
+  const meta =
+    qMeta.find(
+      x=>x.name === name
+    );
 
 
-    qMeta.forEach(q=>{
+  let text = "";
 
-      const x =
+
+  if(value === 4)
+    text = meta.optTop;
+
+  else if(value === 3)
+    text = meta.optMid;
+
+  else if(value === 1)
+    text = meta.optLow;
+
+
+  return {
+    value,
+    text
+  };
+
+}
+
+
+function calculateScore(){
+
+  let total = 0;
+
+
+  qMeta.forEach(q=>{
+
+    const x =
+      selectedValue(q.name);
+
+
+    total +=
+      x.value;
+
+
+    el("score_" + q.name)
+      .textContent =
+      x.value;
+
+  });
+
+
+  el("rawTotal")
+    .textContent =
+    total;
+
+
+  el("finalScore")
+    .textContent =
+    total;
+
+
+  el("percentage")
+    .textContent =
+    total + "%";
+
+}
+
+
+/* ======================================================
+   WRITTEN WORK
+====================================================== */
+
+function buildWorkRows(){
+
+  const body =
+    el("workBody");
+
+
+  body.innerHTML = "";
+
+
+  for(let i=1;i<=8;i++){
+
+    const tr =
+      document.createElement("tr");
+
+
+    tr.innerHTML = `
+
+      <td>
+
+        <input
+          type="text"
+          id="st_name_${i}"
+          placeholder="اسم الطالب"
+        >
+
+      </td>
+
+
+      <td>
+
+        <div class="workChoices">
+
+          <label class="workChoice">
+
+            <input
+              type="radio"
+              name="st_${i}"
+              value="correct"
+            >
+
+            مصحح
+
+          </label>
+
+
+          <label class="workChoice">
+
+            <input
+              type="radio"
+              name="st_${i}"
+              value="partial"
+            >
+
+            غير مكتمل
+
+          </label>
+
+
+          <label class="workChoice">
+
+            <input
+              type="radio"
+              name="st_${i}"
+              value="not"
+            >
+
+            غير مصحح
+
+          </label>
+
+        </div>
+
+      </td>
+
+    `;
+
+
+    body.appendChild(tr);
+
+  }
+
+}
+
+
+function getWorkData(){
+
+  const rows = [];
+
+
+  for(let i=1;i<=8;i++){
+
+    const name =
+      el("st_name_" + i)
+      .value
+      .trim();
+
+
+    const selected =
+      document.querySelector(
+        `input[name="st_${i}"]:checked`
+      );
+
+
+    rows.push({
+
+      name,
+
+      status:
+        selected
+        ? selected.value
+        : ""
+
+    });
+
+  }
+
+
+  return rows;
+
+}
+
+
+/* ======================================================
+   SAVE VISIT
+====================================================== */
+
+async function saveVisit(){
+
+  if(!selectedTeacher){
+
+    alert("اختر المعلم أولاً");
+
+    el("teacherSearch").focus();
+
+    return;
+
+  }
+
+
+  if(
+    !isAdmin &&
+    String(selectedTeacher.supervisorId || "") !==
+    String(currentUser.id || "")
+  ){
+
+    alert("هذا المعلم غير تابع لحسابك");
+
+    selectedTeacher = null;
+
+    el("teacherSearch").value = "";
+
+    el("selectedTeacherBox")
+      .classList
+      .remove("show");
+
+    return;
+
+  }
+
+
+  const visitDate =
+    el("visitDate").value;
+
+
+  if(!visitDate){
+
+    alert("حدد تاريخ الزيارة");
+
+    return;
+
+  }
+
+
+  const answers =
+    qMeta.map(q=>{
+
+      const selected =
         selectedValue(q.name);
 
-      total += x.value;
 
+      return {
 
-      el("score_" + q.name)
-        .textContent =
-        x.value;
+        domainNo:q.domainNo,
+
+        domain:q.domain,
+
+        itemLabel:q.label,
+
+        optTop:q.optTop,
+
+        optMid:q.optMid,
+
+        optLow:q.optLow,
+
+        selected:
+          selected.value,
+
+        selectedText:
+          selected.text,
+
+        max:4
+
+      };
 
     });
 
 
-    el("rawTotal")
-      .textContent =
-      total;
+  const payload = {
 
+    teacherCode:
+      selectedTeacher.code ||
+      selectedTeacher.id,
 
-    el("finalScore")
-      .textContent =
-      total;
+    teacherName:
+      selectedTeacher.name || "",
 
+    teacherPhone:
+      selectedTeacher.phone || "",
 
-    el("percentage")
-      .textContent =
-      total + "%";
+    grade:
+      el("grade")
+      .value
+      .trim(),
 
-  }
+    subject:
+      el("subject")
+      .value
+      .trim(),
 
+    lessonTitle:
+      el("lessonTitle")
+      .value
+      .trim(),
 
+    visitNumber:
+      Number(
+        el("visitNumber").value || 0
+      ),
 
-  /* ======================================================
-     WRITTEN WORK
-  ====================================================== */
+    supervisorId:
+      String(currentUser.id || ""),
 
-  function buildWorkRows(){
+    supervisorName:
+      String(currentUser.name || ""),
 
-    const body =
-      el("workBody");
+    visitDate,
 
-    body.innerHTML = "";
+    positives:
+      el("positives").value,
 
+    recommendations:
+      el("recommendations").value,
 
-    for(let i=1;i<=8;i++){
+    rawTotal:
+      Number(
+        el("rawTotal").textContent || 0
+      ),
 
-      const tr =
-        document.createElement("tr");
+    rawMax:100,
 
+    finalScore:
+      Number(
+        el("finalScore").textContent || 0
+      ),
 
-      tr.innerHTML = `
+    answers,
 
-        <td>
+    writtenWork:
+      getWorkData(),
 
-          <input
-            type="text"
-            id="st_name_${i}"
-            placeholder="اسم الطالب"
-          >
+    teacherViewed:false,
 
-        </td>
+    teacherViewedAt:null,
 
+    createdAt:
+      serverTimestamp()
 
-        <td>
+  };
 
-          <div class="workChoices">
 
-            <label class="workChoice">
+  try{
 
-              <input
-                type="radio"
-                name="st_${i}"
-                value="correct"
-              >
-
-              مصحح
-
-            </label>
-
-
-            <label class="workChoice">
-
-              <input
-                type="radio"
-                name="st_${i}"
-                value="partial"
-              >
-
-              غير مكتمل
-
-            </label>
-
-
-            <label class="workChoice">
-
-              <input
-                type="radio"
-                name="st_${i}"
-                value="not"
-              >
-
-              غير مصحح
-
-            </label>
-
-          </div>
-
-        </td>
-
-      `;
-
-
-      body.appendChild(tr);
-
-    }
-
-  }
-
-
-  function getWorkData(){
-
-    const rows = [];
-
-
-    for(let i=1;i<=8;i++){
-
-      const name =
-        el("st_name_" + i)
-        .value
-        .trim();
-
-
-      const selected =
-        document.querySelector(
-          `input[name="st_${i}"]:checked`
-        );
-
-
-      rows.push({
-
-        name,
-
-        status:
-          selected
-          ? selected.value
-          : ""
-
-      });
-
-    }
-
-
-    return rows;
-
-  }
-
-
-
-  /* ======================================================
-     SAVE VISIT
-  ====================================================== */
-
-  async function saveVisit(){
-
-    if(!selectedTeacher){
-
-      alert("اختر المعلم أولاً");
-
-      el("teacherSearch").focus();
-
-      return;
-
-    }
-
-
-    const visitDate =
-      el("visitDate").value;
-
-
-    if(!visitDate){
-
-      alert("حدد تاريخ الزيارة");
-
-      return;
-
-    }
-
-
-    const answers =
-      qMeta.map(q=>{
-
-        const selected =
-          selectedValue(q.name);
-
-
-        return {
-
-          domainNo:q.domainNo,
-
-          domain:q.domain,
-
-          itemLabel:q.label,
-
-          optTop:q.optTop,
-
-          optMid:q.optMid,
-
-          optLow:q.optLow,
-
-          selected:
-            selected.value,
-
-          selectedText:
-            selected.text,
-
-          max:4
-
-        };
-
-      });
-
-
-    const payload = {
-
-      teacherCode:
-        selectedTeacher.code,
-
-      teacherName:
-        selectedTeacher.name,
-
-      teacherPhone:
-        selectedTeacher.phone,
-
-      grade:
-        el("grade")
-        .value
-        .trim(),
-
-      subject:
-        el("subject")
-        .value
-        .trim(),
-
-      lessonTitle:
-        el("lessonTitle")
-        .value
-        .trim(),
-
-      visitNumber:
-        Number(
-          el("visitNumber").value || 0
-        ),
-
-      supervisorName:
-        el("supervisorName")
-        .value
-        .trim(),
-
-      visitDate,
-
-      positives:
-        el("positives").value,
-
-      recommendations:
-        el("recommendations").value,
-
-      rawTotal:
-        Number(
-          el("rawTotal").textContent || 0
-        ),
-
-      rawMax:100,
-
-      finalScore:
-        Number(
-          el("finalScore").textContent || 0
-        ),
-
-      answers,
-
-      writtenWork:
-        getWorkData(),
-
-
-      /* =============================
-         حالة اطلاع المعلم
-      ============================== */
-
-      teacherViewed:false,
-
-      teacherViewedAt:null,
-
-
-      createdAt:
-        serverTimestamp()
-
-    };
-
-
-    try{
-
-      const ref =
-        await addDoc(
-          collection(db,"visits"),
-          payload
-        );
-
-
-      lastSavedVisitId =
-        ref.id;
-
-
-      lastSavedVisitPayload =
-        payload;
-
-
-      el("btnSendWhats")
-        .disabled =
-        false;
-
-
-      el("formStatus")
-        .textContent =
-        "تم الحفظ";
-
-
-      showSaveMessage();
-
-
-    }catch(error){
-
-      console.error(error);
-
-      alert(
-        "حدث خطأ أثناء حفظ الزيارة"
+    const ref =
+      await addDoc(
+        collection(db,"visits"),
+        payload
       );
 
-    }
+
+    lastSavedVisitId =
+      ref.id;
+
+
+    lastSavedVisitPayload =
+      payload;
+
+
+    el("btnSendWhats")
+      .disabled =
+      false;
+
+
+    el("formStatus")
+      .textContent =
+      "تم الحفظ";
+
+
+    showSaveMessage();
+
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "حدث خطأ أثناء حفظ الزيارة"
+    );
+
+  }
+
+}
+
+
+/* ======================================================
+   WHATSAPP
+====================================================== */
+
+function normalizePhoneToWhatsApp(raw){
+
+  let digits =
+    String(raw || "")
+    .replace(/[^\d]/g,"");
+
+
+  if(!digits)
+    return "";
+
+
+  if(
+    digits.startsWith("00")
+  ){
+
+    digits =
+      digits.slice(2);
 
   }
 
 
+  if(
+    digits.startsWith("0") &&
+    digits.length === 10
+  ){
 
-  /* ======================================================
-     WHATSAPP
-  ====================================================== */
-
-  function normalizePhoneToWhatsApp(raw){
-
-    let digits =
-      String(raw || "")
-      .replace(/[^\d]/g,"");
-
-
-    if(!digits)
-      return "";
-
-
-    if(
-      digits.startsWith("00")
-    ){
-
-      digits =
-        digits.slice(2);
-
-    }
-
-
-    if(
-      digits.startsWith("0") &&
-      digits.length === 10
-    ){
-
-      digits =
-        "966" +
-        digits.slice(1);
-
-    }
-
-
-    if(
-      digits.startsWith("5") &&
-      digits.length === 9
-    ){
-
-      digits =
-        "966" +
-        digits;
-
-    }
-
-
-    return digits;
+    digits =
+      "966" +
+      digits.slice(1);
 
   }
 
 
-  function buildWhatsMessage(p,id){
+  if(
+    digits.startsWith("5") &&
+    digits.length === 9
+  ){
 
-    return `السلام عليكم ورحمة الله وبركاته
+    digits =
+      "966" +
+      digits;
+
+  }
+
+
+  return digits;
+
+}
+
+
+function buildWhatsMessage(p,id){
+
+  return `السلام عليكم ورحمة الله وبركاته
 
 تم تسجيل زيارة تربوية جديدة لك.
 
@@ -2106,231 +2120,228 @@
 الدرجة النهائية: ${p.finalScore || 0} / 100
 
 للاطلاع على تقرير الزيارة:
-${location.origin}/follow-up/visit-view.html?id=${id}
+${location.origin}/follow-up/teacher-portal.html?code=${encodeURIComponent(p.teacherCode)}
 
 يرجى الاطلاع على التقرير.
 `;
 
-  }
+}
 
 
-  function sendWhats(){
+function sendWhats(){
 
-    if(
-      !lastSavedVisitPayload ||
-      !lastSavedVisitId
-    ){
+  if(
+    !lastSavedVisitPayload ||
+    !lastSavedVisitId
+  ){
 
-      alert(
-        "احفظ الزيارة أولاً"
-      );
+    alert(
+      "احفظ الزيارة أولاً"
+    );
 
-      return;
-
-    }
-
-
-    const phone =
-      normalizePhoneToWhatsApp(
-        lastSavedVisitPayload.teacherPhone
-      );
-
-
-    if(!phone){
-
-      alert(
-        "لا يوجد رقم جوال صحيح للمعلم"
-      );
-
-      return;
-
-    }
-
-
-    const text =
-      buildWhatsMessage(
-        lastSavedVisitPayload,
-        lastSavedVisitId
-      );
-
-
-    location.href =
-      "https://wa.me/" +
-      phone +
-      "?text=" +
-      encodeURIComponent(text);
+    return;
 
   }
 
 
-
-  /* ======================================================
-     CLEAR
-  ====================================================== */
-
-  function clearForm(){
-
-    if(
-      !confirm(
-        "هل تريد تفريغ الاستمارة؟"
-      )
-    ){
-
-      return;
-
-    }
-
-
-    selectedTeacher = null;
-
-
-    el("teacherSearch").value = "";
-
-    el("selectedTeacherBox")
-      .classList
-      .remove("show");
-
-
-    el("grade").value = "";
-
-    el("subject").value = "";
-
-    el("lessonTitle").value = "";
-
-    el("visitNumber").value = "";
-
-    el("positives").value = "";
-
-    el("recommendations").value = "";
-
-
-    document
-      .querySelectorAll(
-        'input[type="radio"]'
-      )
-      .forEach(
-        x=>x.checked=false
-      );
-
-
-    for(let i=1;i<=8;i++){
-
-      el("st_name_" + i)
-        .value = "";
-
-    }
-
-
-    calculateScore();
-
-
-    lastSavedVisitPayload = null;
-
-    lastSavedVisitId = null;
-
-
-    el("btnSendWhats")
-      .disabled = true;
-
-
-    el("formStatus")
-      .textContent =
-      "زيارة جديدة";
-
-  }
-
-
-
-  /* ======================================================
-     HELPERS
-  ====================================================== */
-
-  function escapeHtml(str){
-
-    return String(str || "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-
-  }
-
-
-  function showSaveMessage(){
-
-    const box =
-      el("saveMessage");
-
-
-    box.classList.add("show");
-
-
-    setTimeout(()=>{
-
-      box.classList.remove("show");
-
-    },3000);
-
-  }
-
-
-
-  /* ======================================================
-     EVENTS
-  ====================================================== */
-
-  document.addEventListener(
-    "change",
-    e=>{
-
-      if(
-        e.target.matches(
-          '.rubricTable input[type="radio"]'
-        )
-      ){
-
-        calculateScore();
-
-      }
-
-    }
-  );
-
-
-  el("btnSave")
-    .addEventListener(
-      "click",
-      saveVisit
+  const phone =
+    normalizePhoneToWhatsApp(
+      lastSavedVisitPayload.teacherPhone
     );
 
 
-  el("btnSendWhats")
-    .addEventListener(
-      "click",
-      sendWhats
+  if(!phone){
+
+    alert(
+      "لا يوجد رقم جوال صحيح للمعلم"
+    );
+
+    return;
+
+  }
+
+
+  const text =
+    buildWhatsMessage(
+      lastSavedVisitPayload,
+      lastSavedVisitId
     );
 
 
-  el("btnClear")
-    .addEventListener(
-      "click",
-      clearForm
+  location.href =
+    "https://wa.me/" +
+    phone +
+    "?text=" +
+    encodeURIComponent(text);
+
+}
+
+
+/* ======================================================
+   CLEAR
+====================================================== */
+
+function clearForm(){
+
+  if(
+    !confirm(
+      "هل تريد تفريغ الاستمارة؟"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  selectedTeacher = null;
+
+
+  el("teacherSearch").value = "";
+
+
+  el("selectedTeacherBox")
+    .classList
+    .remove("show");
+
+
+  el("grade").value = "";
+
+  el("subject").value = "";
+
+  el("lessonTitle").value = "";
+
+  el("visitNumber").value = "";
+
+  el("positives").value = "";
+
+  el("recommendations").value = "";
+
+
+  document
+    .querySelectorAll(
+      'input[type="radio"]'
+    )
+    .forEach(
+      x=>x.checked=false
     );
 
 
+  for(let i=1;i<=8;i++){
 
-  /* ======================================================
-     INITIALIZE
-  ====================================================== */
+    el("st_name_" + i)
+      .value = "";
 
-  buildRubric();
+  }
 
-  buildWorkRows();
 
   calculateScore();
 
-  await loadTeachers();
+
+  lastSavedVisitPayload = null;
+
+  lastSavedVisitId = null;
+
+
+  el("btnSendWhats")
+    .disabled = true;
+
+
+  el("formStatus")
+    .textContent =
+    "زيارة جديدة";
+
+}
+
+
+/* ======================================================
+   HELPERS
+====================================================== */
+
+function escapeHtml(str){
+
+  return String(str || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+function showSaveMessage(){
+
+  const box =
+    el("saveMessage");
+
+
+  box.classList.add("show");
+
+
+  setTimeout(()=>{
+
+    box.classList.remove("show");
+
+  },3000);
+
+}
+
+
+/* ======================================================
+   EVENTS
+====================================================== */
+
+document.addEventListener(
+  "change",
+  e=>{
+
+    if(
+      e.target.matches(
+        '.rubricTable input[type="radio"]'
+      )
+    ){
+
+      calculateScore();
+
+    }
+
+  }
+);
+
+
+el("btnSave")
+  .addEventListener(
+    "click",
+    saveVisit
+  );
+
+
+el("btnSendWhats")
+  .addEventListener(
+    "click",
+    sendWhats
+  );
+
+
+el("btnClear")
+  .addEventListener(
+    "click",
+    clearForm
+  );
+
+
+/* ======================================================
+   INITIALIZE
+====================================================== */
+
+buildRubric();
+
+buildWorkRows();
+
+calculateScore();
+
+await loadTeachers();
 
 </script>
 
