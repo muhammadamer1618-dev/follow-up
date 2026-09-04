@@ -4,28 +4,216 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>مدارس الفلاح الأهلية</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
   <style>
-    body{font-family:Arial,sans-serif;background:#f4f8fc;margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
-    .card{width:min(720px,100%);background:#fff;border:1px solid #bbdefb;border-radius:16px;padding:22px;text-align:center}
-    .school{font-size:34px;font-weight:900;color:#0d47a1;margin:0}
-    .sub{font-size:20px;font-weight:800;color:#1976d2;margin:8px 0 0}
-    .by{margin-top:18px;color:#455a64;font-weight:800}
-    .btns{margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    .btn{border:0;border-radius:12px;padding:12px 18px;font-size:16px;font-weight:900;cursor:pointer}
-    .btn.primary{background:#1976d2;color:#fff}
-    .btn.secondary{background:#0d47a1;color:#fff}
+    :root{
+      --green:#0b4a3f;
+      --green-dark:#07372f;
+      --gold:#c89a3b;
+      --gold-dark:#a87921;
+      --cream:#faf8f3;
+      --white:#ffffff;
+      --text:#1f2926;
+      --muted:#6f7773;
+      --border:#e7e1d5;
+    }
+
+    *{
+      box-sizing:border-box;
+      font-family:'Cairo',sans-serif;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background:
+        radial-gradient(circle at top right, rgba(200,154,59,.14), transparent 35%),
+        radial-gradient(circle at bottom left, rgba(11,74,63,.12), transparent 35%),
+        linear-gradient(135deg,#f8f5ee,#ffffff 52%,#f2f7f4);
+      color:var(--text);
+    }
+
+    .card{
+      width:min(760px,100%);
+      background:rgba(255,255,255,.97);
+      border:1px solid rgba(200,154,59,.24);
+      border-radius:28px;
+      padding:34px 28px 28px;
+      text-align:center;
+      box-shadow:0 24px 70px rgba(31,52,46,.16);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height:7px;
+      background:linear-gradient(90deg,var(--green),var(--gold),var(--green));
+    }
+
+    .logo{
+      width:165px;
+      height:165px;
+      object-fit:contain;
+      display:block;
+      margin:0 auto 10px;
+    }
+
+    .school{
+      font-size:32px;
+      font-weight:800;
+      color:var(--green);
+      margin:0;
+      line-height:1.5;
+    }
+
+    .gold-line{
+      width:105px;
+      height:3px;
+      border-radius:20px;
+      margin:10px auto 12px;
+      background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    }
+
+    .sub{
+      font-size:21px;
+      font-weight:700;
+      color:var(--gold-dark);
+      margin:0;
+    }
+
+    .desc{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .btns{
+      margin-top:26px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .btn{
+      border:0;
+      border-radius:15px;
+      padding:15px 18px;
+      font-size:16px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.25s ease;
+      box-shadow:0 10px 22px rgba(0,0,0,.08);
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .btn.primary{
+      background:linear-gradient(135deg,var(--green),var(--green-dark));
+      color:#fff;
+    }
+
+    .btn.primary:hover{
+      box-shadow:0 12px 26px rgba(11,74,63,.25);
+    }
+
+    .btn.secondary{
+      background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+      color:#fff;
+    }
+
+    .btn.secondary:hover{
+      box-shadow:0 12px 26px rgba(200,154,59,.25);
+    }
+
+    .by{
+      margin-top:24px;
+      padding-top:16px;
+      border-top:1px solid var(--border);
+      color:#737a76;
+      font-size:13px;
+      font-weight:600;
+    }
+
+    @media(max-width:620px){
+      .card{
+        padding:28px 18px 22px;
+        border-radius:22px;
+      }
+
+      .logo{
+        width:135px;
+        height:135px;
+      }
+
+      .school{
+        font-size:25px;
+      }
+
+      .sub{
+        font-size:18px;
+      }
+
+      .btns{
+        grid-template-columns:1fr;
+      }
+
+      .btn{
+        font-size:15px;
+      }
+    }
   </style>
 </head>
+
 <body>
+
   <div class="card">
+
+    <img src="logo.jpeg" alt="شعار مدارس الفلاح الأهلية" class="logo">
+
     <h1 class="school">مدارس الفلاح الأهلية</h1>
+
+    <div class="gold-line"></div>
+
     <div class="sub">الإشراف التربوي</div>
-    <div class="by">تصميم محمد عامر أحمد</div>
+
+    <div class="desc">
+      منصة متابعة الزيارات والتقييم التربوي
+    </div>
 
     <div class="btns">
-      <button class="btn primary" onclick="location.href='evaluation-form.html'">استمارة التقييم</button>
-      <button class="btn secondary" onclick="location.href='teacher-visits.html'">زيارات المعلمين</button>
+
+      <button
+        class="btn primary"
+        onclick="location.href='evaluation-form.html'">
+        استمارة التقييم
+      </button>
+
+      <button
+        class="btn secondary"
+        onclick="location.href='teacher-visits.html'">
+        زيارات المعلمين
+      </button>
+
     </div>
+
+    <div class="by">
+      تصميم محمد عامر أحمد
+    </div>
+
   </div>
+
 </body>
 </html>
