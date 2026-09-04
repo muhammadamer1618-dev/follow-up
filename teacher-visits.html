@@ -40,9 +40,6 @@
   --red:#b42318;
   --red-soft:#fff1ef;
 
-  --blue:#175cd3;
-  --blue-soft:#eff8ff;
-
   --shadow:
     0 15px 45px rgba(20,52,43,.09);
 
@@ -309,6 +306,157 @@ body{
 
 
 /* =========================
+   TEACHER SELECTOR
+========================= */
+
+.teacher-selector{
+
+  background:#fff;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:18px;
+
+  padding:18px;
+
+  box-shadow:var(--shadow);
+
+  margin-bottom:18px;
+
+}
+
+
+.selector-title{
+
+  margin-bottom:12px;
+
+}
+
+
+.selector-title h3{
+
+  margin:0;
+
+  color:var(--green);
+
+  font-size:16px;
+
+  font-weight:900;
+
+}
+
+
+.selector-title p{
+
+  margin:3px 0 0;
+
+  color:var(--muted);
+
+  font-size:10px;
+
+}
+
+
+.selector-row{
+
+  display:flex;
+
+  gap:10px;
+
+  align-items:center;
+
+  flex-wrap:wrap;
+
+}
+
+
+.teacher-select{
+
+  flex:1;
+
+  min-width:280px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:12px;
+
+  padding:12px 13px;
+
+  background:#fff;
+
+  color:var(--text);
+
+  font-size:11px;
+
+  font-weight:800;
+
+  outline:none;
+
+}
+
+
+.teacher-select:focus{
+
+  border-color:var(--green);
+
+  box-shadow:
+    0 0 0 4px rgba(11,74,63,.07);
+
+}
+
+
+.selected-box{
+
+  display:none;
+
+  margin-top:12px;
+
+  background:var(--green-soft);
+
+  border:
+    1px solid rgba(11,74,63,.12);
+
+  border-radius:13px;
+
+  padding:12px 14px;
+
+}
+
+
+.selected-box.show{
+
+  display:block;
+
+}
+
+
+.selected-name{
+
+  color:var(--green);
+
+  font-size:14px;
+
+  font-weight:900;
+
+}
+
+
+.selected-meta{
+
+  margin-top:3px;
+
+  color:#58625d;
+
+  font-size:10px;
+
+  font-weight:700;
+
+}
+
+
+/* =========================
    STATS
 ========================= */
 
@@ -381,7 +529,7 @@ body{
 
 
 /* =========================
-   FILTER
+   PANEL
 ========================= */
 
 .panel{
@@ -415,39 +563,9 @@ body{
 }
 
 
-.search-input{
-
-  flex:1;
-
-  min-width:260px;
-
-  border:
-    1px solid var(--border);
-
-  border-radius:11px;
-
-  padding:11px 13px;
-
-  outline:none;
-
-  font-size:11px;
-
-}
-
-
-.search-input:focus{
-
-  border-color:var(--green);
-
-  box-shadow:
-    0 0 0 4px rgba(11,74,63,.07);
-
-}
-
-
 .filter-select{
 
-  min-width:170px;
+  min-width:190px;
 
   border:
     1px solid var(--border);
@@ -497,7 +615,7 @@ table{
 
   border-collapse:collapse;
 
-  min-width:1050px;
+  min-width:980px;
 
 }
 
@@ -670,11 +788,13 @@ tbody tr:hover{
 
 .empty{
 
-  padding:35px !important;
+  padding:45px 20px !important;
 
   color:var(--muted);
 
   text-align:center;
+
+  font-size:11px;
 
 }
 
@@ -795,72 +915,44 @@ tbody tr:hover{
     </small>
 
     <h2 id="pageTitle">
-      زيارات المعلمين
+      سجل زيارات المعلمين
     </h2>
 
     <p id="pageSubtitle">
-      متابعة تقارير الزيارات وحالة اطلاع المعلمين عليها.
+      اختر المعلم لعرض جميع زياراته التربوية.
     </p>
 
   </section>
 
 
 
-  <section class="stats">
+  <section class="teacher-selector">
 
-    <div class="stat">
+    <div class="selector-title">
 
-      <span>
-        إجمالي الزيارات
-      </span>
+      <h3>
+        اختر المعلم
+      </h3>
 
-      <strong id="totalCount">
-        0
-      </strong>
-
-    </div>
-
-
-    <div class="stat gold">
-
-      <span>
-        تم اطلاع المعلم
-      </span>
-
-      <strong id="viewedCount">
-        0
-      </strong>
+      <p>
+        اختر اسم المعلم لعرض جميع الزيارات المسجلة له.
+      </p>
 
     </div>
 
 
-    <div class="stat red">
+    <div class="selector-row">
 
-      <span>
-        بانتظار اطلاع المعلم
-      </span>
-
-      <strong id="pendingCount">
-        0
-      </strong>
-
-    </div>
-
-  </section>
-
-
-
-  <section class="panel">
-
-
-    <div class="toolbar">
-
-      <input
-        type="search"
-        id="searchInput"
-        class="search-input"
-        placeholder="ابحث باسم المعلم أو الكود أو المادة أو الصف..."
+      <select
+        id="teacherSelect"
+        class="teacher-select"
       >
+
+        <option value="">
+          -- اختر المعلم --
+        </option>
+
+      </select>
 
 
       <select
@@ -886,10 +978,78 @@ tbody tr:hover{
 
 
     <div
+      id="selectedTeacherBox"
+      class="selected-box"
+    >
+
+      <div
+        id="selectedTeacherName"
+        class="selected-name"
+      ></div>
+
+      <div
+        id="selectedTeacherMeta"
+        class="selected-meta"
+      ></div>
+
+    </div>
+
+  </section>
+
+
+
+  <section class="stats">
+
+    <div class="stat">
+
+      <span>
+        زيارات المعلم
+      </span>
+
+      <strong id="totalCount">
+        0
+      </strong>
+
+    </div>
+
+
+    <div class="stat gold">
+
+      <span>
+        تم الاطلاع عليها
+      </span>
+
+      <strong id="viewedCount">
+        0
+      </strong>
+
+    </div>
+
+
+    <div class="stat red">
+
+      <span>
+        بانتظار الاطلاع
+      </span>
+
+      <strong id="pendingCount">
+        0
+      </strong>
+
+    </div>
+
+  </section>
+
+
+
+  <section class="panel">
+
+
+    <div
       id="resultInfo"
       class="result-info"
     >
-      جاري تحميل الزيارات...
+      اختر معلماً لعرض زياراته.
     </div>
 
 
@@ -928,6 +1088,10 @@ tbody tr:hover{
             </th>
 
             <th>
+              عنوان الدرس
+            </th>
+
+            <th>
               الدرجة
             </th>
 
@@ -949,10 +1113,10 @@ tbody tr:hover{
           <tr>
 
             <td
-              colspan="8"
+              colspan="9"
               class="empty"
             >
-              جاري تحميل البيانات...
+              اختر معلماً من القائمة بالأعلى لعرض زياراته.
             </td>
 
           </tr>
@@ -1067,11 +1231,11 @@ if(isAdmin){
 
   el("pageTitle")
     .textContent =
-    "جميع الزيارات التربوية";
+    "سجل جميع الزيارات";
 
   el("pageSubtitle")
     .textContent =
-    "متابعة جميع زيارات النظام وحالة اطلاع المعلمين عليها.";
+    "اختر المعلم لعرض الزيارات المسجلة له.";
 
 }else{
 
@@ -1084,7 +1248,7 @@ if(isAdmin){
 
   el("pageSubtitle")
     .textContent =
-    "متابعة زيارات المعلمين التابعين لك وحالة اطلاعهم على كل زيارة.";
+    "اختر أحد معلميك لعرض جميع زياراته التربوية.";
 
 }
 
@@ -1100,6 +1264,8 @@ let visibleTeachers = [];
 let allVisits = [];
 
 let visibleVisits = [];
+
+let selectedTeacher = null;
 
 
 /* =====================================
@@ -1280,13 +1446,6 @@ async function loadData(){
       );
 
 
-    /*
-      الأدمن يرى الجميع.
-
-      المشرف يرى المعلمين
-      المسندين له فقط.
-    */
-
     if(isAdmin){
 
       visibleTeachers =
@@ -1297,11 +1456,31 @@ async function loadData(){
       visibleTeachers =
         allTeachers.filter(
           teacher=>
-            teacher.supervisorId ===
-            currentUser.id
+            String(
+              teacher.supervisorId ||
+              ""
+            )
+            ===
+            String(
+              currentUser.id ||
+              ""
+            )
         );
 
     }
+
+
+    visibleTeachers.sort(
+      (a,b)=>
+        String(
+          a.name || ""
+        ).localeCompare(
+          String(
+            b.name || ""
+          ),
+          "ar"
+        )
+    );
 
 
     const teacherCodes =
@@ -1318,15 +1497,6 @@ async function loadData(){
 
       );
 
-
-    /*
-      الزيارات الجديدة:
-      supervisorId = حساب المشرف
-
-      الزيارات القديمة:
-      لو لم يكن فيها supervisorId
-      نربطها بالمعلم المسند للمشرف.
-    */
 
     if(isAdmin){
 
@@ -1348,8 +1518,15 @@ async function loadData(){
 
             return (
 
-              visit.supervisorId ===
-              currentUser.id
+              String(
+                visit.supervisorId ||
+                ""
+              )
+              ===
+              String(
+                currentUser.id ||
+                ""
+              )
 
               ||
 
@@ -1403,9 +1580,54 @@ async function loadData(){
     );
 
 
-    renderStats();
+    fillTeacherSelect();
 
-    renderVisits();
+
+    const params =
+      new URLSearchParams(
+        location.search
+      );
+
+
+    const requestedCode =
+      params.get("code") ||
+      "";
+
+
+    if(requestedCode){
+
+      const teacher =
+        visibleTeachers.find(
+          t=>
+            String(
+              t.code ||
+              t.id ||
+              ""
+            )
+            ===
+            String(
+              requestedCode
+            )
+        );
+
+
+      if(teacher){
+
+        el("teacherSelect").value =
+          teacher.id;
+
+        selectTeacher(
+          teacher.id
+        );
+
+        return;
+
+      }
+
+    }
+
+
+    clearSelectedTeacher();
 
 
   }catch(error){
@@ -1420,7 +1642,7 @@ async function loadData(){
       <tr>
 
         <td
-          colspan="8"
+          colspan="9"
           class="empty"
         >
           تعذر تحميل الزيارات.
@@ -1444,13 +1666,203 @@ async function loadData(){
 
 
 /* =====================================
+   TEACHER SELECT
+===================================== */
+
+function fillTeacherSelect(){
+
+  const select =
+    el("teacherSelect");
+
+
+  select.innerHTML = `
+
+    <option value="">
+      -- اختر المعلم --
+    </option>
+
+  `;
+
+
+  visibleTeachers.forEach(
+    teacher=>{
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+
+      option.value =
+        teacher.id;
+
+
+      const count =
+        getTeacherVisits(
+          teacher
+        ).length;
+
+
+      option.textContent =
+        `${teacher.name || "بدون اسم"} (${count} زيارة)`;
+
+
+      select.appendChild(
+        option
+      );
+
+    }
+  );
+
+}
+
+
+function getTeacherVisits(teacher){
+
+  const code =
+    String(
+      teacher.code ||
+      teacher.id ||
+      ""
+    );
+
+
+  return visibleVisits.filter(
+    visit=>
+      String(
+        visit.teacherCode ||
+        ""
+      )
+      ===
+      code
+  );
+
+}
+
+
+function selectTeacher(teacherId){
+
+  if(!teacherId){
+
+    clearSelectedTeacher();
+
+    return;
+
+  }
+
+
+  const teacher =
+    visibleTeachers.find(
+      t=>t.id === teacherId
+    );
+
+
+  if(!teacher){
+
+    clearSelectedTeacher();
+
+    return;
+
+  }
+
+
+  selectedTeacher =
+    teacher;
+
+
+  el("selectedTeacherName")
+    .textContent =
+    teacher.name ||
+    "بدون اسم";
+
+
+  const code =
+    teacher.code ||
+    teacher.id ||
+    "-";
+
+
+  const phone =
+    teacher.phone ||
+    "غير مسجل";
+
+
+  el("selectedTeacherMeta")
+    .textContent =
+    `رمز المعلم: ${code} — الجوال: ${phone}`;
+
+
+  el("selectedTeacherBox")
+    .classList
+    .add("show");
+
+
+  renderVisits();
+
+}
+
+
+function clearSelectedTeacher(){
+
+  selectedTeacher =
+    null;
+
+
+  el("teacherSelect").value =
+    "";
+
+
+  el("selectedTeacherBox")
+    .classList
+    .remove("show");
+
+
+  el("totalCount")
+    .textContent =
+    "0";
+
+
+  el("viewedCount")
+    .textContent =
+    "0";
+
+
+  el("pendingCount")
+    .textContent =
+    "0";
+
+
+  el("resultInfo")
+    .textContent =
+    "اختر معلماً لعرض زياراته.";
+
+
+  el("visitsBody").innerHTML = `
+
+    <tr>
+
+      <td
+        colspan="9"
+        class="empty"
+      >
+        اختر معلماً من القائمة بالأعلى لعرض زياراته.
+      </td>
+
+    </tr>
+
+  `;
+
+}
+
+
+/* =====================================
    STATS
 ===================================== */
 
-function renderStats(){
+function renderStats(list){
 
   const viewed =
-    visibleVisits.filter(
+    list.filter(
       v=>
         v.teacherViewed ===
         true
@@ -1458,13 +1870,13 @@ function renderStats(){
 
 
   const pending =
-    visibleVisits.length -
+    list.length -
     viewed;
 
 
   el("totalCount")
     .textContent =
-    visibleVisits.length;
+    list.length;
 
 
   el("viewedCount")
@@ -1480,16 +1892,18 @@ function renderStats(){
 
 
 /* =====================================
-   RENDER
+   RENDER VISITS
 ===================================== */
 
 function renderVisits(){
 
-  const term =
-    el("searchInput")
-      .value
-      .trim()
-      .toLowerCase();
+  if(!selectedTeacher){
+
+    clearSelectedTeacher();
+
+    return;
+
+  }
 
 
   const status =
@@ -1497,126 +1911,47 @@ function renderVisits(){
       .value;
 
 
-  /*
-    لو جاي من صفحة معلم
-    ?code=12345
-  */
-
-  const params =
-    new URLSearchParams(
-      location.search
+  let list =
+    getTeacherVisits(
+      selectedTeacher
     );
 
 
-  const requestedCode =
-    params.get("code") ||
-    "";
+  renderStats(list);
 
 
-  let list =
-    visibleVisits.filter(
-      visit=>{
+  if(
+    status ===
+    "viewed"
+  ){
 
-        if(
-          requestedCode
-          &&
-          String(
-            visit.teacherCode ||
-            ""
-          )
-          !==
-          String(
-            requestedCode
-          )
-        ){
-
-          return false;
-
-        }
-
-
-        if(
-          status ===
-          "viewed"
-          &&
-          visit.teacherViewed !==
-          true
-        ){
-
-          return false;
-
-        }
-
-
-        if(
-          status ===
-          "pending"
-          &&
+    list =
+      list.filter(
+        visit=>
           visit.teacherViewed ===
           true
-        ){
+      );
 
-          return false;
-
-        }
+  }
 
 
-        const text = (
+  if(
+    status ===
+    "pending"
+  ){
 
-          String(
-            visit.teacherName ||
-            ""
-          )
+    list =
+      list.filter(
+        visit=>
+          visit.teacherViewed !==
+          true
+      );
 
-          +
-          " "
-
-          +
-          String(
-            visit.teacherCode ||
-            ""
-          )
-
-          +
-          " "
-
-          +
-          String(
-            visit.subject ||
-            ""
-          )
-
-          +
-          " "
-
-          +
-          String(
-            visit.grade ||
-            ""
-          )
-
-          +
-          " "
-
-          +
-          String(
-            visit.lessonTitle ||
-            ""
-          )
-
-        ).toLowerCase();
-
-
-        return text.includes(
-          term
-        );
-
-      }
-    );
+  }
 
 
   el("resultInfo").textContent =
-    `عدد الزيارات: ${list.length}`;
+    `عدد الزيارات المعروضة للمعلم ${selectedTeacher.name || ""}: ${list.length}`;
 
 
   const tbody =
@@ -1634,10 +1969,10 @@ function renderVisits(){
       <tr>
 
         <td
-          colspan="8"
+          colspan="9"
           class="empty"
         >
-          لا توجد زيارات مطابقة.
+          لا توجد زيارات مطابقة لهذا المعلم.
         </td>
 
       </tr>
@@ -1718,6 +2053,16 @@ function renderVisits(){
 
           ${esc(
             visit.subject ||
+            "-"
+          )}
+
+        </td>
+
+
+        <td>
+
+          ${esc(
+            visit.lessonTitle ||
             "-"
           )}
 
@@ -1822,10 +2167,6 @@ function renderVisits(){
   );
 
 
-  /*
-    PRINT
-  */
-
   tbody
     .querySelectorAll(
       "[data-print]"
@@ -1847,10 +2188,6 @@ function renderVisits(){
       }
     );
 
-
-  /*
-    DELETE
-  */
 
   tbody
     .querySelectorAll(
@@ -1899,17 +2236,18 @@ async function deleteVisit(id){
   }
 
 
-  /*
-    حماية إضافية للمشرف
-  */
-
   if(
     !isAdmin
     &&
     visit.supervisorId
     &&
-    visit.supervisorId !==
-    currentUser.id
+    String(
+      visit.supervisorId
+    )
+    !==
+    String(
+      currentUser.id
+    )
   ){
 
     alert(
@@ -1942,7 +2280,31 @@ async function deleteVisit(id){
     );
 
 
-    await loadData();
+    allVisits =
+      allVisits.filter(
+        visit=>
+          visit.id !== id
+      );
+
+
+    visibleVisits =
+      visibleVisits.filter(
+        visit=>
+          visit.id !== id
+      );
+
+
+    fillTeacherSelect();
+
+
+    if(selectedTeacher){
+
+      el("teacherSelect").value =
+        selectedTeacher.id;
+
+      renderVisits();
+
+    }
 
 
   }catch(error){
@@ -1962,7 +2324,7 @@ async function deleteVisit(id){
 
 
 /* =====================================
-   PRINT — نفس نظام الطباعة القديم
+   PRINT
 ===================================== */
 
 function buildHeaderBlock(v){
@@ -3256,10 +3618,16 @@ async function printVisit(id){
    EVENTS
 ===================================== */
 
-el("searchInput")
+el("teacherSelect")
   .addEventListener(
-    "input",
-    renderVisits
+    "change",
+    ()=>{
+
+      selectTeacher(
+        el("teacherSelect").value
+      );
+
+    }
   );
 
 
