@@ -40,6 +40,9 @@
   --red:#b42318;
   --red-soft:#fff1ef;
 
+  --orange:#b54708;
+  --orange-soft:#fff4e5;
+
   --shadow:
     0 15px 45px rgba(20,52,43,.09);
 
@@ -56,6 +59,8 @@ body{
 
   margin:0;
 
+  min-height:100vh;
+
   background:
     radial-gradient(
       circle at top right,
@@ -65,8 +70,6 @@ body{
     var(--bg);
 
   color:var(--text);
-
-  min-height:100vh;
 
 }
 
@@ -298,7 +301,8 @@ body{
 
   margin:4px 0 0;
 
-  color:rgba(255,255,255,.78);
+  color:
+    rgba(255,255,255,.78);
 
   font-size:10px;
 
@@ -360,84 +364,113 @@ body{
 
 .selector-row{
 
-  display:flex;
+  display:grid;
+
+  grid-template-columns:minmax(0,1fr) 220px;
 
   gap:10px;
 
-  align-items:center;
-
-  flex-wrap:wrap;
+  align-items:start;
 
 }
 
 
-/* القائمة المنسدلة المعدلة */
+/* =========================
+   CUSTOM DROPDOWN
+========================= */
 
-.teacher-select{
+.teacher-dropdown{
 
-  flex:1;
-
-  min-width:280px;
+  position:relative;
 
   width:100%;
 
-  max-width:100%;
+  z-index:50;
+
+}
+
+
+.teacher-dropdown-button{
+
+  width:100%;
+
+  min-height:47px;
 
   border:
     1px solid var(--border);
 
   border-radius:12px;
 
-  padding:
-    12px 16px 12px 44px;
+  background:#fff;
 
-  background-color:#fff;
+  padding:10px 14px;
 
-  color:var(--text);
+  display:flex;
 
-  font-size:12px;
+  align-items:center;
 
-  font-weight:800;
+  justify-content:space-between;
+
+  gap:10px;
+
+  cursor:pointer;
 
   outline:none;
 
+  transition:.2s;
+
   direction:rtl;
+
+}
+
+
+.teacher-dropdown-button:hover{
+
+  border-color:#c7cec9;
+
+}
+
+
+.teacher-dropdown.open
+.teacher-dropdown-button{
+
+  border-color:var(--green);
+
+  box-shadow:
+    0 0 0 4px rgba(11,74,63,.07);
+
+}
+
+
+.teacher-dropdown-text{
+
+  flex:1;
+
+  min-width:0;
 
   text-align:right;
 
-  text-align-last:right;
+}
 
-  appearance:none;
 
-  -webkit-appearance:none;
+.teacher-dropdown-placeholder{
 
-  -moz-appearance:none;
+  color:#7c847f;
 
-  background-image:
+  font-size:12px;
 
-    linear-gradient(
-      45deg,
-      transparent 50%,
-      var(--green) 50%
-    ),
+  font-weight:700;
 
-    linear-gradient(
-      135deg,
-      var(--green) 50%,
-      transparent 50%
-    );
+}
 
-  background-position:
-    18px 50%,
-    12px 50%;
 
-  background-size:
-    6px 6px,
-    6px 6px;
+.teacher-dropdown-selected{
 
-  background-repeat:no-repeat;
+  color:var(--green);
 
-  cursor:pointer;
+  font-size:12px;
+
+  font-weight:900;
 
   white-space:nowrap;
 
@@ -448,34 +481,303 @@ body{
 }
 
 
-.teacher-select:focus{
+.teacher-dropdown-arrow{
 
-  border-color:var(--green);
+  width:25px;
 
-  box-shadow:
-    0 0 0 4px rgba(11,74,63,.07);
+  height:25px;
+
+  border-radius:7px;
+
+  background:var(--green-soft);
+
+  color:var(--green);
+
+  flex-shrink:0;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-size:11px;
+
+  transition:.2s;
 
 }
 
 
-.teacher-select option{
+.teacher-dropdown.open
+.teacher-dropdown-arrow{
+
+  transform:rotate(180deg);
+
+}
+
+
+.teacher-dropdown-panel{
+
+  display:none;
+
+  position:absolute;
+
+  top:calc(100% + 7px);
+
+  right:0;
+
+  left:0;
+
+  background:#fff;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:14px;
+
+  box-shadow:
+    0 18px 55px rgba(21,53,44,.17);
+
+  overflow:hidden;
+
+  z-index:500;
+
+}
+
+
+.teacher-dropdown.open
+.teacher-dropdown-panel{
+
+  display:block;
+
+}
+
+
+.teacher-search{
+
+  padding:10px;
+
+  border-bottom:
+    1px solid #edf0ee;
+
+  background:#fafbf9;
+
+}
+
+
+.teacher-search input{
+
+  width:100%;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:10px;
+
+  padding:10px 12px;
+
+  outline:none;
+
+  font-size:11px;
 
   direction:rtl;
 
   text-align:right;
 
-  color:#1f2926;
+}
 
-  background:#fff;
 
-  font-size:12px;
+.teacher-search input:focus{
 
-  font-weight:700;
+  border-color:var(--green);
 
-  padding:8px;
+  box-shadow:
+    0 0 0 3px rgba(11,74,63,.06);
 
 }
 
+
+.teacher-options{
+
+  max-height:330px;
+
+  overflow-y:auto;
+
+  overscroll-behavior:contain;
+
+}
+
+
+.teacher-option{
+
+  width:100%;
+
+  border:0;
+
+  background:#fff;
+
+  padding:11px 13px;
+
+  text-align:right;
+
+  cursor:pointer;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:10px;
+
+  border-bottom:
+    1px solid #f0f2f1;
+
+  transition:.15s;
+
+}
+
+
+.teacher-option:last-child{
+
+  border-bottom:0;
+
+}
+
+
+.teacher-option:hover{
+
+  background:var(--green-soft);
+
+}
+
+
+.teacher-option.active{
+
+  background:#e6f1ec;
+
+}
+
+
+.teacher-option-info{
+
+  min-width:0;
+
+  flex:1;
+
+}
+
+
+.teacher-option-name{
+
+  color:#26332d;
+
+  font-size:11px;
+
+  font-weight:900;
+
+  white-space:normal;
+
+  word-break:break-word;
+
+}
+
+
+.teacher-option-code{
+
+  margin-top:2px;
+
+  color:var(--muted);
+
+  font-size:8px;
+
+  font-weight:700;
+
+}
+
+
+.teacher-option-count{
+
+  flex-shrink:0;
+
+  min-width:60px;
+
+  text-align:center;
+
+  padding:4px 7px;
+
+  border-radius:20px;
+
+  background:var(--gold-soft);
+
+  color:var(--gold-dark);
+
+  font-size:8px;
+
+  font-weight:900;
+
+}
+
+
+.dropdown-empty{
+
+  padding:25px 12px;
+
+  text-align:center;
+
+  color:var(--muted);
+
+  font-size:10px;
+
+  font-weight:700;
+
+}
+
+
+/* =========================
+   STATUS FILTER
+========================= */
+
+.filter-select{
+
+  width:100%;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:12px;
+
+  padding:12px;
+
+  min-height:47px;
+
+  background:#fff;
+
+  color:var(--text);
+
+  outline:none;
+
+  font-size:10px;
+
+  font-weight:800;
+
+  direction:rtl;
+
+  text-align:right;
+
+}
+
+
+.filter-select:focus{
+
+  border-color:var(--green);
+
+}
+
+
+/* =========================
+   SELECTED TEACHER
+========================= */
 
 .selected-box{
 
@@ -589,12 +891,16 @@ body{
 
 
 .stat.gold strong{
+
   color:var(--gold-dark);
+
 }
 
 
 .stat.red strong{
+
   color:var(--red);
+
 }
 
 
@@ -618,35 +924,22 @@ body{
 }
 
 
-.filter-select{
+.result-info{
 
-  min-width:190px;
-
-  border:
-    1px solid var(--border);
-
-  border-radius:11px;
-
-  padding:10px;
-
-  background:#fff;
-
-  color:var(--text);
+  color:var(--muted);
 
   font-size:10px;
 
-  font-weight:700;
+  font-weight:800;
 
-  direction:rtl;
-
-  text-align:right;
+  margin-bottom:8px;
 
 }
 
 
-.result-info{
+.error{
 
-  color:var(--muted);
+  color:var(--red);
 
   font-size:10px;
 
@@ -760,9 +1053,9 @@ tbody tr:hover{
 
 .status.pending{
 
-  background:#fff4e5;
+  background:var(--orange-soft);
 
-  color:#b54708;
+  color:var(--orange);
 
 }
 
@@ -858,19 +1151,6 @@ tbody tr:hover{
 }
 
 
-.error{
-
-  color:var(--red);
-
-  font-size:10px;
-
-  font-weight:800;
-
-  margin-top:8px;
-
-}
-
-
 /* =========================
    FOOTER
 ========================= */
@@ -888,6 +1168,10 @@ tbody tr:hover{
 }
 
 
+/* =========================
+   RESPONSIVE
+========================= */
+
 @media(max-width:800px){
 
   .stats{
@@ -899,25 +1183,16 @@ tbody tr:hover{
 
   .selector-row{
 
-    display:block;
+    grid-template-columns:1fr;
 
   }
 
 
-  .teacher-select{
+  .teacher-dropdown-panel{
 
-    min-width:0;
+    right:0;
 
-    width:100%;
-
-    margin-bottom:10px;
-
-  }
-
-
-  .filter-select{
-
-    width:100%;
+    left:0;
 
   }
 
@@ -1029,7 +1304,7 @@ tbody tr:hover{
       </h3>
 
       <p>
-        اختر اسم المعلم لعرض جميع الزيارات المسجلة له.
+        اختر اسم المعلم من القائمة لعرض جميع الزيارات المسجلة له.
       </p>
 
     </div>
@@ -1037,23 +1312,69 @@ tbody tr:hover{
 
     <div class="selector-row">
 
-      <select
-        id="teacherSelect"
-        class="teacher-select"
-        dir="rtl"
+
+      <!-- CUSTOM TEACHER DROPDOWN -->
+
+      <div
+        class="teacher-dropdown"
+        id="teacherDropdown"
       >
 
-        <option value="">
-          -- اختر المعلم --
-        </option>
+        <button
+          type="button"
+          class="teacher-dropdown-button"
+          id="teacherDropdownButton"
+        >
 
-      </select>
+          <div
+            class="teacher-dropdown-text"
+            id="teacherDropdownText"
+          >
+
+            <span class="teacher-dropdown-placeholder">
+              اختر المعلم
+            </span>
+
+          </div>
+
+
+          <div class="teacher-dropdown-arrow">
+            ▼
+          </div>
+
+        </button>
+
+
+        <div
+          class="teacher-dropdown-panel"
+          id="teacherDropdownPanel"
+        >
+
+          <div class="teacher-search">
+
+            <input
+              type="search"
+              id="teacherSearchInput"
+              placeholder="ابحث باسم المعلم أو الكود..."
+              autocomplete="off"
+            >
+
+          </div>
+
+
+          <div
+            class="teacher-options"
+            id="teacherOptions"
+          ></div>
+
+        </div>
+
+      </div>
 
 
       <select
         id="statusFilter"
         class="filter-select"
-        dir="rtl"
       >
 
         <option value="all">
@@ -1069,6 +1390,7 @@ tbody tr:hover{
         </option>
 
       </select>
+
 
     </div>
 
@@ -1373,26 +1695,11 @@ function esc(value){
   return String(
     value ?? ""
   )
-  .replaceAll(
-    "&",
-    "&amp;"
-  )
-  .replaceAll(
-    "<",
-    "&lt;"
-  )
-  .replaceAll(
-    ">",
-    "&gt;"
-  )
-  .replaceAll(
-    '"',
-    "&quot;"
-  )
-  .replaceAll(
-    "'",
-    "&#039;"
-  );
+  .replaceAll("&","&amp;")
+  .replaceAll("<","&lt;")
+  .replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;")
+  .replaceAll("'","&#039;");
 
 }
 
@@ -1442,7 +1749,9 @@ function formatViewedDate(value){
       date =
         value.toDate();
 
-    }else if(
+    }
+
+    else if(
       value.seconds
     ){
 
@@ -1452,7 +1761,9 @@ function formatViewedDate(value){
           1000
         );
 
-    }else{
+    }
+
+    else{
 
       date =
         new Date(value);
@@ -1485,6 +1796,274 @@ function formatViewedDate(value){
     return "";
 
   }
+
+}
+
+
+/* =====================================
+   CUSTOM DROPDOWN
+===================================== */
+
+function openTeacherDropdown(){
+
+  el("teacherDropdown")
+    .classList
+    .add("open");
+
+
+  setTimeout(
+    ()=>{
+
+      el("teacherSearchInput")
+        .focus();
+
+    },
+    50
+  );
+
+}
+
+
+function closeTeacherDropdown(){
+
+  el("teacherDropdown")
+    .classList
+    .remove("open");
+
+}
+
+
+function toggleTeacherDropdown(){
+
+  const dropdown =
+    el("teacherDropdown");
+
+
+  if(
+    dropdown.classList.contains(
+      "open"
+    )
+  ){
+
+    closeTeacherDropdown();
+
+  }else{
+
+    openTeacherDropdown();
+
+  }
+
+}
+
+
+function renderTeacherOptions(){
+
+  const box =
+    el("teacherOptions");
+
+
+  const search =
+    el("teacherSearchInput")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const filtered =
+    visibleTeachers.filter(
+      teacher=>{
+
+        const text =
+
+          String(
+            teacher.name ||
+            ""
+          )
+
+          +
+
+          " "
+
+          +
+
+          String(
+            teacher.code ||
+            teacher.id ||
+            ""
+          );
+
+
+        return text
+          .toLowerCase()
+          .includes(search);
+
+      }
+    );
+
+
+  box.innerHTML =
+    "";
+
+
+  if(!filtered.length){
+
+    box.innerHTML = `
+
+      <div class="dropdown-empty">
+        لا يوجد معلمون مطابقون للبحث.
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  filtered.forEach(
+    teacher=>{
+
+      const code =
+        String(
+          teacher.code ||
+          teacher.id ||
+          ""
+        );
+
+
+      const visitsCount =
+        getTeacherVisits(
+          teacher
+        ).length;
+
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+
+      button.type =
+        "button";
+
+
+      button.className =
+        "teacher-option";
+
+
+      if(
+        selectedTeacher
+        &&
+        selectedTeacher.id ===
+        teacher.id
+      ){
+
+        button.classList.add(
+          "active"
+        );
+
+      }
+
+
+      button.innerHTML = `
+
+        <div class="teacher-option-info">
+
+          <div class="teacher-option-name">
+
+            ${esc(
+              teacher.name ||
+              "بدون اسم"
+            )}
+
+          </div>
+
+
+          <div class="teacher-option-code">
+
+            كود المعلم:
+            ${esc(code)}
+
+          </div>
+
+        </div>
+
+
+        <div class="teacher-option-count">
+
+          ${visitsCount}
+          زيارة
+
+        </div>
+
+      `;
+
+
+      button.addEventListener(
+        "click",
+        ()=>{
+
+          selectTeacher(
+            teacher.id
+          );
+
+
+          closeTeacherDropdown();
+
+
+          el("teacherSearchInput").value =
+            "";
+
+
+          renderTeacherOptions();
+
+        }
+      );
+
+
+      box.appendChild(
+        button
+      );
+
+    }
+  );
+
+}
+
+
+function updateTeacherDropdownText(){
+
+  const box =
+    el("teacherDropdownText");
+
+
+  if(!selectedTeacher){
+
+    box.innerHTML = `
+
+      <span class="teacher-dropdown-placeholder">
+        اختر المعلم
+      </span>
+
+    `;
+
+    return;
+
+  }
+
+
+  box.innerHTML = `
+
+    <div class="teacher-dropdown-selected">
+
+      ${esc(
+        selectedTeacher.name ||
+        "بدون اسم"
+      )}
+
+    </div>
+
+  `;
 
 }
 
@@ -1569,10 +2148,12 @@ async function loadData(){
     visibleTeachers.sort(
       (a,b)=>
         String(
-          a.name || ""
+          a.name ||
+          ""
         ).localeCompare(
           String(
-            b.name || ""
+            b.name ||
+            ""
           ),
           "ar"
         )
@@ -1650,6 +2231,7 @@ async function loadData(){
             a.visitDate
           );
 
+
         const db =
           toSortableDate(
             b.visitDate
@@ -1676,7 +2258,7 @@ async function loadData(){
     );
 
 
-    fillTeacherSelect();
+    renderTeacherOptions();
 
 
     const params =
@@ -1708,9 +2290,6 @@ async function loadData(){
 
 
       if(teacher){
-
-        el("teacherSelect").value =
-          teacher.id;
 
         selectTeacher(
           teacher.id
@@ -1762,56 +2341,8 @@ async function loadData(){
 
 
 /* =====================================
-   TEACHER SELECT
+   TEACHER VISITS
 ===================================== */
-
-function fillTeacherSelect(){
-
-  const select =
-    el("teacherSelect");
-
-
-  select.innerHTML = `
-
-    <option value="">
-      -- اختر المعلم --
-    </option>
-
-  `;
-
-
-  visibleTeachers.forEach(
-    teacher=>{
-
-      const option =
-        document.createElement(
-          "option"
-        );
-
-
-      option.value =
-        teacher.id;
-
-
-      const count =
-        getTeacherVisits(
-          teacher
-        ).length;
-
-
-      option.textContent =
-        `${teacher.name || "بدون اسم"} (${count} زيارة)`;
-
-
-      select.appendChild(
-        option
-      );
-
-    }
-  );
-
-}
-
 
 function getTeacherVisits(teacher){
 
@@ -1836,16 +2367,11 @@ function getTeacherVisits(teacher){
 }
 
 
+/* =====================================
+   SELECT TEACHER
+===================================== */
+
 function selectTeacher(teacherId){
-
-  if(!teacherId){
-
-    clearSelectedTeacher();
-
-    return;
-
-  }
-
 
   const teacher =
     visibleTeachers.find(
@@ -1864,6 +2390,9 @@ function selectTeacher(teacherId){
 
   selectedTeacher =
     teacher;
+
+
+  updateTeacherDropdownText();
 
 
   el("selectedTeacherName")
@@ -1893,6 +2422,8 @@ function selectTeacher(teacherId){
     .add("show");
 
 
+  renderTeacherOptions();
+
   renderVisits();
 
 }
@@ -1904,8 +2435,7 @@ function clearSelectedTeacher(){
     null;
 
 
-  el("teacherSelect").value =
-    "";
+  updateTeacherDropdownText();
 
 
   el("selectedTeacherBox")
@@ -2390,13 +2920,10 @@ async function deleteVisit(id){
       );
 
 
-    fillTeacherSelect();
+    renderTeacherOptions();
 
 
     if(selectedTeacher){
-
-      el("teacherSelect").value =
-        selectedTeacher.id;
 
       renderVisits();
 
@@ -2420,7 +2947,7 @@ async function deleteVisit(id){
 
 
 /* =====================================
-   PRINT
+   PRINT HEADER
 ===================================== */
 
 function buildHeaderBlock(v){
@@ -2480,52 +3007,20 @@ function buildHeaderBlock(v){
 
       <tr>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-            width:14%;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;">
           كود المعلم
         </th>
 
-        <td
-          style="
-            border:1px solid #000;
-            padding:4px;
-            width:16%;
-          "
-        >
-          ${esc(
-            v.teacherCode ||
-            ""
-          )}
+        <td style="border:1px solid #000;padding:4px;">
+          ${esc(v.teacherCode || "")}
         </td>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-            width:14%;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;">
           اسم المعلم
         </th>
 
-        <td
-          style="
-            border:1px solid #000;
-            padding:4px;
-            width:56%;
-          "
-        >
-          ${esc(
-            v.teacherName ||
-            ""
-          )}
+        <td style="border:1px solid #000;padding:4px;">
+          ${esc(v.teacherName || "")}
         </td>
 
       </tr>
@@ -2533,48 +3028,20 @@ function buildHeaderBlock(v){
 
       <tr>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;">
           الصف
         </th>
 
-        <td
-          style="
-            border:1px solid #000;
-            padding:4px;
-          "
-        >
-          ${esc(
-            v.grade ||
-            ""
-          )}
+        <td style="border:1px solid #000;padding:4px;">
+          ${esc(v.grade || "")}
         </td>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;">
           المادة
         </th>
 
-        <td
-          style="
-            border:1px solid #000;
-            padding:4px;
-          "
-        >
-          ${esc(
-            v.subject ||
-            ""
-          )}
+        <td style="border:1px solid #000;padding:4px;">
+          ${esc(v.subject || "")}
         </td>
 
       </tr>
@@ -2582,27 +3049,15 @@ function buildHeaderBlock(v){
 
       <tr>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;">
           عنوان الدرس
         </th>
 
         <td
           colspan="3"
-          style="
-            border:1px solid #000;
-            padding:4px;
-          "
+          style="border:1px solid #000;padding:4px;"
         >
-          ${esc(
-            v.lessonTitle ||
-            ""
-          )}
+          ${esc(v.lessonTitle || "")}
         </td>
 
       </tr>
@@ -2610,50 +3065,20 @@ function buildHeaderBlock(v){
 
       <tr>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;">
           رقم الزيارة
         </th>
 
-        <td
-          style="
-            border:1px solid #000;
-            padding:4px;
-          "
-        >
-          ${esc(
-            String(
-              v.visitNumber ||
-              ""
-            )
-          )}
+        <td style="border:1px solid #000;padding:4px;">
+          ${esc(String(v.visitNumber || ""))}
         </td>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;">
           اسم المشرف
         </th>
 
-        <td
-          style="
-            border:1px solid #000;
-            padding:4px;
-          "
-        >
-          ${esc(
-            v.supervisorName ||
-            ""
-          )}
+        <td style="border:1px solid #000;padding:4px;">
+          ${esc(v.supervisorName || "")}
         </td>
 
       </tr>
@@ -2661,51 +3086,20 @@ function buildHeaderBlock(v){
 
       <tr>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;">
           التاريخ
         </th>
 
-        <td
-          style="
-            border:1px solid #000;
-            padding:4px;
-          "
-        >
-          ${esc(
-            v.visitDate ||
-            ""
-          )}
+        <td style="border:1px solid #000;padding:4px;">
+          ${esc(v.visitDate || "")}
         </td>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;">
           الدرجة النهائية
         </th>
 
-        <td
-          style="
-            border:1px solid #000;
-            padding:4px;
-            font-weight:900;
-          "
-        >
-          ${esc(
-            String(
-              v.finalScore ||
-              0
-            )
-          )}
+        <td style="border:1px solid #000;padding:4px;font-weight:900;">
+          ${esc(String(v.finalScore || 0))}
           / 100
         </td>
 
@@ -2714,23 +3108,13 @@ function buildHeaderBlock(v){
 
       <tr>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;">
           حالة الاطلاع
         </th>
 
         <td
           colspan="3"
-          style="
-            border:1px solid #000;
-            padding:4px;
-            font-weight:900;
-          "
+          style="border:1px solid #000;padding:4px;font-weight:900;"
         >
 
           ${
@@ -2751,6 +3135,10 @@ function buildHeaderBlock(v){
 
 }
 
+
+/* =====================================
+   RUBRIC
+===================================== */
 
 const domainOrder = [
 
@@ -2927,9 +3315,7 @@ function buildPaperRubricTable(v){
                   padding:4px;
                 "
               >
-                ${esc(
-                  domain.name
-                )}
+                ${esc(domain.name)}
               </td>
 
             `;
@@ -2946,10 +3332,7 @@ function buildPaperRubricTable(v){
                 width:220px;
               "
             >
-              ${esc(
-                answer.itemLabel ||
-                ""
-              )}
+              ${esc(answer.itemLabel || "")}
             </td>
 
 
@@ -2969,66 +3352,23 @@ function buildPaperRubricTable(v){
                 "
               >
 
-                <colgroup>
-
-                  <col style="width:34%">
-
-                  <col style="width:33%">
-
-                  <col style="width:33%">
-
-                </colgroup>
-
-
                 <tr>
 
-                  <td
-                    style="
-                      border-left:1px solid #000;
-                      padding:4px;
-                    "
-                  >
-                    ${circle(
-                      selected === 4
-                    )}
-
-                    ${esc(
-                      answer.optTop ||
-                      ""
-                    )}
+                  <td style="border-left:1px solid #000;padding:4px;">
+                    ${circle(selected === 4)}
+                    ${esc(answer.optTop || "")}
                   </td>
 
 
-                  <td
-                    style="
-                      border-left:1px solid #000;
-                      padding:4px;
-                    "
-                  >
-                    ${circle(
-                      selected === 3
-                    )}
-
-                    ${esc(
-                      answer.optMid ||
-                      ""
-                    )}
+                  <td style="border-left:1px solid #000;padding:4px;">
+                    ${circle(selected === 3)}
+                    ${esc(answer.optMid || "")}
                   </td>
 
 
-                  <td
-                    style="
-                      padding:4px;
-                    "
-                  >
-                    ${circle(
-                      selected === 1
-                    )}
-
-                    ${esc(
-                      answer.optLow ||
-                      ""
-                    )}
+                  <td style="padding:4px;">
+                    ${circle(selected === 1)}
+                    ${esc(answer.optLow || "")}
                   </td>
 
                 </tr>
@@ -3066,46 +3406,19 @@ function buildPaperRubricTable(v){
 
         <tr>
 
-          <th
-            style="
-              border:1px solid #000;
-              background:#edf5f1;
-              padding:4px;
-              width:26px;
-            "
-          >
+          <th style="border:1px solid #000;background:#edf5f1;padding:4px;width:26px;">
             م
           </th>
 
-          <th
-            style="
-              border:1px solid #000;
-              background:#edf5f1;
-              padding:4px;
-              width:92px;
-            "
-          >
+          <th style="border:1px solid #000;background:#edf5f1;padding:4px;width:92px;">
             المجال
           </th>
 
-          <th
-            style="
-              border:1px solid #000;
-              background:#edf5f1;
-              padding:4px;
-              width:220px;
-            "
-          >
+          <th style="border:1px solid #000;background:#edf5f1;padding:4px;width:220px;">
             العنصر
           </th>
 
-          <th
-            style="
-              border:1px solid #000;
-              background:#edf5f1;
-              padding:4px;
-            "
-          >
+          <th style="border:1px solid #000;background:#edf5f1;padding:4px;">
             التقييم
           </th>
 
@@ -3127,6 +3440,10 @@ function buildPaperRubricTable(v){
 }
 
 
+/* =====================================
+   NOTES
+===================================== */
+
 function buildNotesAndSigns(v){
 
   return `
@@ -3140,13 +3457,7 @@ function buildNotesAndSigns(v){
       "
     >
 
-      <div
-        style="
-          font-weight:900;
-          margin-bottom:4px;
-          font-size:11px;
-        "
-      >
+      <div style="font-weight:900;margin-bottom:4px;font-size:11px;">
         إيجابيات الحصة
       </div>
 
@@ -3169,13 +3480,7 @@ function buildNotesAndSigns(v){
       </div>
 
 
-      <div
-        style="
-          font-weight:900;
-          margin:6px 0 4px;
-          font-size:11px;
-        "
-      >
+      <div style="font-weight:900;margin:6px 0 4px;font-size:11px;">
         توصيات وتوجيهات
       </div>
 
@@ -3211,25 +3516,11 @@ function buildNotesAndSigns(v){
 
       <tr>
 
-        <td
-          style="
-            border:1px solid #000;
-            padding:6px;
-            text-align:center;
-            font-weight:900;
-          "
-        >
+        <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">
           توقيع المعلم
         </td>
 
-        <td
-          style="
-            border:1px solid #000;
-            padding:6px;
-            text-align:center;
-            font-weight:900;
-          "
-        >
+        <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">
           توقيع المشرف
         </td>
 
@@ -3238,19 +3529,9 @@ function buildNotesAndSigns(v){
 
       <tr>
 
-        <td
-          style="
-            border:1px solid #000;
-            height:28px;
-          "
-        ></td>
+        <td style="border:1px solid #000;height:28px;"></td>
 
-        <td
-          style="
-            border:1px solid #000;
-            height:28px;
-          "
-        ></td>
+        <td style="border:1px solid #000;height:28px;"></td>
 
       </tr>
 
@@ -3260,6 +3541,10 @@ function buildNotesAndSigns(v){
 
 }
 
+
+/* =====================================
+   WRITTEN WORK
+===================================== */
 
 function buildWorkPrint(v){
 
@@ -3297,27 +3582,11 @@ function buildWorkPrint(v){
 
       <tr>
 
-        <td
-          style="
-            border:1px solid #000;
-            height:26px;
-            padding:5px;
-            font-size:11px;
-          "
-        >
-          ${esc(
-            row.name ||
-            ""
-          )}
+        <td style="border:1px solid #000;height:26px;padding:5px;font-size:11px;">
+          ${esc(row.name || "")}
         </td>
 
-        <td
-          style="
-            border:1px solid #000;
-            text-align:center;
-            font-size:11px;
-          "
-        >
+        <td style="border:1px solid #000;text-align:center;font-size:11px;">
           ${
             row.status ===
             "correct"
@@ -3328,13 +3597,7 @@ function buildWorkPrint(v){
           }
         </td>
 
-        <td
-          style="
-            border:1px solid #000;
-            text-align:center;
-            font-size:11px;
-          "
-        >
+        <td style="border:1px solid #000;text-align:center;font-size:11px;">
           ${
             row.status ===
             "partial"
@@ -3345,13 +3608,7 @@ function buildWorkPrint(v){
           }
         </td>
 
-        <td
-          style="
-            border:1px solid #000;
-            text-align:center;
-            font-size:11px;
-          "
-        >
+        <td style="border:1px solid #000;text-align:center;font-size:11px;">
           ${
             row.status ===
             "not"
@@ -3378,36 +3635,6 @@ function buildWorkPrint(v){
     ></div>
 
 
-    <div
-      style="
-        display:flex;
-        justify-content:space-between;
-        align-items:flex-start;
-        margin-bottom:6px;
-      "
-    >
-
-      <div
-        style="
-          font-weight:900;
-          font-size:12px;
-        "
-      >
-        مدارس الفلاح الأهلية
-      </div>
-
-      <div
-        style="
-          font-weight:900;
-          font-size:12px;
-        "
-      >
-        تصميم محمد عامر أحمد
-      </div>
-
-    </div>
-
-
     <h2
       style="
         margin:0 0 6px;
@@ -3431,46 +3658,19 @@ function buildWorkPrint(v){
 
       <tr>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;">
           اسم الطالب
         </th>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-            width:90px;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;width:90px;">
           مصحح
         </th>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-            width:90px;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;width:90px;">
           غير مكتمل
         </th>
 
-        <th
-          style="
-            border:1px solid #000;
-            background:#edf5f1;
-            padding:4px;
-            width:90px;
-          "
-        >
+        <th style="border:1px solid #000;background:#edf5f1;padding:4px;width:90px;">
           غير مصحح
         </th>
 
@@ -3480,66 +3680,14 @@ function buildWorkPrint(v){
 
     </table>
 
-
-    <table
-      style="
-        width:100%;
-        border-collapse:collapse;
-        margin-top:6px;
-        font-size:11px;
-      "
-    >
-
-      <tr>
-
-        <td
-          style="
-            border:1px solid #000;
-            padding:6px;
-            text-align:center;
-            font-weight:900;
-          "
-        >
-          توقيع المعلم
-        </td>
-
-        <td
-          style="
-            border:1px solid #000;
-            padding:6px;
-            text-align:center;
-            font-weight:900;
-          "
-        >
-          توقيع المشرف
-        </td>
-
-      </tr>
-
-      <tr>
-
-        <td
-          style="
-            border:1px solid #000;
-            height:28px;
-          "
-        ></td>
-
-        <td
-          style="
-            border:1px solid #000;
-            height:28px;
-          "
-        ></td>
-
-      </tr>
-
-    </table>
-
   `;
 
 }
 
+
+/* =====================================
+   PRINT
+===================================== */
 
 async function printVisit(id){
 
@@ -3585,30 +3733,11 @@ async function printVisit(id){
     snap.data();
 
 
-  const header =
-    buildHeaderBlock(v);
-
-
-  const rubric =
-    buildPaperRubricTable(v);
-
-
-  const notes =
-    buildNotesAndSigns(v);
-
-
-  const work =
-    buildWorkPrint(v);
-
-
   const html = `
 
     <!DOCTYPE html>
 
-    <html
-      lang="ar"
-      dir="rtl"
-    >
+    <html lang="ar" dir="rtl">
 
     <head>
 
@@ -3645,16 +3774,15 @@ async function printVisit(id){
 
     </head>
 
-
     <body>
 
-      ${header}
+      ${buildHeaderBlock(v)}
 
-      ${rubric}
+      ${buildPaperRubricTable(v)}
 
-      ${notes}
+      ${buildNotesAndSigns(v)}
 
-      ${work}
+      ${buildWorkPrint(v)}
 
     </body>
 
@@ -3693,17 +3821,62 @@ async function printVisit(id){
    EVENTS
 ===================================== */
 
-el("teacherSelect")
+el("teacherDropdownButton")
   .addEventListener(
-    "change",
-    ()=>{
+    "click",
+    event=>{
 
-      selectTeacher(
-        el("teacherSelect").value
-      );
+      event.stopPropagation();
+
+      toggleTeacherDropdown();
 
     }
   );
+
+
+el("teacherDropdownPanel")
+  .addEventListener(
+    "click",
+    event=>{
+
+      event.stopPropagation();
+
+    }
+  );
+
+
+el("teacherSearchInput")
+  .addEventListener(
+    "input",
+    renderTeacherOptions
+  );
+
+
+document.addEventListener(
+  "click",
+  ()=>{
+
+    closeTeacherDropdown();
+
+  }
+);
+
+
+document.addEventListener(
+  "keydown",
+  event=>{
+
+    if(
+      event.key ===
+      "Escape"
+    ){
+
+      closeTeacherDropdown();
+
+    }
+
+  }
+);
 
 
 el("statusFilter")
