@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>إدارة المعلمين - مدارس الفلاح الأهلية</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,6 +27,9 @@
 
   --red:#c43c3c;
   --red-dark:#9f2e2e;
+
+  --blue:#175cd3;
+  --blue-soft:#eff8ff;
 
   --shadow:0 15px 45px rgba(20,52,43,.10);
 }
@@ -94,6 +98,7 @@ body{
 .header-actions{
   display:flex;
   gap:8px;
+  flex-wrap:wrap;
 }
 
 .nav-btn{
@@ -112,6 +117,11 @@ body{
 .nav-btn.home{
   background:var(--green-soft);
   color:var(--green);
+}
+
+.nav-btn.logout{
+  background:#fff1ef;
+  color:#b42318;
 }
 
 /* ================= PAGE ================= */
@@ -141,23 +151,33 @@ body{
 .title-area p{
   margin:5px 0 0;
   color:var(--muted);
-  font-size:14px;
+  font-size:13px;
+}
+
+.user-note{
+  margin-top:7px;
+  display:inline-block;
+  background:var(--green-soft);
+  color:var(--green);
+  border-radius:20px;
+  padding:5px 10px;
+  font-size:10px;
+  font-weight:800;
 }
 
 .add-btn{
-  border:none;
-  cursor:pointer;
-  padding:12px 20px;
-  border-radius:13px;
-  background:linear-gradient(135deg,var(--green),var(--green-dark));
+  border:0;
+  border-radius:12px;
+  padding:11px 18px;
+  background:var(--green);
   color:#fff;
+  font-size:13px;
   font-weight:800;
-  font-size:14px;
-  box-shadow:0 8px 20px rgba(11,74,63,.18);
+  cursor:pointer;
 }
 
 .add-btn:hover{
-  transform:translateY(-1px);
+  background:var(--green-dark);
 }
 
 /* ================= STATS ================= */
@@ -165,111 +185,104 @@ body{
 .stats{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:14px;
-  margin-bottom:18px;
+  gap:13px;
+  margin-bottom:20px;
 }
 
 .stat{
   background:#fff;
   border:1px solid var(--border);
-  border-radius:17px;
-  padding:17px;
+  border-radius:16px;
+  padding:16px;
   box-shadow:var(--shadow);
 }
 
 .stat .label{
-  font-size:13px;
   color:var(--muted);
+  font-size:11px;
   font-weight:700;
 }
 
 .stat .value{
-  margin-top:4px;
-  font-size:26px;
   color:var(--green);
+  font-size:28px;
   font-weight:800;
+  margin-top:3px;
 }
 
 .stat.gold .value{
   color:var(--gold-dark);
 }
 
-/* ================= CONTENT ================= */
+/* ================= PANEL ================= */
 
 .panel{
   background:#fff;
-  border-radius:19px;
   border:1px solid var(--border);
-  padding:18px;
+  border-radius:18px;
+  padding:16px;
   box-shadow:var(--shadow);
 }
 
 .toolbar{
   display:flex;
   justify-content:space-between;
-  gap:12px;
   align-items:center;
+  gap:12px;
   flex-wrap:wrap;
-  margin-bottom:15px;
+  margin-bottom:14px;
 }
 
 .search-wrap{
   flex:1;
-  min-width:240px;
-  max-width:520px;
-  position:relative;
+  min-width:250px;
 }
 
 .search-wrap input{
   width:100%;
   border:1px solid var(--border);
-  background:#fafafa;
-  border-radius:13px;
-  padding:12px 14px;
-  font-size:14px;
+  border-radius:11px;
+  padding:11px 13px;
   outline:none;
+  font-size:12px;
 }
 
 .search-wrap input:focus{
-  border-color:var(--gold);
-  box-shadow:0 0 0 3px rgba(200,154,59,.12);
-  background:#fff;
+  border-color:var(--green);
+  box-shadow:0 0 0 4px rgba(11,74,63,.07);
 }
 
 .result-count{
   color:var(--muted);
-  font-size:13px;
+  font-size:11px;
   font-weight:700;
 }
 
 /* ================= TABLE ================= */
 
 .table-wrap{
-  width:100%;
   overflow:auto;
 }
 
 table{
   width:100%;
   border-collapse:collapse;
-  min-width:780px;
+  min-width:850px;
+}
+
+th,
+td{
+  padding:11px 9px;
+  border-bottom:1px solid #edf0ee;
+  text-align:center;
+  font-size:11px;
+  vertical-align:middle;
 }
 
 th{
-  background:#f6f8f6;
+  background:#f4f7f5;
   color:var(--green);
-  font-size:13px;
   font-weight:800;
-  padding:12px 10px;
-  border-bottom:2px solid #e4e7e4;
-  text-align:center;
-}
-
-td{
-  padding:12px 10px;
-  border-bottom:1px solid #eceeec;
-  font-size:13px;
-  text-align:center;
 }
 
 tbody tr:hover{
@@ -279,104 +292,102 @@ tbody tr:hover{
 .teacher-name{
   text-align:right;
   font-weight:800;
+  color:#25312c;
 }
 
-.code-badge{
-  background:var(--green-soft);
-  color:var(--green);
-  display:inline-block;
-  padding:4px 10px;
-  border-radius:50px;
+.code{
   font-weight:800;
-  letter-spacing:.5px;
-}
-
-.visit-badge{
-  background:var(--gold-soft);
   color:var(--gold-dark);
-  padding:4px 10px;
-  border-radius:50px;
+}
+
+.supervisor-badge{
   display:inline-block;
-  min-width:42px;
+  background:var(--blue-soft);
+  color:var(--blue);
+  border-radius:20px;
+  padding:4px 8px;
+  font-size:9px;
   font-weight:800;
 }
 
-.action-group{
-  display:flex;
-  gap:6px;
-  justify-content:center;
+.unassigned{
+  display:inline-block;
+  background:#fff4e5;
+  color:#b54708;
+  border-radius:20px;
+  padding:4px 8px;
+  font-size:9px;
+  font-weight:800;
 }
 
-.table-btn{
-  border:none;
+.actions{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.action-btn{
+  border:0;
+  border-radius:8px;
+  padding:6px 9px;
+  font-size:9px;
+  font-weight:800;
   cursor:pointer;
-  padding:7px 11px;
-  border-radius:9px;
-  font-weight:700;
-  font-size:12px;
+  text-decoration:none;
 }
 
 .edit-btn{
+  background:var(--blue-soft);
+  color:var(--blue);
+}
+
+.visit-btn{
   background:var(--green-soft);
   color:var(--green);
 }
 
-.visits-btn{
-  background:var(--gold-soft);
-  color:var(--gold-dark);
-}
-
 .delete-btn{
-  background:#fdecec;
-  color:var(--red);
+  background:#fff1ef;
+  color:#b42318;
 }
 
 .empty{
-  padding:50px 15px!important;
+  padding:35px !important;
+  text-align:center;
   color:var(--muted);
-  text-align:center!important;
-  font-weight:700;
 }
 
 /* ================= MODAL ================= */
 
 .modal{
+  display:none;
   position:fixed;
   inset:0;
-  background:rgba(5,31,26,.56);
-  backdrop-filter:blur(5px);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  padding:16px;
   z-index:1000;
+  background:rgba(15,33,27,.48);
+  backdrop-filter:blur(3px);
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal.show{
+  display:flex;
 }
 
 .modal-card{
-  width:100%;
-  max-width:510px;
+  width:min(500px,100%);
   background:#fff;
   border-radius:20px;
-  padding:23px;
-  position:relative;
-  box-shadow:0 25px 80px rgba(0,0,0,.28);
-}
-
-.modal-card::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:5px;
-  border-radius:20px 20px 0 0;
-  background:linear-gradient(90deg,var(--green),var(--gold));
+  padding:24px;
+  box-shadow:0 30px 90px rgba(0,0,0,.22);
 }
 
 .modal-title{
-  font-size:20px;
-  font-weight:800;
   color:var(--green);
+  font-size:18px;
+  font-weight:800;
   margin-bottom:18px;
 }
 
@@ -387,27 +398,28 @@ tbody tr:hover{
 .field label{
   display:block;
   margin-bottom:6px;
-  font-size:13px;
+  font-size:11px;
   font-weight:800;
+  color:#35413b;
 }
 
 .field input{
   width:100%;
-  border:1px solid #dcdedb;
-  padding:11px 12px;
+  border:1px solid var(--border);
   border-radius:11px;
-  font-size:14px;
+  padding:10px 11px;
   outline:none;
+  font-size:12px;
 }
 
 .field input:focus{
-  border-color:var(--gold);
-  box-shadow:0 0 0 3px rgba(200,154,59,.12);
+  border-color:var(--green);
+  box-shadow:0 0 0 4px rgba(11,74,63,.07);
 }
 
 .code-row{
   display:flex;
-  gap:8px;
+  gap:7px;
 }
 
 .code-row input{
@@ -415,66 +427,67 @@ tbody tr:hover{
 }
 
 .generate-btn{
-  border:none;
-  border-radius:11px;
-  padding:0 13px;
-  cursor:pointer;
+  border:0;
+  border-radius:10px;
+  padding:9px 12px;
   background:var(--gold-soft);
   color:var(--gold-dark);
   font-weight:800;
-  white-space:nowrap;
+  font-size:10px;
+  cursor:pointer;
+}
+
+.modal-msg{
+  min-height:20px;
+  color:var(--red);
+  font-size:10px;
+  font-weight:700;
+  margin-top:3px;
 }
 
 .modal-actions{
+  margin-top:17px;
   display:flex;
-  gap:9px;
-  margin-top:19px;
+  justify-content:flex-end;
+  gap:8px;
 }
 
-.modal-actions button{
-  flex:1;
-  border:none;
-  cursor:pointer;
-  border-radius:11px;
-  padding:11px;
+.modal-btn{
+  border:0;
+  border-radius:10px;
+  padding:9px 15px;
+  font-size:11px;
   font-weight:800;
+  cursor:pointer;
 }
 
-.save-modal{
+.save-btn{
   background:var(--green);
   color:#fff;
 }
 
-.cancel-modal{
-  background:#f0f1ef;
-  color:#444;
-}
-
-.msg{
-  min-height:20px;
-  text-align:center;
-  margin-top:10px;
-  font-size:13px;
-  color:var(--red);
-  font-weight:700;
+.cancel-btn{
+  background:#f0f2f1;
+  color:#555;
 }
 
 /* ================= TOAST ================= */
 
 .toast{
   position:fixed;
-  bottom:24px;
-  left:24px;
+  bottom:20px;
+  left:20px;
   background:var(--green);
   color:#fff;
-  border-radius:12px;
-  padding:12px 18px;
-  font-size:13px;
-  font-weight:700;
-  box-shadow:0 10px 30px rgba(0,0,0,.20);
+  padding:11px 15px;
+  border-radius:11px;
+  font-size:11px;
+  font-weight:800;
+  box-shadow:var(--shadow);
+
   opacity:0;
-  pointer-events:none;
   transform:translateY(15px);
+  pointer-events:none;
   transition:.25s;
   z-index:2000;
 }
@@ -546,9 +559,11 @@ tbody tr:hover{
 
     <div class="brand">
 
-      <img src="logo.jpeg"
-           class="logo"
-           alt="شعار مدارس الفلاح الأهلية">
+      <img
+        src="logo.jpeg"
+        class="logo"
+        alt="شعار مدارس الفلاح الأهلية"
+      >
 
       <div class="brand-text">
         <h1>مدارس الفلاح الأهلية</h1>
@@ -557,10 +572,24 @@ tbody tr:hover{
 
     </div>
 
+
     <div class="header-actions">
-      <a href="index.html" class="nav-btn home">
-        الرئيسية
+
+      <a
+        href="#"
+        class="nav-btn home"
+        id="backBtn"
+      >
+        الرجوع للوحة التحكم
       </a>
+
+      <button
+        class="nav-btn logout"
+        id="logoutBtn"
+      >
+        تسجيل الخروج
+      </button>
+
     </div>
 
   </div>
@@ -573,11 +602,26 @@ tbody tr:hover{
   <div class="page-title">
 
     <div class="title-area">
-      <h2>إدارة المعلمين</h2>
-      <p>إضافة المعلمين وتحديث بياناتهم ومتابعة سجل الزيارات.</p>
+
+      <h2 id="pageTitle">
+        إدارة المعلمين
+      </h2>
+
+      <p id="pageDescription">
+        إضافة المعلمين وتحديث بياناتهم ومتابعة سجل الزيارات.
+      </p>
+
+      <div
+        class="user-note"
+        id="userNote"
+      ></div>
+
     </div>
 
-    <button class="add-btn" id="btnAddTeacher">
+    <button
+      class="add-btn"
+      id="btnAddTeacher"
+    >
       + إضافة معلم
     </button>
 
@@ -587,18 +631,41 @@ tbody tr:hover{
   <div class="stats">
 
     <div class="stat">
-      <div class="label">إجمالي المعلمين</div>
-      <div class="value" id="teachersCount">0</div>
+
+      <div class="label" id="teachersLabel">
+        إجمالي المعلمين
+      </div>
+
+      <div class="value" id="teachersCount">
+        0
+      </div>
+
     </div>
+
 
     <div class="stat gold">
-      <div class="label">إجمالي الزيارات</div>
-      <div class="value" id="visitsCount">0</div>
+
+      <div class="label">
+        إجمالي الزيارات
+      </div>
+
+      <div class="value" id="visitsCount">
+        0
+      </div>
+
     </div>
 
+
     <div class="stat">
-      <div class="label">المعلمون الذين لديهم زيارات</div>
-      <div class="value" id="teachersWithVisits">0</div>
+
+      <div class="label">
+        المعلمون الذين لديهم زيارات
+      </div>
+
+      <div class="value" id="teachersWithVisits">
+        0
+      </div>
+
     </div>
 
   </div>
@@ -609,14 +676,19 @@ tbody tr:hover{
     <div class="toolbar">
 
       <div class="search-wrap">
+
         <input
           type="search"
           id="searchInput"
           placeholder="ابحث باسم المعلم أو الكود أو رقم الجوال..."
         >
+
       </div>
 
-      <div class="result-count" id="resultCount">
+      <div
+        class="result-count"
+        id="resultCount"
+      >
         جاري التحميل...
       </div>
 
@@ -628,21 +700,49 @@ tbody tr:hover{
       <table>
 
         <thead>
+
           <tr>
-            <th>المعلم</th>
-            <th>رقم الجوال</th>
-            <th>رمز المعلم</th>
-            <th>عدد الزيارات</th>
-            <th>الإجراءات</th>
+
+            <th>
+              المعلم
+            </th>
+
+            <th>
+              رقم الجوال
+            </th>
+
+            <th>
+              رمز المعلم
+            </th>
+
+            <th>
+              المشرف
+            </th>
+
+            <th>
+              عدد الزيارات
+            </th>
+
+            <th>
+              الإجراءات
+            </th>
+
           </tr>
+
         </thead>
+
 
         <tbody id="teachersBody">
 
           <tr>
-            <td colspan="5" class="empty">
+
+            <td
+              colspan="6"
+              class="empty"
+            >
               جاري تحميل البيانات...
             </td>
+
           </tr>
 
         </tbody>
@@ -663,44 +763,69 @@ tbody tr:hover{
 
 <!-- ================= MODAL ================= -->
 
-<div class="modal" id="teacherModal">
+<div
+  class="modal"
+  id="teacherModal"
+>
 
   <div class="modal-card">
 
-    <div class="modal-title" id="modalTitle">
+    <div
+      class="modal-title"
+      id="modalTitle"
+    >
       إضافة معلم جديد
     </div>
 
-    <div class="field">
-      <label>اسم المعلم</label>
-      <input id="teacherName" placeholder="اكتب اسم المعلم">
-    </div>
 
     <div class="field">
-      <label>رقم الجوال</label>
+
+      <label>
+        اسم المعلم
+      </label>
+
+      <input
+        id="teacherName"
+        placeholder="اكتب اسم المعلم"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label>
+        رقم الجوال
+      </label>
+
       <input
         id="teacherPhone"
         inputmode="tel"
         placeholder="مثال: 05xxxxxxxx"
       >
+
     </div>
+
 
     <div class="field">
 
-      <label>رمز المعلم</label>
+      <label>
+        رمز المعلم
+      </label>
 
       <div class="code-row">
 
         <input
           id="teacherCode"
-          inputmode="numeric"
-          placeholder="رمز المعلم"
+          readonly
+          placeholder="يتم إنشاء الرمز تلقائياً"
         >
 
         <button
           type="button"
           class="generate-btn"
-          id="generateCode">
+          id="generateCode"
+        >
           إنشاء رمز
         </button>
 
@@ -709,375 +834,551 @@ tbody tr:hover{
     </div>
 
 
+    <div class="field">
+
+      <label>
+        الرقم السري للمعلم
+      </label>
+
+      <input
+        id="teacherPin"
+        inputmode="numeric"
+        placeholder="رقم سري لدخول بوابة المعلم"
+      >
+
+    </div>
+
+
+    <div
+      class="modal-msg"
+      id="modalMsg"
+    ></div>
+
+
     <div class="modal-actions">
 
       <button
-        class="cancel-modal"
+        class="modal-btn cancel-btn"
+        id="cancelBtn"
         type="button"
-        id="cancelModal">
+      >
         إلغاء
       </button>
 
       <button
-        class="save-modal"
+        class="modal-btn save-btn"
+        id="saveTeacherBtn"
         type="button"
-        id="saveTeacher">
-        حفظ المعلم
+      >
+        حفظ
       </button>
 
     </div>
-
-    <div class="msg" id="modalMsg"></div>
 
   </div>
 
 </div>
 
 
-<div class="toast" id="toast"></div>
+<div
+  class="toast"
+  id="toast"
+></div>
 
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { db } from "./firebase.js";
 
 import {
-  getFirestore,
   collection,
   getDocs,
-  doc,
   getDoc,
+  doc,
   setDoc,
   deleteDoc,
   serverTimestamp
 }
-from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+from
+"https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 
-/* ================= FIREBASE ================= */
-
-const firebaseConfig = {
-
-  apiKey:
-  "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
-
-  authDomain:
-  "follow-up-2026.firebaseapp.com",
-
-  projectId:
-  "follow-up-2026",
-
-  storageBucket:
-  "follow-up-2026.firebasestorage.app",
-
-  messagingSenderId:
-  "1077131515114",
-
-  appId:
-  "1:1077131515114:web:d10d9c5228382d7cfdb393"
-
-};
+const el =
+  id => document.getElementById(id);
 
 
-const app = initializeApp(firebaseConfig);
+/* =====================================
+   SESSION
+===================================== */
 
-const db = getFirestore(app);
-
-
-/* ================= ELEMENTS ================= */
-
-const teachersBody =
-document.getElementById("teachersBody");
-
-const searchInput =
-document.getElementById("searchInput");
-
-const resultCount =
-document.getElementById("resultCount");
-
-const teachersCount =
-document.getElementById("teachersCount");
-
-const visitsCount =
-document.getElementById("visitsCount");
-
-const teachersWithVisits =
-document.getElementById("teachersWithVisits");
+const rawSession =
+  localStorage.getItem(
+    "currentSupervisor"
+  )
+  ||
+  sessionStorage.getItem(
+    "currentSupervisor"
+  );
 
 
-const teacherModal =
-document.getElementById("teacherModal");
+if(!rawSession){
 
-const modalTitle =
-document.getElementById("modalTitle");
+  location.href =
+    "supervisor-login.html";
 
-const teacherName =
-document.getElementById("teacherName");
+  throw new Error(
+    "No session"
+  );
 
-const teacherPhone =
-document.getElementById("teacherPhone");
-
-const teacherCode =
-document.getElementById("teacherCode");
-
-const modalMsg =
-document.getElementById("modalMsg");
-
-const toast =
-document.getElementById("toast");
+}
 
 
-/* ================= DATA ================= */
+let currentUser;
 
+
+try{
+
+  currentUser =
+    JSON.parse(
+      rawSession
+    );
+
+}catch(error){
+
+  localStorage.removeItem(
+    "currentSupervisor"
+  );
+
+  sessionStorage.removeItem(
+    "currentSupervisor"
+  );
+
+  location.href =
+    "supervisor-login.html";
+
+  throw new Error(
+    "Invalid session"
+  );
+
+}
+
+
+const isAdmin =
+  currentUser.role ===
+  "admin";
+
+
+/* =====================================
+   PAGE IDENTITY
+===================================== */
+
+if(isAdmin){
+
+  el("backBtn").href =
+    "admin-dashboard.html";
+
+  el("userNote").textContent =
+    "مدير النظام — عرض جميع المعلمين";
+
+  el("pageDescription").textContent =
+    "إدارة جميع معلمي النظام وتحديث بياناتهم ومتابعة سجلاتهم.";
+
+}else{
+
+  el("backBtn").href =
+    "supervisor-dashboard.html";
+
+  el("userNote").textContent =
+    "المشرف: " +
+    (
+      currentUser.name ||
+      ""
+    );
+
+  el("pageTitle").textContent =
+    "معلميّ";
+
+  el("pageDescription").textContent =
+    "إدارة المعلمين المسندين إليك فقط ومتابعة سجلات زياراتهم.";
+
+  el("teachersLabel").textContent =
+    "المعلمون التابعون لك";
+
+}
+
+
+/* =====================================
+   VARIABLES
+===================================== */
+
+let allTeachers = [];
 let teachers = [];
+let allVisits = [];
+let visits = [];
 
 let visitCounts = {};
 
 let editCode = null;
 
 
-/* ================= HELPERS ================= */
+/* =====================================
+   ELEMENTS
+===================================== */
 
-function esc(value){
+const teacherModal =
+  el("teacherModal");
 
-  return String(value || "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;");
+const teacherName =
+  el("teacherName");
 
-}
+const teacherPhone =
+  el("teacherPhone");
 
+const teacherCode =
+  el("teacherCode");
 
-function showToast(text){
+const teacherPin =
+  el("teacherPin");
 
-  toast.textContent = text;
-
-  toast.classList.add("show");
-
-  setTimeout(()=>{
-
-    toast.classList.remove("show");
-
-  },2500);
-
-}
+const modalMsg =
+  el("modalMsg");
 
 
-function generateRandomCode(){
-
-  return String(
-    Math.floor(
-      10000 +
-      Math.random() * 90000
-    )
-  );
-
-}
-
-
-async function generateUniqueCode(){
-
-  let code = "";
-
-  let exists = true;
-
-  while(exists){
-
-    code = generateRandomCode();
-
-    const snap =
-    await getDoc(
-      doc(db,"teachers",code)
-    );
-
-    exists = snap.exists();
-
-  }
-
-  return code;
-
-}
-
-
-/* ================= LOAD DATA ================= */
+/* =====================================
+   LOAD DATA
+===================================== */
 
 async function loadData(){
 
   try{
 
-    teachersBody.innerHTML = `
-      <tr>
-        <td colspan="5" class="empty">
-          جاري تحميل البيانات...
-        </td>
-      </tr>
-    `;
-
-
     const [
       teachersSnap,
       visitsSnap
-    ] = await Promise.all([
+    ] =
+    await Promise.all([
 
       getDocs(
-        collection(db,"teachers")
+        collection(
+          db,
+          "teachers"
+        )
       ),
 
       getDocs(
-        collection(db,"visits")
+        collection(
+          db,
+          "visits"
+        )
       )
 
     ]);
 
 
-    visitCounts = {};
-
-    let totalVisits = 0;
-
-
-    visitsSnap.forEach(d=>{
-
-      const v = d.data();
-
-      const code =
-      String(v.teacherCode || "");
-
-      if(code){
-
-        visitCounts[code] =
-        (visitCounts[code] || 0) + 1;
-
-      }
-
-      totalVisits++;
-
-    });
+    allTeachers =
+      teachersSnap.docs.map(
+        d => ({
+          id:d.id,
+          ...d.data()
+        })
+      );
 
 
-    teachers = [];
-
-    teachersSnap.forEach(d=>{
-
-      const data = d.data();
-
-      teachers.push({
-
-        id:d.id,
-
-        code:
-        data.code || d.id,
-
-        name:
-        data.name || "",
-
-        phone:
-        data.phone || ""
-
-      });
-
-    });
+    allVisits =
+      visitsSnap.docs.map(
+        d => ({
+          id:d.id,
+          ...d.data()
+        })
+      );
 
 
-    teachers.sort(
-      (a,b)=>
-      a.name.localeCompare(
-        b.name,
-        "ar"
-      )
-    );
+    /*
+      الأدمن:
+      كل المعلمين
+
+      المشرف:
+      فقط من supervisorId
+      يساوي حسابه
+    */
+
+    if(isAdmin){
+
+      teachers =
+        [...allTeachers];
+
+    }else{
+
+      teachers =
+        allTeachers.filter(
+          t =>
+            t.supervisorId ===
+            currentUser.id
+        );
+
+    }
 
 
-    teachersCount.textContent =
-    teachers.length;
+    /*
+      الزيارات الخاصة بالمعلمين
+      الظاهرين فقط
+    */
+
+    const visibleCodes =
+      new Set(
+
+        teachers.map(
+          t =>
+            String(
+              t.code ||
+              t.id ||
+              ""
+            )
+        )
+
+      );
 
 
-    visitsCount.textContent =
-    totalVisits;
+    if(isAdmin){
+
+      visits =
+        [...allVisits];
+
+    }else{
+
+      visits =
+        allVisits.filter(
+          v =>{
+
+            const code =
+              String(
+                v.teacherCode ||
+                ""
+              );
 
 
-    teachersWithVisits.textContent =
-    Object.values(visitCounts)
-      .filter(n=>n>0)
-      .length;
+            /*
+              الزيارة إما مسجلة
+              supervisorId للمشرف
+              أو زيارة قديمة للمعلم
+              الذي أصبح تابعاً له
+            */
 
+            return (
+              v.supervisorId ===
+              currentUser.id
+              ||
+              (
+                !v.supervisorId
+                &&
+                visibleCodes.has(
+                  code
+                )
+              )
+            );
+
+          }
+        );
+
+    }
+
+
+    calculateVisitCounts();
+
+    renderStats();
 
     renderTeachers();
 
-  }
+  }catch(error){
 
-  catch(e){
+    console.error(
+      "LOAD DATA ERROR:",
+      error
+    );
 
-    console.error(e);
 
-    teachersBody.innerHTML = `
+    el("teachersBody").innerHTML = `
+
       <tr>
-        <td colspan="5" class="empty">
-          حدث خطأ أثناء تحميل البيانات
+
+        <td
+          colspan="6"
+          class="empty"
+        >
+          تعذر تحميل بيانات المعلمين.
         </td>
+
       </tr>
+
     `;
 
-    resultCount.textContent =
-    "تعذر تحميل البيانات";
+
+    el("resultCount").textContent =
+      "تعذر التحميل";
 
   }
 
 }
 
 
-/* ================= RENDER ================= */
+/* =====================================
+   VISIT COUNTS
+===================================== */
+
+function calculateVisitCounts(){
+
+  visitCounts = {};
+
+
+  visits.forEach(
+    visit=>{
+
+      const code =
+        String(
+          visit.teacherCode ||
+          ""
+        );
+
+
+      if(!code)
+        return;
+
+
+      visitCounts[code] =
+        (
+          visitCounts[code] ||
+          0
+        )
+        +
+        1;
+
+    }
+  );
+
+}
+
+
+/* =====================================
+   STATS
+===================================== */
+
+function renderStats(){
+
+  el("teachersCount")
+    .textContent =
+    teachers.length;
+
+
+  el("visitsCount")
+    .textContent =
+    visits.length;
+
+
+  const withVisits =
+    teachers.filter(
+      teacher=>{
+
+        const code =
+          String(
+            teacher.code ||
+            teacher.id ||
+            ""
+          );
+
+
+        return (
+          visitCounts[code] ||
+          0
+        ) > 0;
+
+      }
+    ).length;
+
+
+  el("teachersWithVisits")
+    .textContent =
+    withVisits;
+
+}
+
+
+/* =====================================
+   RENDER
+===================================== */
 
 function renderTeachers(){
 
-  const search =
-  searchInput.value
-    .trim()
-    .toLowerCase();
+  const term =
+    el("searchInput")
+      .value
+      .trim()
+      .toLowerCase();
 
 
-  const list =
-  teachers.filter(t=>{
+  const filtered =
+    teachers.filter(
+      teacher=>{
 
-    return (
+        const text =
+          (
+            String(
+              teacher.name ||
+              ""
+            )
+            +
+            " "
+            +
+            String(
+              teacher.code ||
+              teacher.id ||
+              ""
+            )
+            +
+            " "
+            +
+            String(
+              teacher.phone ||
+              ""
+            )
+          )
+          .toLowerCase();
 
-      t.name
-        .toLowerCase()
-        .includes(search)
 
-      ||
+        return text.includes(
+          term
+        );
 
-      String(t.code)
-        .toLowerCase()
-        .includes(search)
-
-      ||
-
-      String(t.phone)
-        .toLowerCase()
-        .includes(search)
-
+      }
     );
 
-  });
+
+  el("resultCount").textContent =
+    `عدد النتائج: ${filtered.length}`;
 
 
-  resultCount.textContent =
-  `عدد النتائج: ${list.length}`;
+  const tbody =
+    el("teachersBody");
 
 
-  teachersBody.innerHTML = "";
+  tbody.innerHTML =
+    "";
 
 
-  if(list.length === 0){
+  if(!filtered.length){
 
-    teachersBody.innerHTML = `
+    tbody.innerHTML = `
+
       <tr>
-        <td colspan="5" class="empty">
-          لا توجد بيانات مطابقة
+
+        <td
+          colspan="6"
+          class="empty"
+        >
+          لا يوجد معلمون مطابقون.
         </td>
+
       </tr>
+
     `;
 
     return;
@@ -1085,238 +1386,456 @@ function renderTeachers(){
   }
 
 
-  list.forEach(t=>{
-
-    const tr =
-    document.createElement("tr");
-
-
-    const count =
-    visitCounts[t.code] || 0;
-
-
-    tr.innerHTML = `
-
-      <td class="teacher-name">
-        ${esc(t.name)}
-      </td>
-
-      <td>
-        ${esc(t.phone)}
-      </td>
-
-      <td>
-        <span class="code-badge">
-          ${esc(t.code)}
-        </span>
-      </td>
-
-      <td>
-        <span class="visit-badge">
-          ${count}
-        </span>
-      </td>
-
-      <td>
-
-        <div class="action-group">
-
-          <button
-            class="table-btn visits-btn"
-            data-visits="${esc(t.code)}">
-            الزيارات
-          </button>
-
-          <button
-            class="table-btn edit-btn"
-            data-edit="${esc(t.code)}">
-            تعديل
-          </button>
-
-          <button
-            class="table-btn delete-btn"
-            data-delete="${esc(t.code)}">
-            حذف
-          </button>
-
-        </div>
-
-      </td>
-
-    `;
-
-
-    teachersBody.appendChild(tr);
-
-  });
-
-
-  document
-  .querySelectorAll("[data-edit]")
-  .forEach(btn=>{
-
-    btn.onclick = ()=>{
-
-      openEdit(
-        btn.dataset.edit
-      );
-
-    };
-
-  });
-
-
-  document
-  .querySelectorAll("[data-delete]")
-  .forEach(btn=>{
-
-    btn.onclick = ()=>{
-
-      deleteTeacher(
-        btn.dataset.delete
-      );
-
-    };
-
-  });
-
-
-  document
-  .querySelectorAll("[data-visits]")
-  .forEach(btn=>{
-
-    btn.onclick = ()=>{
+  filtered.forEach(
+    teacher=>{
 
       const code =
-      btn.dataset.visits;
+        String(
+          teacher.code ||
+          teacher.id
+        );
 
-      window.location.href =
-      "teacher-visits.html?code="
-      +
-      encodeURIComponent(code);
 
-    };
+      const count =
+        visitCounts[code] ||
+        0;
 
-  });
+
+      const supervisorName =
+        teacher.supervisorName ||
+        (
+          teacher.supervisorId
+          ?
+          "مشرف مسند"
+          :
+          ""
+        );
+
+
+      const tr =
+        document.createElement(
+          "tr"
+        );
+
+
+      tr.innerHTML = `
+
+        <td class="teacher-name">
+
+          ${escapeHtml(
+            teacher.name ||
+            "-"
+          )}
+
+        </td>
+
+
+        <td>
+
+          ${escapeHtml(
+            teacher.phone ||
+            "-"
+          )}
+
+        </td>
+
+
+        <td class="code">
+
+          ${escapeHtml(
+            code
+          )}
+
+        </td>
+
+
+        <td>
+
+          ${
+            supervisorName
+            ?
+            `
+
+              <span class="supervisor-badge">
+
+                ${escapeHtml(
+                  supervisorName
+                )}
+
+              </span>
+
+            `
+            :
+            `
+
+              <span class="unassigned">
+                بدون مشرف
+              </span>
+
+            `
+          }
+
+        </td>
+
+
+        <td>
+
+          <strong>
+            ${count}
+          </strong>
+
+        </td>
+
+
+        <td>
+
+          <div class="actions">
+
+            <button
+              type="button"
+              class="action-btn edit-btn"
+              data-edit="${escapeHtml(code)}"
+            >
+              تعديل
+            </button>
+
+
+            <a
+              class="action-btn visit-btn"
+              href="teacher-visits.html?code=${encodeURIComponent(code)}"
+            >
+              الزيارات
+            </a>
+
+
+            <button
+              type="button"
+              class="action-btn delete-btn"
+              data-delete="${escapeHtml(code)}"
+            >
+              حذف
+            </button>
+
+          </div>
+
+        </td>
+
+      `;
+
+
+      tbody.appendChild(
+        tr
+      );
+
+    }
+  );
+
+
+  tbody
+    .querySelectorAll(
+      "[data-edit]"
+    )
+    .forEach(
+      button=>{
+
+        button.addEventListener(
+          "click",
+          ()=>{
+
+            openEdit(
+              button.dataset.edit
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+  tbody
+    .querySelectorAll(
+      "[data-delete]"
+    )
+    .forEach(
+      button=>{
+
+        button.addEventListener(
+          "click",
+          ()=>{
+
+            deleteTeacher(
+              button.dataset.delete
+            );
+
+          }
+        );
+
+      }
+    );
 
 }
 
 
-/* ================= ADD ================= */
+/* =====================================
+   GENERATE CODE
+===================================== */
+
+async function generateUniqueCode(){
+
+  let tries = 0;
+
+
+  while(tries < 30){
+
+    const code =
+      String(
+        Math.floor(
+          10000 +
+          Math.random() *
+          90000
+        )
+      );
+
+
+    const existing =
+      await getDoc(
+        doc(
+          db,
+          "teachers",
+          code
+        )
+      );
+
+
+    if(!existing.exists()){
+
+      return code;
+
+    }
+
+
+    tries++;
+
+  }
+
+
+  return String(
+    Date.now()
+  ).slice(-5);
+
+}
+
+
+/* =====================================
+   OPEN ADD
+===================================== */
 
 async function openAdd(){
 
-  editCode = null;
-
-  modalTitle.textContent =
-  "إضافة معلم جديد";
-
-  teacherName.value = "";
-
-  teacherPhone.value = "";
-
-  teacherCode.value =
-  await generateUniqueCode();
-
-  teacherCode.readOnly = false;
-
-  document.getElementById(
-    "generateCode"
-  ).style.display =
-  "inline-block";
-
-  modalMsg.textContent = "";
-
-  teacherModal.style.display =
-  "flex";
-
-  setTimeout(()=>{
-
-    teacherName.focus();
-
-  },100);
-
-}
+  editCode =
+    null;
 
 
-/* ================= EDIT ================= */
-
-function openEdit(code){
-
-  const t =
-  teachers.find(
-    x=>String(x.code)===String(code)
-  );
-
-  if(!t) return;
-
-
-  editCode = t.code;
-
-
-  modalTitle.textContent =
-  "تعديل بيانات المعلم";
+  el("modalTitle")
+    .textContent =
+    "إضافة معلم جديد";
 
 
   teacherName.value =
-  t.name;
+    "";
 
 
   teacherPhone.value =
-  t.phone;
+    "";
+
+
+  teacherPin.value =
+    "";
+
+
+  teacherCode.readOnly =
+    true;
+
+
+  el("generateCode")
+    .style.display =
+    "inline-flex";
+
+
+  modalMsg.textContent =
+    "";
+
+
+  teacherModal
+    .classList
+    .add("show");
 
 
   teacherCode.value =
-  t.code;
+    "جاري الإنشاء...";
 
 
-  /*
-    الكود لا يتغير أثناء التعديل
-    لأنه Document ID
-  */
-
-  teacherCode.readOnly =
-  true;
+  teacherCode.value =
+    await generateUniqueCode();
 
 
-  document.getElementById(
-    "generateCode"
-  ).style.display =
-  "none";
-
-
-  modalMsg.textContent = "";
-
-
-  teacherModal.style.display =
-  "flex";
+  teacherName.focus();
 
 }
 
 
-/* ================= SAVE ================= */
+/* =====================================
+   OPEN EDIT
+===================================== */
+
+function openEdit(code){
+
+  const teacher =
+    teachers.find(
+      t =>
+        String(
+          t.code ||
+          t.id
+        )
+        ===
+        String(code)
+    );
+
+
+  if(!teacher){
+
+    alert(
+      "المعلم غير موجود أو غير تابع لك."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    حماية إضافية للمشرف
+  */
+
+  if(
+    !isAdmin
+    &&
+    teacher.supervisorId !==
+    currentUser.id
+  ){
+
+    alert(
+      "ليس لديك صلاحية تعديل هذا المعلم."
+    );
+
+    return;
+
+  }
+
+
+  editCode =
+    String(code);
+
+
+  el("modalTitle")
+    .textContent =
+    "تعديل بيانات المعلم";
+
+
+  teacherName.value =
+    teacher.name ||
+    "";
+
+
+  teacherPhone.value =
+    teacher.phone ||
+    "";
+
+
+  teacherCode.value =
+    String(
+      teacher.code ||
+      teacher.id
+    );
+
+
+  teacherPin.value =
+    teacher.pin ||
+    "";
+
+
+  teacherCode.readOnly =
+    true;
+
+
+  el("generateCode")
+    .style.display =
+    "none";
+
+
+  modalMsg.textContent =
+    "";
+
+
+  teacherModal
+    .classList
+    .add("show");
+
+}
+
+
+/* =====================================
+   CLOSE MODAL
+===================================== */
+
+function closeModal(){
+
+  teacherModal
+    .classList
+    .remove("show");
+
+}
+
+
+/* =====================================
+   SAVE TEACHER
+===================================== */
 
 async function saveTeacher(){
 
-  modalMsg.textContent = "";
+  modalMsg.textContent =
+    "";
 
 
   const code =
-  teacherCode.value.trim();
+    teacherCode
+      .value
+      .trim();
 
 
   const name =
-  teacherName.value.trim();
+    teacherName
+      .value
+      .trim();
 
 
   const phone =
-  teacherPhone.value.trim();
+    teacherPhone
+      .value
+      .trim();
+
+
+  const pin =
+    teacherPin
+      .value
+      .trim();
 
 
   if(!name){
 
     modalMsg.textContent =
-    "اكتب اسم المعلم";
+      "اكتب اسم المعلم";
 
     teacherName.focus();
 
@@ -1328,7 +1847,7 @@ async function saveTeacher(){
   if(!phone){
 
     modalMsg.textContent =
-    "اكتب رقم الجوال";
+      "اكتب رقم الجوال";
 
     teacherPhone.focus();
 
@@ -1340,7 +1859,19 @@ async function saveTeacher(){
   if(!code){
 
     modalMsg.textContent =
-    "رمز المعلم غير موجود";
+      "رمز المعلم غير موجود";
+
+    return;
+
+  }
+
+
+  if(!pin){
+
+    modalMsg.textContent =
+      "اكتب الرقم السري للمعلم";
+
+    teacherPin.focus();
 
     return;
 
@@ -1350,26 +1881,139 @@ async function saveTeacher(){
   try{
 
     /*
-      عند إضافة معلم جديد
-      نتأكد أن الرمز غير مستخدم
+      في الإضافة الجديدة:
+      التأكد أن الكود غير مستخدم
     */
 
     if(!editCode){
 
       const existing =
-      await getDoc(
-        doc(db,"teachers",code)
-      );
+        await getDoc(
+          doc(
+            db,
+            "teachers",
+            code
+          )
+        );
 
 
       if(existing.exists()){
 
         modalMsg.textContent =
-        "هذا الرمز مستخدم بالفعل";
+          "هذا الرمز مستخدم بالفعل";
 
         return;
 
       }
+
+    }
+
+
+    /*
+      لو تعديل:
+      نقرأ النسخة الأصلية
+      حتى لا نمسح الإسناد
+    */
+
+    let original =
+      null;
+
+
+    if(editCode){
+
+      original =
+        teachers.find(
+          t =>
+            String(
+              t.code ||
+              t.id
+            )
+            ===
+            String(editCode)
+        );
+
+
+      if(
+        !isAdmin
+        &&
+        (
+          !original
+          ||
+          original.supervisorId !==
+          currentUser.id
+        )
+      ){
+
+        modalMsg.textContent =
+          "ليس لديك صلاحية تعديل هذا المعلم";
+
+        return;
+
+      }
+
+    }
+
+
+    const data = {
+
+      code,
+      name,
+      phone,
+      pin,
+
+      updatedAt:
+        serverTimestamp()
+
+    };
+
+
+    /*
+      لو معلم جديد وأضافه مشرف:
+      يسند تلقائياً للمشرف
+    */
+
+    if(!editCode){
+
+      if(isAdmin){
+
+        data.supervisorId =
+          "";
+
+        data.supervisorName =
+          "";
+
+      }else{
+
+        data.supervisorId =
+          currentUser.id;
+
+        data.supervisorName =
+          currentUser.name ||
+          "";
+
+      }
+
+      data.createdAt =
+        serverTimestamp();
+
+    }
+
+
+    /*
+      في حالة التعديل:
+      لا نغيّر الإسناد
+      من هذه الصفحة
+    */
+
+    if(editCode && original){
+
+      data.supervisorId =
+        original.supervisorId ||
+        "";
+
+      data.supervisorName =
+        original.supervisorName ||
+        "";
 
     }
 
@@ -1382,18 +2026,7 @@ async function saveTeacher(){
         code
       ),
 
-      {
-
-        code,
-
-        name,
-
-        phone,
-
-        updatedAt:
-        serverTimestamp()
-
-      },
+      data,
 
       {
         merge:true
@@ -1406,64 +2039,114 @@ async function saveTeacher(){
 
 
     showToast(
+
       editCode
       ?
       "تم تحديث بيانات المعلم"
       :
-      "تم إضافة المعلم بنجاح"
+      (
+        isAdmin
+        ?
+        "تم إضافة المعلم بنجاح"
+        :
+        "تم إضافة المعلم وإسناده لك بنجاح"
+      )
+
     );
 
 
     await loadData();
 
-  }
+  }catch(error){
 
-  catch(e){
+    console.error(
+      "SAVE TEACHER ERROR:",
+      error
+    );
 
-    console.error(e);
 
     modalMsg.textContent =
-    "حدث خطأ أثناء الحفظ";
+      "حدث خطأ أثناء الحفظ: "
+      +
+      (
+        error.code ||
+        error.message ||
+        ""
+      );
 
   }
 
 }
 
 
-/* ================= DELETE ================= */
+/* =====================================
+   DELETE TEACHER
+===================================== */
 
 async function deleteTeacher(code){
 
-  const t =
-  teachers.find(
-    x=>String(x.code)===String(code)
-  );
+  const teacher =
+    teachers.find(
+      t =>
+        String(
+          t.code ||
+          t.id
+        )
+        ===
+        String(code)
+    );
 
 
-  if(!t) return;
+  if(!teacher){
+
+    alert(
+      "المعلم غير موجود أو غير تابع لك."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !isAdmin
+    &&
+    teacher.supervisorId !==
+    currentUser.id
+  ){
+
+    alert(
+      "ليس لديك صلاحية حذف هذا المعلم."
+    );
+
+    return;
+
+  }
 
 
   const count =
-  visitCounts[code] || 0;
+    visitCounts[
+      String(code)
+    ] ||
+    0;
 
 
   let message =
-  `هل تريد حذف المعلم "${t.name}"؟`;
+    `هل تريد حذف المعلم "${teacher.name}"؟`;
 
 
   if(count > 0){
 
     message +=
-    `\n\nيوجد لهذا المعلم ${count} زيارة محفوظة.\nلن يتم حذف الزيارات، وإنما بيانات المعلم فقط.`;
+      `\n\nيوجد لهذا المعلم ${count} زيارة محفوظة.`
+      +
+      `\nلن يتم حذف الزيارات، وإنما بيانات المعلم فقط.`;
 
   }
 
 
-  const ok =
-  confirm(message);
-
-
-  if(!ok) return;
+  if(!confirm(message))
+    return;
 
 
   try{
@@ -1472,7 +2155,7 @@ async function deleteTeacher(code){
       doc(
         db,
         "teachers",
-        code
+        String(code)
       )
     );
 
@@ -1484,14 +2167,16 @@ async function deleteTeacher(code){
 
     await loadData();
 
-  }
+  }catch(error){
 
-  catch(e){
+    console.error(
+      "DELETE TEACHER ERROR:",
+      error
+    );
 
-    console.error(e);
 
     alert(
-      "حدث خطأ أثناء حذف المعلم"
+      "تعذر حذف المعلم"
     );
 
   }
@@ -1499,81 +2184,186 @@ async function deleteTeacher(code){
 }
 
 
-/* ================= MODAL ================= */
+/* =====================================
+   TOAST
+===================================== */
 
-function closeModal(){
+let toastTimer;
 
-  teacherModal.style.display =
-  "none";
 
-  modalMsg.textContent = "";
+function showToast(message){
+
+  clearTimeout(
+    toastTimer
+  );
+
+
+  const toast =
+    el("toast");
+
+
+  toast.textContent =
+    message;
+
+
+  toast.classList
+    .add("show");
+
+
+  toastTimer =
+    setTimeout(
+      ()=>{
+
+        toast.classList
+          .remove("show");
+
+      },
+      2800
+    );
 
 }
 
 
-document
-.getElementById("btnAddTeacher")
-.onclick = openAdd;
+/* =====================================
+   ESCAPE
+===================================== */
+
+function escapeHtml(value){
+
+  return String(
+    value ?? ""
+  )
+  .replaceAll(
+    "&",
+    "&amp;"
+  )
+  .replaceAll(
+    "<",
+    "&lt;"
+  )
+  .replaceAll(
+    ">",
+    "&gt;"
+  )
+  .replaceAll(
+    '"',
+    "&quot;"
+  )
+  .replaceAll(
+    "'",
+    "&#039;"
+  );
+
+}
 
 
-document
-.getElementById("cancelModal")
-.onclick = closeModal;
+/* =====================================
+   EVENTS
+===================================== */
+
+el("btnAddTeacher")
+  .addEventListener(
+    "click",
+    openAdd
+  );
 
 
-document
-.getElementById("saveTeacher")
-.onclick = saveTeacher;
+el("generateCode")
+  .addEventListener(
+    "click",
+    async ()=>{
+
+      teacherCode.value =
+        "جاري الإنشاء...";
 
 
-document
-.getElementById("generateCode")
-.onclick =
-async ()=>{
-
-  teacherCode.value =
-  await generateUniqueCode();
-
-};
-
-
-teacherModal.addEventListener(
-  "click",
-  e=>{
-
-    if(e.target === teacherModal){
-
-      closeModal();
+      teacherCode.value =
+        await generateUniqueCode();
 
     }
-
-  }
-);
+  );
 
 
-document.addEventListener(
-  "keydown",
-  e=>{
+el("saveTeacherBtn")
+  .addEventListener(
+    "click",
+    saveTeacher
+  );
 
-    if(e.key === "Escape"){
 
-      closeModal();
+el("cancelBtn")
+  .addEventListener(
+    "click",
+    closeModal
+  );
+
+
+teacherModal
+  .addEventListener(
+    "click",
+    event=>{
+
+      if(
+        event.target ===
+        teacherModal
+      ){
+
+        closeModal();
+
+      }
 
     }
-
-  }
-);
+  );
 
 
-/* ================= SEARCH ================= */
+el("searchInput")
+  .addEventListener(
+    "input",
+    renderTeachers
+  );
 
-searchInput.addEventListener(
-  "input",
-  renderTeachers
-);
+
+el("logoutBtn")
+  .addEventListener(
+    "click",
+    ()=>{
+
+      localStorage.removeItem(
+        "currentSupervisor"
+      );
+
+      sessionStorage.removeItem(
+        "currentSupervisor"
+      );
+
+      location.href =
+        "supervisor-login.html";
+
+    }
+  );
 
 
-/* ================= START ================= */
+document
+  .addEventListener(
+    "keydown",
+    event=>{
+
+      if(
+        event.key ===
+        "Escape"
+      ){
+
+        closeModal();
+
+      }
+
+    }
+  );
+
+
+/* =====================================
+   START
+===================================== */
 
 loadData();
 
