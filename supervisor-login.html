@@ -62,8 +62,6 @@
       box-shadow:var(--shadow);
     }
 
-    /* الجانب الأول */
-
     .identity{
       background:
         linear-gradient(
@@ -160,8 +158,6 @@
 
       max-width:330px;
     }
-
-    /* LOGIN */
 
     .login-side{
       padding:45px;
@@ -264,6 +260,11 @@
       transform:translateY(-1px);
     }
 
+    .login-btn:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+    }
+
     .home-link{
       display:block;
 
@@ -297,8 +298,6 @@
 
       text-align:center;
     }
-
-    /* FIRST ACCOUNT */
 
     .setup{
       display:none;
@@ -397,13 +396,13 @@
 
     <div class="welcome">
 
-      <small>بوابة المشرف التربوي</small>
+      <small>بوابة الإدارة والمشرفين</small>
 
       <h2>تسجيل الدخول</h2>
 
       <p>
         أدخل اسم المستخدم وكلمة المرور للدخول
-        إلى لوحة الإشراف الخاصة بك.
+        إلى لوحة التحكم الخاصة بك.
       </p>
 
     </div>
@@ -414,7 +413,7 @@
       <strong>تهيئة النظام لأول مرة</strong>
 
       <p>
-        لا يوجد أي مشرف مسجل حتى الآن.
+        لا يوجد أي حساب مسجل حتى الآن.
         الحساب الذي ستنشئه الآن سيكون مدير النظام.
       </p>
 
@@ -423,6 +422,7 @@
 
     <div class="field">
       <label>اسم المستخدم</label>
+
       <input
         type="text"
         id="username"
@@ -433,6 +433,7 @@
 
 
     <div class="field">
+
       <label>كلمة المرور</label>
 
       <input
@@ -441,12 +442,13 @@
         autocomplete="current-password"
         placeholder="كلمة المرور"
       >
+
     </div>
 
 
     <div class="field" id="nameField" style="display:none;">
 
-      <label>اسم المشرف</label>
+      <label>اسم مدير النظام</label>
 
       <input
         type="text"
@@ -502,7 +504,46 @@
 
 
   /* ======================================
-     فحص وجود المشرفين
+     SESSION
+  ======================================= */
+
+  function saveSession(session){
+
+    const value =
+      JSON.stringify(session);
+
+    sessionStorage.setItem(
+      "currentSupervisor",
+      value
+    );
+
+    localStorage.setItem(
+      "currentSupervisor",
+      value
+    );
+
+  }
+
+
+  function redirectByRole(role){
+
+    if(role === "admin"){
+
+      location.href =
+        "admin-dashboard.html";
+
+    }else{
+
+      location.href =
+        "supervisor-dashboard.html";
+
+    }
+
+  }
+
+
+  /* ======================================
+     فحص وجود الحسابات
   ======================================= */
 
   async function checkSystem(){
@@ -511,7 +552,10 @@
 
       const snap =
         await getDocs(
-          collection(db,"supervisors")
+          collection(
+            db,
+            "supervisors"
+          )
         );
 
 
@@ -543,9 +587,8 @@
   }
 
 
-
   /* ======================================
-     أول حساب
+     إنشاء أول حساب Admin
   ======================================= */
 
   async function createFirstSupervisor(){
@@ -555,10 +598,12 @@
       .value
       .trim();
 
+
     const username =
       el("username")
       .value
       .trim();
+
 
     const password =
       el("password")
@@ -568,7 +613,7 @@
     if(!name){
 
       showError(
-        "اكتب اسم المشرف"
+        "اكتب اسم مدير النظام"
       );
 
       return;
@@ -606,10 +651,22 @@
 
       const duplicate =
         await getDocs(
+
           query(
-            collection(db,"supervisors"),
-            where("username","==",username)
+
+            collection(
+              db,
+              "supervisors"
+            ),
+
+            where(
+              "username",
+              "==",
+              username
+            )
+
           )
+
         );
 
 
@@ -629,8 +686,14 @@
 
       const ref =
         await addDoc(
-          collection(db,"supervisors"),
+
+          collection(
+            db,
+            "supervisors"
+          ),
+
           {
+
             name,
             username,
             password,
@@ -641,7 +704,9 @@
 
             createdAt:
               serverTimestamp()
+
           }
+
         );
 
 
@@ -658,14 +723,14 @@
       };
 
 
-      sessionStorage.setItem(
-        "currentSupervisor",
-        JSON.stringify(session)
+      saveSession(
+        session
       );
 
 
-      location.href =
-        "supervisor-dashboard.html";
+      redirectByRole(
+        "admin"
+      );
 
 
     }catch(error){
@@ -684,7 +749,6 @@
   }
 
 
-
   /* ======================================
      تسجيل الدخول
   ======================================= */
@@ -695,6 +759,7 @@
       el("username")
       .value
       .trim();
+
 
     const password =
       el("password")
@@ -720,14 +785,22 @@
 
       const snap =
         await getDocs(
+
           query(
-            collection(db,"supervisors"),
+
+            collection(
+              db,
+              "supervisors"
+            ),
+
             where(
               "username",
               "==",
               username
             )
+
           )
+
         );
 
 
@@ -769,7 +842,9 @@
       }
 
 
-      if(data.active === false){
+      if(
+        data.active === false
+      ){
 
         showError(
           "هذا الحساب موقوف"
@@ -783,29 +858,34 @@
       }
 
 
+      const role =
+        data.role ||
+        "supervisor";
+
+
       const session = {
 
         id:item.id,
 
-        name:data.name || "",
+        name:
+          data.name || "",
 
         username:
           data.username || "",
 
-        role:
-          data.role || "supervisor"
+        role
 
       };
 
 
-      sessionStorage.setItem(
-        "currentSupervisor",
-        JSON.stringify(session)
+      saveSession(
+        session
       );
 
 
-      location.href =
-        "supervisor-dashboard.html";
+      redirectByRole(
+        role
+      );
 
 
     }catch(error){
@@ -824,8 +904,13 @@
   }
 
 
+  /* ======================================
+     ERROR
+  ======================================= */
 
-  function showError(message){
+  function showError(
+    message
+  ){
 
     el("errorBox").textContent =
       message;
@@ -836,6 +921,9 @@
   }
 
 
+  /* ======================================
+     EVENTS
+  ======================================= */
 
   el("loginBtn")
     .addEventListener(
@@ -860,19 +948,18 @@
     );
 
 
-  document
-    .addEventListener(
-      "keydown",
-      e=>{
+  document.addEventListener(
+    "keydown",
+    e=>{
 
-        if(e.key === "Enter"){
+      if(e.key === "Enter"){
 
-          el("loginBtn").click();
-
-        }
+        el("loginBtn").click();
 
       }
-    );
+
+    }
+  );
 
 
   checkSystem();
