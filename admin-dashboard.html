@@ -30,6 +30,9 @@
       --blue:#175cd3;
       --blue-soft:#eff8ff;
 
+      --orange:#b54708;
+      --orange-soft:#fff4e5;
+
       --shadow:0 14px 38px rgba(20,55,45,.08);
     }
 
@@ -42,8 +45,13 @@
       margin:0;
       min-height:100vh;
       color:var(--text);
+
       background:
-        radial-gradient(circle at top right,rgba(200,154,59,.08),transparent 28%),
+        radial-gradient(
+          circle at top right,
+          rgba(200,154,59,.08),
+          transparent 28%
+        ),
         var(--bg);
     }
 
@@ -57,12 +65,18 @@
       cursor:pointer;
     }
 
-    /* ================= HEADER ================= */
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    /* HEADER */
 
     .header{
       background:#fff;
       border-bottom:1px solid var(--border);
       box-shadow:0 4px 18px rgba(0,0,0,.03);
+
       position:sticky;
       top:0;
       z-index:50;
@@ -116,8 +130,10 @@
       border:0;
       border-radius:10px;
       padding:8px 13px;
+
       font-size:10px;
       font-weight:800;
+
       text-decoration:none;
 
       display:inline-flex;
@@ -158,7 +174,7 @@
       font-size:9px;
     }
 
-    /* ================= PAGE ================= */
+    /* PAGE */
 
     .page{
       max-width:1450px;
@@ -166,15 +182,23 @@
       padding:24px 18px 45px;
     }
 
+    /* WELCOME */
+
     .welcome{
       background:
-        linear-gradient(135deg,var(--green),var(--green-dark));
+        linear-gradient(
+          135deg,
+          var(--green),
+          var(--green-dark)
+        );
 
       color:#fff;
+
       border-radius:20px;
       padding:22px;
 
       box-shadow:var(--shadow);
+
       position:relative;
       overflow:hidden;
 
@@ -187,13 +211,18 @@
 
     .welcome::after{
       content:"";
+
       width:210px;
       height:210px;
+
       position:absolute;
       left:-80px;
       bottom:-120px;
+
       border-radius:50%;
-      background:rgba(200,154,59,.13);
+
+      background:
+        rgba(200,154,59,.13);
     }
 
     .welcome small{
@@ -217,7 +246,9 @@
     .admin-badge{
       background:rgba(255,255,255,.13);
       border:1px solid rgba(255,255,255,.16);
+
       border-radius:30px;
+
       padding:8px 13px;
 
       font-size:10px;
@@ -227,7 +258,7 @@
       z-index:2;
     }
 
-    /* ================= STATS ================= */
+    /* STATS */
 
     .stats{
       margin-top:15px;
@@ -239,9 +270,12 @@
 
     .stat{
       background:#fff;
+
       border:1px solid var(--border);
       border-radius:15px;
+
       padding:14px;
+
       box-shadow:var(--shadow);
     }
 
@@ -253,8 +287,11 @@
 
     .stat strong{
       display:block;
+
       margin-top:4px;
+
       color:var(--green);
+
       font-size:24px;
       font-weight:900;
     }
@@ -267,14 +304,66 @@
       color:var(--red);
     }
 
-    /* ================= CONTENT ================= */
+    /* QUICK LINKS */
+
+    .quick{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+
+      gap:11px;
+
+      margin-top:18px;
+    }
+
+    .quick-card{
+      display:block;
+
+      text-decoration:none;
+      color:inherit;
+
+      background:#fff;
+
+      border:1px solid var(--border);
+      border-radius:16px;
+
+      padding:15px;
+
+      box-shadow:var(--shadow);
+
+      transition:.2s;
+    }
+
+    .quick-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(200,154,59,.4);
+    }
+
+    .quick-card strong{
+      display:block;
+      color:var(--green);
+      font-size:12px;
+    }
+
+    .quick-card span{
+      display:block;
+      margin-top:3px;
+
+      color:var(--muted);
+
+      font-size:9px;
+      line-height:1.7;
+    }
+
+    /* SECTION */
 
     .section{
       margin-top:18px;
 
       background:#fff;
+
       border:1px solid var(--border);
       border-radius:18px;
+
       box-shadow:var(--shadow);
 
       overflow:hidden;
@@ -282,25 +371,31 @@
 
     .section-header{
       padding:15px 17px;
+
       border-bottom:1px solid var(--border);
 
       display:flex;
       align-items:center;
       justify-content:space-between;
+
       gap:15px;
       flex-wrap:wrap;
     }
 
     .section-title h3{
       margin:0;
+
       color:var(--green);
+
       font-size:15px;
       font-weight:900;
     }
 
     .section-title p{
       margin:3px 0 0;
+
       color:var(--muted);
+
       font-size:9px;
     }
 
@@ -314,15 +409,21 @@
     .search{
       border:1px solid var(--border);
       border-radius:9px;
+
       padding:7px 10px;
+
       min-width:220px;
+
       outline:none;
+
       font-size:10px;
     }
 
     .search:focus{
       border-color:var(--green);
     }
+
+    /* TABLE */
 
     .table-wrap{
       overflow:auto;
@@ -331,21 +432,29 @@
     table{
       width:100%;
       border-collapse:collapse;
+
       min-width:800px;
     }
 
     th,
     td{
       padding:10px;
-      border-bottom:1px solid #edf0ee;
+
+      border-bottom:
+        1px solid #edf0ee;
+
       text-align:center;
+
       font-size:10px;
+
       vertical-align:middle;
     }
 
     th{
       background:#f4f7f5;
+
       color:var(--green);
+
       font-weight:900;
     }
 
@@ -359,18 +468,27 @@
 
     .person strong{
       display:block;
+
       color:#28322d;
+
       font-size:10px;
     }
 
     .person small{
+      display:block;
+
+      margin-top:2px;
+
       color:var(--muted);
+
       font-size:8px;
     }
 
     .badge{
       display:inline-block;
+
       border-radius:30px;
+
       padding:4px 8px;
 
       font-size:8px;
@@ -398,80 +516,96 @@
     }
 
     .badge-unassigned{
-      background:#fff4e5;
-      color:#b54708;
+      background:var(--orange-soft);
+      color:var(--orange);
     }
 
     .actions{
       display:flex;
+
       justify-content:center;
       align-items:center;
+
       gap:5px;
       flex-wrap:wrap;
     }
 
     .supervisor-select{
-      min-width:150px;
+      min-width:160px;
+
       border:1px solid var(--border);
       border-radius:8px;
+
       padding:6px 7px;
+
       background:#fff;
+
       font-size:9px;
+
       outline:none;
     }
 
-    /* ================= QUICK LINKS ================= */
+    /* EMPTY */
 
-    .quick{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:11px;
-      margin-top:18px;
-    }
+    .empty{
+      padding:30px;
 
-    .quick-card{
-      display:block;
-      text-decoration:none;
-      color:inherit;
+      text-align:center;
 
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:15px;
-      box-shadow:var(--shadow);
-      transition:.2s;
-    }
-
-    .quick-card:hover{
-      transform:translateY(-2px);
-      border-color:rgba(200,154,59,.4);
-    }
-
-    .quick-card strong{
-      display:block;
-      color:var(--green);
-      font-size:12px;
-    }
-
-    .quick-card span{
-      display:block;
-      margin-top:3px;
       color:var(--muted);
-      font-size:9px;
+
+      font-size:10px;
     }
 
-    /* ================= MODAL ================= */
+    /* STATUS */
+
+    .status-box{
+      display:none;
+
+      margin-top:15px;
+
+      padding:11px 14px;
+
+      border-radius:12px;
+
+      font-size:10px;
+      font-weight:800;
+    }
+
+    .status-box.show{
+      display:block;
+    }
+
+    .status-success{
+      background:var(--green-soft);
+      color:var(--green);
+      border:1px solid #cfe1d8;
+    }
+
+    .status-error{
+      background:var(--red-soft);
+      color:var(--red);
+      border:1px solid #f3c9c4;
+    }
+
+    /* MODAL */
 
     .modal{
       display:none;
+
       position:fixed;
       inset:0;
+
       z-index:1000;
 
-      background:rgba(13,28,24,.48);
-      backdrop-filter:blur(3px);
+      background:
+        rgba(13,28,24,.48);
+
+      backdrop-filter:
+        blur(3px);
 
       padding:20px;
+
       align-items:center;
       justify-content:center;
     }
@@ -482,15 +616,22 @@
 
     .modal-box{
       width:min(480px,100%);
+
       background:#fff;
+
       border-radius:18px;
-      box-shadow:0 30px 90px rgba(0,0,0,.22);
+
+      box-shadow:
+        0 30px 90px rgba(0,0,0,.22);
+
       overflow:hidden;
     }
 
     .modal-header{
       padding:15px 17px;
-      border-bottom:1px solid var(--border);
+
+      border-bottom:
+        1px solid var(--border);
 
       display:flex;
       align-items:center;
@@ -499,7 +640,9 @@
 
     .modal-header h3{
       margin:0;
+
       color:var(--green);
+
       font-size:14px;
       font-weight:900;
     }
@@ -507,10 +650,14 @@
     .modal-close{
       width:32px;
       height:32px;
+
       border:0;
       border-radius:9px;
+
       background:#f2f4f3;
+
       color:#555;
+
       font-size:17px;
     }
 
@@ -524,8 +671,11 @@
 
     .field label{
       display:block;
+
       margin-bottom:5px;
+
       color:#36413b;
+
       font-size:10px;
       font-weight:800;
     }
@@ -533,54 +683,73 @@
     .field input,
     .field select{
       width:100%;
+
       border:1px solid var(--border);
       border-radius:10px;
+
       padding:9px 10px;
+
       outline:none;
+
       font-size:10px;
+
       background:#fff;
     }
 
     .field input:focus,
     .field select:focus{
       border-color:var(--green);
-      box-shadow:0 0 0 3px rgba(11,74,63,.07);
+
+      box-shadow:
+        0 0 0 3px rgba(11,74,63,.07);
+    }
+
+    .hint{
+      margin-top:4px;
+
+      color:var(--muted);
+
+      font-size:8px;
+      line-height:1.7;
     }
 
     .modal-footer{
       padding:12px 17px;
-      border-top:1px solid var(--border);
+
+      border-top:
+        1px solid var(--border);
 
       display:flex;
-      justify-content:flex-end;
-      gap:7px;
-    }
 
-    .empty{
-      padding:30px;
-      text-align:center;
-      color:var(--muted);
-      font-size:10px;
+      justify-content:flex-end;
+
+      gap:7px;
     }
 
     .footer{
       text-align:center;
+
       margin-top:25px;
+
       color:#999f9c;
+
       font-size:9px;
     }
 
-    @media(max-width:1000px){
+    @media(max-width:1100px){
       .stats{
-        grid-template-columns:repeat(3,1fr);
+        grid-template-columns:
+          repeat(3,1fr);
       }
 
       .quick{
-        grid-template-columns:1fr 1fr;
+        grid-template-columns:
+          repeat(2,1fr);
       }
     }
 
     @media(max-width:650px){
+
       .header-inner{
         flex-wrap:wrap;
       }
@@ -591,11 +760,13 @@
       }
 
       .page{
-        padding:17px 10px 35px;
+        padding:
+          17px 10px 35px;
       }
 
       .stats{
-        grid-template-columns:1fr 1fr;
+        grid-template-columns:
+          1fr 1fr;
       }
 
       .quick{
@@ -604,6 +775,10 @@
 
       .search{
         min-width:100%;
+      }
+
+      .welcome h2{
+        font-size:19px;
       }
     }
   </style>
@@ -617,11 +792,21 @@
 
     <div class="brand">
 
-      <img src="logo.jpeg" alt="شعار مدارس الفلاح">
+      <img
+        src="logo.jpeg"
+        alt="شعار مدارس الفلاح"
+      >
 
       <div>
-        <h1>مدارس الفلاح الأهلية</h1>
-        <p>إدارة نظام الإشراف التربوي</p>
+
+        <h1>
+          مدارس الفلاح الأهلية
+        </h1>
+
+        <p>
+          إدارة نظام الإشراف التربوي
+        </p>
+
       </div>
 
     </div>
@@ -629,11 +814,24 @@
 
     <div class="header-actions">
 
-      <a href="supervisor-dashboard.html" class="btn btn-gray">
+      <a
+        href="teachers.html"
+        class="btn btn-green"
+      >
+        إدارة المعلمين
+      </a>
+
+      <a
+        href="supervisor-dashboard.html"
+        class="btn btn-gray"
+      >
         لوحة المشرف
       </a>
 
-      <button class="btn btn-red" id="logoutBtn">
+      <button
+        class="btn btn-red"
+        id="logoutBtn"
+      >
         تسجيل الخروج
       </button>
 
@@ -644,97 +842,205 @@
 </header>
 
 
-<main class="page">
 
-  <!-- WELCOME -->
+<main class="page">
 
   <section class="welcome">
 
     <div>
-      <small>لوحة إدارة النظام</small>
+
+      <small>
+        لوحة إدارة النظام
+      </small>
 
       <h2 id="adminName">
         مدير النظام
       </h2>
 
       <p>
-        إدارة المشرفين والمعلمين ومتابعة جميع الزيارات من مكان واحد.
+        إدارة المشرفين والمعلمين
+        ومتابعة جميع الزيارات من مكان واحد.
       </p>
+
     </div>
 
     <div class="admin-badge">
-      صلاحية كاملة للنظام
+      صلاحية مدير النظام
     </div>
 
   </section>
 
 
-  <!-- STATS -->
+  <div
+    class="status-box"
+    id="statusBox"
+  ></div>
+
 
   <section class="stats">
 
     <div class="stat">
-      <span>المشرفون</span>
-      <strong id="supervisorsCount">0</strong>
+
+      <span>
+        المشرفون
+      </span>
+
+      <strong id="supervisorsCount">
+        0
+      </strong>
+
     </div>
+
 
     <div class="stat">
-      <span>إجمالي المعلمين</span>
-      <strong id="teachersCount">0</strong>
+
+      <span>
+        إجمالي المعلمين
+      </span>
+
+      <strong id="teachersCount">
+        0
+      </strong>
+
     </div>
 
+
     <div class="stat gold">
-      <span>إجمالي الزيارات</span>
-      <strong id="visitsCount">0</strong>
+
+      <span>
+        إجمالي الزيارات
+      </span>
+
+      <strong id="visitsCount">
+        0
+      </strong>
+
     </div>
+
 
     <div class="stat red">
-      <span>زيارات لم يتم الاطلاع عليها</span>
-      <strong id="pendingVisitsCount">0</strong>
+
+      <span>
+        لم يتم الاطلاع عليها
+      </span>
+
+      <strong id="pendingVisitsCount">
+        0
+      </strong>
+
     </div>
 
+
     <div class="stat gold">
-      <span>معلمون بدون مشرف</span>
-      <strong id="unassignedCount">0</strong>
+
+      <span>
+        معلمون بدون مشرف
+      </span>
+
+      <strong id="unassignedCount">
+        0
+      </strong>
+
     </div>
 
   </section>
 
 
-  <!-- QUICK -->
 
   <section class="quick">
 
-    <a class="quick-card" href="evaluation-form.html">
-      <strong>زيارة جديدة</strong>
-      <span>تنفيذ وتسجيل زيارة تربوية جديدة.</span>
+    <a
+      class="quick-card"
+      href="#supervisorsSection"
+    >
+
+      <strong>
+        إدارة المشرفين
+      </strong>
+
+      <span>
+        إضافة وتعديل وإيقاف
+        حسابات المشرفين.
+      </span>
+
     </a>
 
-    <a class="quick-card" href="teacher-visits.html">
-      <strong>سجل الزيارات</strong>
-      <span>عرض ومتابعة تقارير الزيارات.</span>
+
+    <a
+      class="quick-card"
+      href="teachers.html"
+    >
+
+      <strong>
+        إدارة المعلمين
+      </strong>
+
+      <span>
+        إضافة المعلمين وتعديل
+        بياناتهم.
+      </span>
+
     </a>
 
-    <a class="quick-card" href="index.html">
-      <strong>الصفحة الرئيسية</strong>
-      <span>العودة إلى واجهة النظام الرئيسية.</span>
+
+    <a
+      class="quick-card"
+      href="teacher-visits.html"
+    >
+
+      <strong>
+        سجل الزيارات
+      </strong>
+
+      <span>
+        متابعة جميع زيارات
+        النظام.
+      </span>
+
+    </a>
+
+
+    <a
+      class="quick-card"
+      href="index.html"
+    >
+
+      <strong>
+        الصفحة الرئيسية
+      </strong>
+
+      <span>
+        العودة إلى واجهة
+        النظام.
+      </span>
+
     </a>
 
   </section>
+
 
 
   <!-- SUPERVISORS -->
 
-  <section class="section">
+  <section
+    class="section"
+    id="supervisorsSection"
+  >
 
     <div class="section-header">
 
       <div class="section-title">
-        <h3>إدارة المشرفين</h3>
+
+        <h3>
+          إدارة المشرفين
+        </h3>
+
         <p>
-          إنشاء حسابات المشرفين ومتابعة المعلمين والزيارات التابعة لكل مشرف.
+          إضافة وتعديل وإيقاف حسابات المشرفين التربويين.
         </p>
+
       </div>
+
 
       <div class="tools">
 
@@ -742,7 +1048,7 @@
           type="search"
           id="supervisorSearch"
           class="search"
-          placeholder="بحث عن مشرف..."
+          placeholder="بحث باسم المشرف أو اسم المستخدم..."
         >
 
         <button
@@ -762,18 +1068,53 @@
       <table>
 
         <thead>
+
           <tr>
-            <th>المشرف</th>
-            <th>اسم المستخدم</th>
-            <th>الصلاحية</th>
-            <th>الحالة</th>
-            <th>المعلمون</th>
-            <th>الزيارات</th>
-            <th>الإجراءات</th>
+
+            <th>
+              المشرف
+            </th>
+
+            <th>
+              اسم المستخدم
+            </th>
+
+            <th>
+              الصلاحية
+            </th>
+
+            <th>
+              الحالة
+            </th>
+
+            <th>
+              المعلمون
+            </th>
+
+            <th>
+              الزيارات
+            </th>
+
+            <th>
+              الإجراءات
+            </th>
+
           </tr>
+
         </thead>
 
-        <tbody id="supervisorsBody"></tbody>
+
+        <tbody id="supervisorsBody">
+
+          <tr>
+            <td colspan="7">
+              <div class="empty">
+                جاري تحميل المشرفين...
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
 
       </table>
 
@@ -782,7 +1123,8 @@
   </section>
 
 
-  <!-- TEACHERS -->
+
+  <!-- TEACHER ASSIGNMENT -->
 
   <section class="section">
 
@@ -790,13 +1132,16 @@
 
       <div class="section-title">
 
-        <h3>توزيع المعلمين على المشرفين</h3>
+        <h3>
+          توزيع المعلمين على المشرفين
+        </h3>
 
         <p>
-          يمكنك تغيير المشرف المسؤول عن أي معلم مباشرة.
+          يمكنك تحديد المشرف المسؤول عن كل معلم.
         </p>
 
       </div>
+
 
       <div class="tools">
 
@@ -817,17 +1162,53 @@
       <table>
 
         <thead>
+
           <tr>
-            <th>المعلم</th>
-            <th>الكود</th>
-            <th>الجوال</th>
-            <th>المشرف الحالي</th>
-            <th>عدد الزيارات</th>
-            <th>إسناد إلى مشرف</th>
+
+            <th>
+              المعلم
+            </th>
+
+            <th>
+              الكود
+            </th>
+
+            <th>
+              الجوال
+            </th>
+
+            <th>
+              المشرف الحالي
+            </th>
+
+            <th>
+              الزيارات
+            </th>
+
+            <th>
+              الإسناد
+            </th>
+
           </tr>
+
         </thead>
 
-        <tbody id="teachersBody"></tbody>
+
+        <tbody id="teachersBody">
+
+          <tr>
+
+            <td colspan="6">
+
+              <div class="empty">
+                جاري تحميل المعلمين...
+              </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
 
       </table>
 
@@ -844,19 +1225,26 @@
 
 
 
-<!-- ADD / EDIT SUPERVISOR -->
+<!-- MODAL -->
 
-<div class="modal" id="supervisorModal">
+<div
+  class="modal"
+  id="supervisorModal"
+>
 
   <div class="modal-box">
 
     <div class="modal-header">
 
       <h3 id="modalTitle">
-        إضافة مشرف
+        إضافة مشرف جديد
       </h3>
 
-      <button class="modal-close" id="closeModal">
+      <button
+        class="modal-close"
+        id="closeModal"
+        type="button"
+      >
         ×
       </button>
 
@@ -867,11 +1255,14 @@
 
       <div class="field">
 
-        <label>اسم المشرف</label>
+        <label>
+          اسم المشرف
+        </label>
 
         <input
           id="supName"
-          placeholder="اسم المشرف"
+          type="text"
+          placeholder="مثال: محمد عامر أحمد"
         >
 
       </div>
@@ -879,11 +1270,14 @@
 
       <div class="field">
 
-        <label>اسم المستخدم</label>
+        <label>
+          اسم المستخدم
+        </label>
 
         <input
           id="supUsername"
-          placeholder="اسم المستخدم"
+          type="text"
+          placeholder="مثال: mohamed"
         >
 
       </div>
@@ -891,20 +1285,31 @@
 
       <div class="field">
 
-        <label>كلمة المرور</label>
+        <label>
+          كلمة المرور
+        </label>
 
         <input
-          type="password"
           id="supPassword"
+          type="password"
           placeholder="كلمة المرور"
         >
 
+        <div
+          class="hint"
+          id="passwordHint"
+        >
+          يجب ألا تقل كلمة المرور عن 4 أحرف أو أرقام.
+        </div>
+
       </div>
 
 
       <div class="field">
 
-        <label>نوع الحساب</label>
+        <label>
+          نوع الحساب
+        </label>
 
         <select id="supRole">
 
@@ -925,12 +1330,20 @@
 
     <div class="modal-footer">
 
-      <button class="btn btn-gray" id="cancelModal">
+      <button
+        class="btn btn-gray"
+        id="cancelModal"
+        type="button"
+      >
         إلغاء
       </button>
 
-      <button class="btn btn-green" id="saveSupervisorBtn">
-        حفظ
+      <button
+        class="btn btn-green"
+        id="saveSupervisorBtn"
+        type="button"
+      >
+        حفظ المشرف
       </button>
 
     </div>
@@ -952,54 +1365,107 @@
     updateDoc,
     deleteDoc,
     doc,
-    serverTimestamp,
-    query,
-    where
-  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+    serverTimestamp
+  }
+  from
+  "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 
-  const el = id =>
-    document.getElementById(id);
+  const el =
+    id =>
+      document.getElementById(id);
 
 
-  /* ===================================
+  /* ============================================
      SESSION
-  ==================================== */
+  ============================================ */
 
-  const rawSession =
-    sessionStorage.getItem(
-      "currentSupervisor"
+  function getSavedSession(){
+
+    let raw =
+      localStorage.getItem(
+        "currentSupervisor"
+      );
+
+
+    if(!raw){
+
+      raw =
+        sessionStorage.getItem(
+          "currentSupervisor"
+        );
+
+    }
+
+
+    if(!raw)
+      return null;
+
+
+    try{
+
+      return JSON.parse(raw);
+
+    }catch(error){
+
+      console.error(
+        "Session parse error:",
+        error
+      );
+
+      return null;
+
+    }
+
+  }
+
+
+  function saveSession(data){
+
+    const raw =
+      JSON.stringify(data);
+
+
+    localStorage.setItem(
+      "currentSupervisor",
+      raw
     );
 
 
-  if(!rawSession){
-
-    location.href =
-      "supervisor-login.html";
-
-    throw new Error(
-      "No session"
+    sessionStorage.setItem(
+      "currentSupervisor",
+      raw
     );
 
   }
 
 
-  let currentUser;
+  function clearSession(){
 
+    localStorage.removeItem(
+      "currentSupervisor"
+    );
 
-  try{
-
-    currentUser =
-      JSON.parse(rawSession);
-
-  }catch{
 
     sessionStorage.removeItem(
       "currentSupervisor"
     );
 
+  }
+
+
+  const currentUser =
+    getSavedSession();
+
+
+  if(!currentUser){
+
     location.href =
       "supervisor-login.html";
+
+    throw new Error(
+      "No admin session"
+    );
 
   }
 
@@ -1009,11 +1475,13 @@
   ){
 
     alert(
-      "ليس لديك صلاحية الدخول إلى إدارة النظام"
+      "هذه الصفحة متاحة لمدير النظام فقط."
     );
+
 
     location.href =
       "supervisor-dashboard.html";
+
 
     throw new Error(
       "Not admin"
@@ -1022,73 +1490,150 @@
   }
 
 
-  el("adminName").textContent =
+  el("adminName")
+    .textContent =
     currentUser.name ||
     "مدير النظام";
 
 
-  /* ===================================
+
+  /* ============================================
      DATA
-  ==================================== */
+  ============================================ */
 
   let supervisors = [];
   let teachers = [];
   let visits = [];
 
-  let editingSupervisorId = null;
+  let editingSupervisorId =
+    null;
 
+
+
+  /* ============================================
+     STATUS
+  ============================================ */
+
+  let statusTimer;
+
+
+  function showStatus(
+    message,
+    type="success"
+  ){
+
+    clearTimeout(
+      statusTimer
+    );
+
+
+    const box =
+      el("statusBox");
+
+
+    box.textContent =
+      message;
+
+
+    box.className =
+      "status-box show " +
+      (
+        type === "error"
+        ? "status-error"
+        : "status-success"
+      );
+
+
+    statusTimer =
+      setTimeout(
+        ()=>{
+
+          box.className =
+            "status-box";
+
+        },
+        4500
+      );
+
+  }
+
+
+
+  /* ============================================
+     LOAD
+  ============================================ */
 
   async function loadAll(){
 
     try{
 
       const [
-        supervisorsSnap,
-        teachersSnap,
-        visitsSnap
-      ] = await Promise.all([
+        supervisorSnap,
+        teacherSnap,
+        visitSnap
+      ] =
+      await Promise.all([
 
         getDocs(
-          collection(db,"supervisors")
+          collection(
+            db,
+            "supervisors"
+          )
         ),
 
         getDocs(
-          collection(db,"teachers")
+          collection(
+            db,
+            "teachers"
+          )
         ),
 
         getDocs(
-          collection(db,"visits")
+          collection(
+            db,
+            "visits"
+          )
         )
 
       ]);
 
 
       supervisors =
-        supervisorsSnap.docs.map(d=>({
-          id:d.id,
-          ...d.data()
-        }));
+        supervisorSnap.docs.map(
+          d=>({
+            id:d.id,
+            ...d.data()
+          })
+        );
 
 
       teachers =
-        teachersSnap.docs.map(d=>({
-          id:d.id,
-          ...d.data()
-        }));
+        teacherSnap.docs.map(
+          d=>({
+            id:d.id,
+            ...d.data()
+          })
+        );
 
 
       visits =
-        visitsSnap.docs.map(d=>({
-          id:d.id,
-          ...d.data()
-        }));
+        visitSnap.docs.map(
+          d=>({
+            id:d.id,
+            ...d.data()
+          })
+        );
 
 
       supervisors.sort(
         (a,b)=>
-          String(a.name || "")
+          String(
+            a.name || ""
+          )
           .localeCompare(
-            String(b.name || ""),
+            String(
+              b.name || ""
+            ),
             "ar"
           )
       );
@@ -1096,23 +1641,36 @@
 
       teachers.sort(
         (a,b)=>
-          String(a.name || "")
+          String(
+            a.name || ""
+          )
           .localeCompare(
-            String(b.name || ""),
+            String(
+              b.name || ""
+            ),
             "ar"
           )
       );
 
 
-      renderEverything();
-
+      renderAll();
 
     }catch(error){
 
-      console.error(error);
+      console.error(
+        "LOAD ERROR:",
+        error
+      );
 
-      alert(
-        "تعذر تحميل بيانات النظام"
+
+      showStatus(
+        "تعذر تحميل البيانات: " +
+        (
+          error.message ||
+          error.code ||
+          "خطأ غير معروف"
+        ),
+        "error"
       );
 
     }
@@ -1121,23 +1679,23 @@
 
 
 
-  /* ===================================
+  /* ============================================
      STATS
-  ==================================== */
+  ============================================ */
 
   function renderStats(){
 
-    const realSupervisors =
+    const supervisorOnly =
       supervisors.filter(
         s =>
-          s.role !== "admin" ||
-          s.id !== currentUser.id
+          s.role ===
+          "supervisor"
       );
 
 
     el("supervisorsCount")
       .textContent =
-      realSupervisors.length;
+      supervisorOnly.length;
 
 
     el("teachersCount")
@@ -1150,56 +1708,83 @@
       visits.length;
 
 
-    const pending =
-      visits.filter(
-        v =>
-          v.teacherViewed !== true
-      ).length;
-
-
     el("pendingVisitsCount")
       .textContent =
-      pending;
-
-
-    const unassigned =
-      teachers.filter(
-        t =>
-          !t.supervisorId
+      visits.filter(
+        v =>
+          v.teacherViewed !==
+          true
       ).length;
 
 
     el("unassignedCount")
       .textContent =
-      unassigned;
+      teachers.filter(
+        t =>
+          !t.supervisorId
+      ).length;
 
   }
 
 
 
-  /* ===================================
-     SUPERVISORS
-  ==================================== */
+  /* ============================================
+     COUNTS
+  ============================================ */
 
-  function supervisorTeacherCount(id){
+  function supervisorTeacherCount(
+    supervisorId
+  ){
 
     return teachers.filter(
       t =>
-        t.supervisorId === id
+        t.supervisorId ===
+        supervisorId
     ).length;
 
   }
 
 
-  function supervisorVisitCount(id){
+  function supervisorVisitCount(
+    supervisorId
+  ){
 
     return visits.filter(
       v =>
-        v.supervisorId === id
+        v.supervisorId ===
+        supervisorId
     ).length;
 
   }
 
+
+  function teacherVisitCount(
+    teacher
+  ){
+
+    const code =
+      String(
+        teacher.code ||
+        teacher.id ||
+        ""
+      );
+
+
+    return visits.filter(
+      v =>
+        String(
+          v.teacherCode ||
+          ""
+        ) === code
+    ).length;
+
+  }
+
+
+
+  /* ============================================
+     SUPERVISORS RENDER
+  ============================================ */
 
   function renderSupervisors(){
 
@@ -1207,7 +1792,7 @@
       el("supervisorsBody");
 
 
-    const term =
+    const search =
       el("supervisorSearch")
       .value
       .trim()
@@ -1215,17 +1800,30 @@
 
 
     const list =
-      supervisors.filter(s=>{
+      supervisors.filter(
+        supervisor=>{
 
-        const text = (
-          String(s.name || "") +
-          " " +
-          String(s.username || "")
-        ).toLowerCase();
+          const text =
+            (
+              String(
+                supervisor.name ||
+                ""
+              ) +
+              " " +
+              String(
+                supervisor.username ||
+                ""
+              )
+            )
+            .toLowerCase();
 
-        return text.includes(term);
 
-      });
+          return text.includes(
+            search
+          );
+
+        }
+      );
 
 
     tbody.innerHTML = "";
@@ -1234,13 +1832,19 @@
     if(!list.length){
 
       tbody.innerHTML = `
+
         <tr>
+
           <td colspan="7">
+
             <div class="empty">
-              لا توجد حسابات مطابقة
+              لا توجد حسابات مشرفين.
             </div>
+
           </td>
+
         </tr>
+
       `;
 
       return;
@@ -1248,195 +1852,268 @@
     }
 
 
-    list.forEach(s=>{
+    list.forEach(
+      supervisor=>{
 
-      const tr =
-        document.createElement("tr");
-
-
-      const teacherCount =
-        supervisorTeacherCount(
-          s.id
-        );
+        const tr =
+          document.createElement(
+            "tr"
+          );
 
 
-      const visitCount =
-        supervisorVisitCount(
-          s.id
-        );
+        const isAdmin =
+          supervisor.role ===
+          "admin";
 
 
-      const roleLabel =
-        s.role === "admin"
-        ? "مدير نظام"
-        : "مشرف تربوي";
+        const active =
+          supervisor.active !==
+          false;
 
 
-      const roleClass =
-        s.role === "admin"
-        ? "badge-admin"
-        : "badge-supervisor";
+        const isCurrent =
+          supervisor.id ===
+          currentUser.id;
 
 
-      const active =
-        s.active !== false;
+        tr.innerHTML = `
+
+          <td class="person">
+
+            <strong>
+              ${escapeHtml(
+                supervisor.name ||
+                "-"
+              )}
+            </strong>
+
+            <small>
+              ${
+                isCurrent
+                ? "الحساب الحالي"
+                : ""
+              }
+            </small>
+
+          </td>
 
 
-      tr.innerHTML = `
-
-        <td class="person">
-          <strong>
-            ${escapeHtml(s.name || "-")}
-          </strong>
-
-          <small>
-            ${s.id === currentUser.id ? "الحساب الحالي" : ""}
-          </small>
-        </td>
+          <td>
+            ${escapeHtml(
+              supervisor.username ||
+              "-"
+            )}
+          </td>
 
 
-        <td>
-          ${escapeHtml(s.username || "-")}
-        </td>
+          <td>
 
-
-        <td>
-          <span class="badge ${roleClass}">
-            ${roleLabel}
-          </span>
-        </td>
-
-
-        <td>
-
-          <span class="badge ${active ? "badge-active" : "badge-off"}">
-
-            ${active ? "فعال" : "موقوف"}
-
-          </span>
-
-        </td>
-
-
-        <td>
-          <b>${teacherCount}</b>
-        </td>
-
-
-        <td>
-          <b>${visitCount}</b>
-        </td>
-
-
-        <td>
-
-          <div class="actions">
-
-            <button
-              class="btn btn-blue btn-small"
-              data-edit="${s.id}"
+            <span
+              class="badge ${
+                isAdmin
+                ? "badge-admin"
+                : "badge-supervisor"
+              }"
             >
-              تعديل
-            </button>
+
+              ${
+                isAdmin
+                ? "مدير نظام"
+                : "مشرف تربوي"
+              }
+
+            </span>
+
+          </td>
 
 
-            ${
-              s.id !== currentUser.id
-              ? `
-                <button
-                  class="btn ${active ? "btn-red" : "btn-green"} btn-small"
-                  data-toggle="${s.id}"
-                >
-                  ${active ? "إيقاف" : "تفعيل"}
-                </button>
-              `
-              : ""
-            }
+          <td>
+
+            <span
+              class="badge ${
+                active
+                ? "badge-active"
+                : "badge-off"
+              }"
+            >
+
+              ${
+                active
+                ? "فعال"
+                : "موقوف"
+              }
+
+            </span>
+
+          </td>
 
 
-            ${
-              s.id !== currentUser.id
-              ? `
-                <button
-                  class="btn btn-red btn-small"
-                  data-delete="${s.id}"
-                >
-                  حذف
-                </button>
-              `
-              : ""
-            }
-
-          </div>
-
-        </td>
-
-      `;
+          <td>
+            <b>
+              ${supervisorTeacherCount(
+                supervisor.id
+              )}
+            </b>
+          </td>
 
 
-      tbody.appendChild(tr);
+          <td>
+            <b>
+              ${supervisorVisitCount(
+                supervisor.id
+              )}
+            </b>
+          </td>
 
-    });
+
+          <td>
+
+            <div class="actions">
+
+              <button
+                class="btn btn-blue btn-small"
+                data-edit="${supervisor.id}"
+                type="button"
+              >
+                تعديل
+              </button>
+
+
+              ${
+                !isCurrent
+                ? `
+
+                  <button
+                    class="btn ${
+                      active
+                      ? "btn-red"
+                      : "btn-green"
+                    } btn-small"
+                    data-toggle="${supervisor.id}"
+                    type="button"
+                  >
+
+                    ${
+                      active
+                      ? "إيقاف"
+                      : "تفعيل"
+                    }
+
+                  </button>
+
+                `
+                : ""
+              }
+
+
+              ${
+                !isCurrent
+                ? `
+
+                  <button
+                    class="btn btn-red btn-small"
+                    data-delete="${supervisor.id}"
+                    type="button"
+                  >
+                    حذف
+                  </button>
+
+                `
+                : ""
+              }
+
+            </div>
+
+          </td>
+
+        `;
+
+
+        tbody.appendChild(
+          tr
+        );
+
+      }
+    );
 
 
     tbody
       .querySelectorAll(
         "[data-edit]"
       )
-      .forEach(btn=>{
+      .forEach(
+        btn=>{
 
-        btn.addEventListener(
-          "click",
-          ()=>openEditSupervisor(
-            btn.dataset.edit
-          )
-        );
+          btn.addEventListener(
+            "click",
+            ()=>{
 
-      });
+              openEditSupervisor(
+                btn.dataset.edit
+              );
+
+            }
+          );
+
+        }
+      );
 
 
     tbody
       .querySelectorAll(
         "[data-toggle]"
       )
-      .forEach(btn=>{
+      .forEach(
+        btn=>{
 
-        btn.addEventListener(
-          "click",
-          ()=>toggleSupervisor(
-            btn.dataset.toggle
-          )
-        );
+          btn.addEventListener(
+            "click",
+            ()=>{
 
-      });
+              toggleSupervisor(
+                btn.dataset.toggle
+              );
+
+            }
+          );
+
+        }
+      );
 
 
     tbody
       .querySelectorAll(
         "[data-delete]"
       )
-      .forEach(btn=>{
+      .forEach(
+        btn=>{
 
-        btn.addEventListener(
-          "click",
-          ()=>removeSupervisor(
-            btn.dataset.delete
-          )
-        );
+          btn.addEventListener(
+            "click",
+            ()=>{
 
-      });
+              deleteSupervisor(
+                btn.dataset.delete
+              );
+
+            }
+          );
+
+        }
+      );
 
   }
 
 
 
-  /* ===================================
-     ADD / EDIT SUPERVISOR
-  ==================================== */
+  /* ============================================
+     MODAL
+  ============================================ */
 
   function openAddSupervisor(){
 
-    editingSupervisorId = null;
+    editingSupervisorId =
+      null;
 
 
     el("modalTitle")
@@ -1444,11 +2121,27 @@
       "إضافة مشرف جديد";
 
 
-    el("supName").value = "";
+    el("supName").value =
+      "";
 
-    el("supUsername").value = "";
 
-    el("supPassword").value = "";
+    el("supUsername").value =
+      "";
+
+
+    el("supPassword").value =
+      "";
+
+
+    el("supPassword")
+      .placeholder =
+      "كلمة المرور";
+
+
+    el("passwordHint")
+      .textContent =
+      "يجب ألا تقل كلمة المرور عن 4 أحرف أو أرقام.";
+
 
     el("supRole").value =
       "supervisor";
@@ -1458,22 +2151,36 @@
       .classList
       .add("show");
 
+
+    setTimeout(
+      ()=>{
+
+        el("supName")
+          .focus();
+
+      },
+      100
+    );
+
   }
 
 
-  function openEditSupervisor(id){
+  function openEditSupervisor(
+    id
+  ){
 
-    const s =
+    const supervisor =
       supervisors.find(
-        x=>x.id === id
+        s=>s.id === id
       );
 
 
-    if(!s)
+    if(!supervisor)
       return;
 
 
-    editingSupervisorId = id;
+    editingSupervisorId =
+      id;
 
 
     el("modalTitle")
@@ -1482,11 +2189,11 @@
 
 
     el("supName").value =
-      s.name || "";
+      supervisor.name || "";
 
 
     el("supUsername").value =
-      s.username || "";
+      supervisor.username || "";
 
 
     el("supPassword").value =
@@ -1495,11 +2202,17 @@
 
     el("supPassword")
       .placeholder =
-      "اتركها فارغة للإبقاء على كلمة المرور الحالية";
+      "اتركها فارغة للإبقاء على الحالية";
+
+
+    el("passwordHint")
+      .textContent =
+      "اترك كلمة المرور فارغة إذا كنت لا تريد تغييرها.";
 
 
     el("supRole").value =
-      s.role || "supervisor";
+      supervisor.role ||
+      "supervisor";
 
 
     el("supervisorModal")
@@ -1517,6 +2230,11 @@
 
   }
 
+
+
+  /* ============================================
+     SAVE SUPERVISOR
+  ============================================ */
 
   async function saveSupervisor(){
 
@@ -1544,7 +2262,11 @@
 
     if(!name){
 
-      alert("اكتب اسم المشرف");
+      alert(
+        "اكتب اسم المشرف."
+      );
+
+      el("supName").focus();
 
       return;
 
@@ -1553,7 +2275,11 @@
 
     if(!username){
 
-      alert("اكتب اسم المستخدم");
+      alert(
+        "اكتب اسم المستخدم."
+      );
+
+      el("supUsername").focus();
 
       return;
 
@@ -1566,7 +2292,24 @@
     ){
 
       alert(
-        "كلمة المرور يجب ألا تقل عن 4 أحرف"
+        "كلمة المرور يجب ألا تقل عن 4 أحرف أو أرقام."
+      );
+
+      el("supPassword").focus();
+
+      return;
+
+    }
+
+
+    if(
+      editingSupervisorId &&
+      password &&
+      password.length < 4
+    ){
+
+      alert(
+        "كلمة المرور الجديدة يجب ألا تقل عن 4 أحرف أو أرقام."
       );
 
       return;
@@ -1577,19 +2320,23 @@
     const duplicate =
       supervisors.find(
         s =>
-          String(s.username || "")
+          String(
+            s.username || ""
+          )
+          .trim()
           .toLowerCase()
           ===
           username.toLowerCase()
           &&
-          s.id !== editingSupervisorId
+          s.id !==
+          editingSupervisorId
       );
 
 
     if(duplicate){
 
       alert(
-        "اسم المستخدم مستخدم بالفعل"
+        "اسم المستخدم مستخدم بالفعل لمشرف آخر."
       );
 
       return;
@@ -1597,11 +2344,18 @@
     }
 
 
+    const button =
+      el("saveSupervisorBtn");
+
+
     try{
 
-      el("saveSupervisorBtn")
-        .disabled =
+      button.disabled =
         true;
+
+
+      button.textContent =
+        "جاري الحفظ...";
 
 
       if(editingSupervisorId){
@@ -1636,56 +2390,74 @@
         );
 
 
-        /*
-          لو المدير عدّل حسابه الحالي
-          نحدّث الـ Session أيضاً
-        */
-
         if(
-          editingSupervisorId
-          ===
+          editingSupervisorId ===
           currentUser.id
         ){
 
           currentUser.name =
             name;
 
+
           currentUser.username =
             username;
+
 
           currentUser.role =
             role;
 
 
-          sessionStorage.setItem(
-            "currentSupervisor",
-            JSON.stringify(
-              currentUser
-            )
+          saveSession(
+            currentUser
           );
+
+
+          el("adminName")
+            .textContent =
+            name;
 
         }
 
+
+        showStatus(
+          "تم تعديل بيانات المشرف بنجاح."
+        );
+
       }else{
 
-        await addDoc(
-          collection(
-            db,
-            "supervisors"
-          ),
-          {
+        const docRef =
+          await addDoc(
+            collection(
+              db,
+              "supervisors"
+            ),
+            {
 
-            name,
-            username,
-            password,
-            role,
+              name,
+              username,
+              password,
+              role,
 
-            active:true,
+              active:true,
 
-            createdAt:
-              serverTimestamp()
+              createdAt:
+                serverTimestamp(),
 
-          }
+              updatedAt:
+                serverTimestamp()
+
+            }
+          );
+
+
+        console.log(
+          "Supervisor created:",
+          docRef.id
+        );
+
+
+        showStatus(
+          "تم إضافة المشرف بنجاح."
         );
 
       }
@@ -1693,22 +2465,46 @@
 
       closeModal();
 
-      await loadAll();
 
+      await loadAll();
 
     }catch(error){
 
-      console.error(error);
+      console.error(
+        "SAVE SUPERVISOR ERROR:",
+        error
+      );
+
 
       alert(
-        "تعذر حفظ بيانات المشرف"
+        "تعذر حفظ المشرف.\n\n" +
+        "سبب الخطأ:\n" +
+        (
+          error.code ||
+          error.message ||
+          "غير معروف"
+        )
+      );
+
+
+      showStatus(
+        "تعذر حفظ المشرف: " +
+        (
+          error.code ||
+          error.message ||
+          "خطأ غير معروف"
+        ),
+        "error"
       );
 
     }finally{
 
-      el("saveSupervisorBtn")
-        .disabled =
+      button.disabled =
         false;
+
+
+      button.textContent =
+        "حفظ المشرف";
 
     }
 
@@ -1716,20 +2512,41 @@
 
 
 
-  async function toggleSupervisor(id){
+  /* ============================================
+     ACTIVATE / DEACTIVATE
+  ============================================ */
 
-    const s =
+  async function toggleSupervisor(
+    id
+  ){
+
+    const supervisor =
       supervisors.find(
-        x=>x.id === id
+        s=>s.id === id
       );
 
 
-    if(!s)
+    if(!supervisor)
       return;
 
 
-    const newValue =
-      s.active === false;
+    const currentlyActive =
+      supervisor.active !==
+      false;
+
+
+    const newStatus =
+      !currentlyActive;
+
+
+    const message =
+      newStatus
+      ? `هل تريد تفعيل حساب ${supervisor.name}؟`
+      : `هل تريد إيقاف حساب ${supervisor.name}؟`;
+
+
+    if(!confirm(message))
+      return;
 
 
     try{
@@ -1741,22 +2558,40 @@
           id
         ),
         {
-          active:newValue,
+
+          active:newStatus,
+
           updatedAt:
             serverTimestamp()
+
         }
+      );
+
+
+      showStatus(
+        newStatus
+        ? "تم تفعيل حساب المشرف."
+        : "تم إيقاف حساب المشرف."
       );
 
 
       await loadAll();
 
-
     }catch(error){
 
-      console.error(error);
+      console.error(
+        "TOGGLE ERROR:",
+        error
+      );
+
 
       alert(
-        "تعذر تغيير حالة الحساب"
+        "تعذر تغيير حالة المشرف.\n\n" +
+        (
+          error.code ||
+          error.message ||
+          ""
+        )
       );
 
     }
@@ -1765,33 +2600,57 @@
 
 
 
-  async function removeSupervisor(id){
+  /* ============================================
+     DELETE SUPERVISOR
+  ============================================ */
 
-    const s =
+  async function deleteSupervisor(
+    id
+  ){
+
+    if(
+      id ===
+      currentUser.id
+    ){
+
+      alert(
+        "لا يمكن حذف حساب مدير النظام الحالي."
+      );
+
+      return;
+
+    }
+
+
+    const supervisor =
       supervisors.find(
-        x=>x.id === id
+        s=>s.id === id
       );
 
 
-    if(!s)
+    if(!supervisor)
       return;
 
 
-    const teacherCount =
-      supervisorTeacherCount(
-        id
+    const assignedTeachers =
+      teachers.filter(
+        t =>
+          t.supervisorId ===
+          id
       );
 
 
     let message =
-      `هل تريد حذف حساب المشرف "${s.name}"؟`;
+      `هل تريد حذف حساب المشرف "${supervisor.name}"؟`;
 
 
-    if(teacherCount){
+    if(assignedTeachers.length){
 
       message +=
-        `\n\nيوجد ${teacherCount} معلم تابع لهذا المشرف.` +
-        `\nسيظل المعلمون موجودين ولكن يجب إعادة إسنادهم لمشرف آخر.`;
+
+        `\n\nعدد المعلمين التابعين له: ${assignedTeachers.length}` +
+
+        "\nسيظل المعلمون موجودين وسيصبحون بدون مشرف.";
 
     }
 
@@ -1802,36 +2661,20 @@
 
     try{
 
-      await deleteDoc(
-        doc(
-          db,
-          "supervisors",
-          id
-        )
-      );
-
-
       /*
-        نجعل المعلمين التابعين له
-        غير مسندين بدلاً من حذفهم
+        أولاً إزالة الإسناد
+        عن المعلمين
       */
-
-      const relatedTeachers =
-        teachers.filter(
-          t =>
-            t.supervisorId === id
-        );
-
 
       await Promise.all(
 
-        relatedTeachers.map(
-          t =>
+        assignedTeachers.map(
+          teacher =>
             updateDoc(
               doc(
                 db,
                 "teachers",
-                t.id
+                teacher.id
               ),
               {
 
@@ -1848,15 +2691,41 @@
       );
 
 
-      await loadAll();
+      /*
+        ثم حذف حساب المشرف
+      */
 
+      await deleteDoc(
+        doc(
+          db,
+          "supervisors",
+          id
+        )
+      );
+
+
+      showStatus(
+        "تم حذف المشرف بنجاح."
+      );
+
+
+      await loadAll();
 
     }catch(error){
 
-      console.error(error);
+      console.error(
+        "DELETE ERROR:",
+        error
+      );
+
 
       alert(
-        "تعذر حذف المشرف"
+        "تعذر حذف المشرف.\n\n" +
+        (
+          error.code ||
+          error.message ||
+          ""
+        )
       );
 
     }
@@ -1865,74 +2734,75 @@
 
 
 
-  /* ===================================
-     TEACHERS
-  ==================================== */
+  /* ============================================
+     TEACHER ASSIGNMENT
+  ============================================ */
 
-  function teacherVisitCount(teacher){
+  function getSupervisorName(
+    id
+  ){
 
-    return visits.filter(
-      v =>
-        String(v.teacherCode || "")
-        ===
-        String(
-          teacher.code ||
-          teacher.id
-        )
-    ).length;
-
-  }
-
-
-  function getSupervisorName(id){
-
-    const s =
+    const supervisor =
       supervisors.find(
-        x=>x.id === id
+        s=>s.id === id
       );
 
-    return s
-      ? s.name || ""
+
+    return supervisor
+      ? supervisor.name || ""
       : "";
 
   }
 
 
-  function supervisorOptions(
+  function getSupervisorOptions(
     selectedId
   ){
 
     let html = `
+
       <option value="">
-        غير مسند
+        بدون مشرف
       </option>
+
     `;
 
 
     supervisors
       .filter(
-        s =>
-          s.active !== false &&
-          s.role !== "admin"
+        supervisor =>
+          supervisor.active !==
+          false
+          &&
+          supervisor.role ===
+          "supervisor"
       )
-      .forEach(s=>{
+      .forEach(
+        supervisor=>{
 
-        html += `
+          html += `
 
-          <option
-            value="${escapeHtml(s.id)}"
-            ${
-              s.id === selectedId
-              ? "selected"
-              : ""
-            }
-          >
-            ${escapeHtml(s.name || "")}
-          </option>
+            <option
+              value="${escapeHtml(
+                supervisor.id
+              )}"
+              ${
+                supervisor.id ===
+                selectedId
+                ? "selected"
+                : ""
+              }
+            >
+              ${escapeHtml(
+                supervisor.name ||
+                ""
+              )}
+            </option>
 
-        `;
+          `;
 
-      });
+        }
+      );
 
 
     return html;
@@ -1947,43 +2817,61 @@
       el("teachersBody");
 
 
-    const term =
+    const search =
       el("teacherSearch")
       .value
       .trim()
       .toLowerCase();
 
 
-    const filtered =
-      teachers.filter(t=>{
+    const list =
+      teachers.filter(
+        teacher=>{
 
-        const text = (
-          String(t.name || "") +
-          " " +
-          String(t.code || t.id || "") +
-          " " +
-          String(t.phone || "")
-        ).toLowerCase();
+          const text =
+            (
+              String(
+                teacher.name || ""
+              ) +
+              " " +
+              String(
+                teacher.code ||
+                teacher.id ||
+                ""
+              ) +
+              " " +
+              String(
+                teacher.phone || ""
+              )
+            )
+            .toLowerCase();
 
 
-        return text.includes(term);
+          return text.includes(
+            search
+          );
 
-      });
+        }
+      );
 
 
     tbody.innerHTML = "";
 
 
-    if(!filtered.length){
+    if(!list.length){
 
       tbody.innerHTML = `
 
         <tr>
+
           <td colspan="6">
+
             <div class="empty">
-              لا يوجد معلمون مطابقون
+              لا يوجد معلمون.
             </div>
+
           </td>
+
         </tr>
 
       `;
@@ -1993,110 +2881,152 @@
     }
 
 
-    filtered.forEach(t=>{
+    list.forEach(
+      teacher=>{
 
-      const tr =
-        document.createElement("tr");
+        const tr =
+          document.createElement(
+            "tr"
+          );
 
 
-      const supervisorName =
-        t.supervisorId
-        ? (
-            t.supervisorName ||
-            getSupervisorName(
-              t.supervisorId
+        const supervisorName =
+          teacher.supervisorId
+          ?
+            (
+              teacher.supervisorName
+              ||
+              getSupervisorName(
+                teacher.supervisorId
+              )
             )
-          )
-        : "";
+          :
+            "";
 
 
-      const visitCount =
-        teacherVisitCount(t);
+        tr.innerHTML = `
+
+          <td class="person">
+
+            <strong>
+              ${escapeHtml(
+                teacher.name ||
+                "-"
+              )}
+            </strong>
+
+          </td>
 
 
-      tr.innerHTML = `
+          <td>
 
-        <td class="person">
-
-          <strong>
-            ${escapeHtml(t.name || "-")}
-          </strong>
-
-        </td>
-
-
-        <td>
-          ${escapeHtml(t.code || t.id)}
-        </td>
-
-
-        <td>
-          ${escapeHtml(t.phone || "-")}
-        </td>
-
-
-        <td>
-
-          ${
-            supervisorName
-            ? `
-              <span class="badge badge-supervisor">
-                ${escapeHtml(supervisorName)}
-              </span>
-            `
-            : `
-              <span class="badge badge-unassigned">
-                غير مسند
-              </span>
-            `
-          }
-
-        </td>
-
-
-        <td>
-          <b>${visitCount}</b>
-        </td>
-
-
-        <td>
-
-          <select
-            class="supervisor-select"
-            data-teacher-id="${escapeHtml(t.id)}"
-          >
-
-            ${supervisorOptions(
-              t.supervisorId || ""
+            ${escapeHtml(
+              teacher.code ||
+              teacher.id ||
+              "-"
             )}
 
-          </select>
-
-        </td>
-
-      `;
+          </td>
 
 
-      tbody.appendChild(tr);
+          <td>
 
-    });
+            ${escapeHtml(
+              teacher.phone ||
+              "-"
+            )}
+
+          </td>
+
+
+          <td>
+
+            ${
+              supervisorName
+              ? `
+
+                <span class="badge badge-supervisor">
+
+                  ${escapeHtml(
+                    supervisorName
+                  )}
+
+                </span>
+
+              `
+              : `
+
+                <span class="badge badge-unassigned">
+                  بدون مشرف
+                </span>
+
+              `
+            }
+
+          </td>
+
+
+          <td>
+
+            <b>
+              ${teacherVisitCount(
+                teacher
+              )}
+            </b>
+
+          </td>
+
+
+          <td>
+
+            <select
+              class="supervisor-select"
+              data-teacher="${escapeHtml(
+                teacher.id
+              )}"
+            >
+
+              ${getSupervisorOptions(
+                teacher.supervisorId ||
+                ""
+              )}
+
+            </select>
+
+          </td>
+
+        `;
+
+
+        tbody.appendChild(
+          tr
+        );
+
+      }
+    );
 
 
     tbody
       .querySelectorAll(
         ".supervisor-select"
       )
-      .forEach(select=>{
+      .forEach(
+        select=>{
 
-        select.addEventListener(
-          "change",
-          ()=>assignTeacher(
-            select.dataset.teacherId,
-            select.value
-          )
-        );
+          select.addEventListener(
+            "change",
+            ()=>{
 
-      });
+              assignTeacher(
+                select.dataset.teacher,
+                select.value
+              );
+
+            }
+          );
+
+        }
+      );
 
   }
 
@@ -2109,7 +3039,9 @@
 
     const supervisor =
       supervisors.find(
-        s=>s.id === supervisorId
+        s =>
+          s.id ===
+          supervisorId
       );
 
 
@@ -2140,16 +3072,36 @@
       );
 
 
-      await loadAll();
+      showStatus(
+        supervisor
+        ?
+          `تم إسناد المعلم إلى ${supervisor.name}.`
+        :
+          "تم إلغاء إسناد المعلم."
+      );
 
+
+      await loadAll();
 
     }catch(error){
 
-      console.error(error);
+      console.error(
+        "ASSIGN ERROR:",
+        error
+      );
+
 
       alert(
-        "تعذر إسناد المعلم للمشرف"
+        "تعذر إسناد المعلم.\n\n" +
+        (
+          error.code ||
+          error.message ||
+          ""
+        )
       );
+
+
+      await loadAll();
 
     }
 
@@ -2157,11 +3109,47 @@
 
 
 
-  /* ===================================
-     RENDER
-  ==================================== */
+  /* ============================================
+     ESCAPE
+  ============================================ */
 
-  function renderEverything(){
+  function escapeHtml(
+    value
+  ){
+
+    return String(
+      value ?? ""
+    )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
+  }
+
+
+
+  /* ============================================
+     RENDER ALL
+  ============================================ */
+
+  function renderAll(){
 
     renderStats();
 
@@ -2173,31 +3161,21 @@
 
 
 
-  /* ===================================
-     ESCAPE
-  ==================================== */
-
-  function escapeHtml(value){
-
-    return String(value || "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-
-  }
-
-
-
-  /* ===================================
+  /* ============================================
      EVENTS
-  ==================================== */
+  ============================================ */
 
   el("addSupervisorBtn")
     .addEventListener(
       "click",
       openAddSupervisor
+    );
+
+
+  el("saveSupervisorBtn")
+    .addEventListener(
+      "click",
+      saveSupervisor
     );
 
 
@@ -2215,20 +3193,13 @@
     );
 
 
-  el("saveSupervisorBtn")
-    .addEventListener(
-      "click",
-      saveSupervisor
-    );
-
-
   el("supervisorModal")
     .addEventListener(
       "click",
-      e=>{
+      event=>{
 
         if(
-          e.target ===
+          event.target ===
           el("supervisorModal")
         ){
 
@@ -2254,14 +3225,26 @@
     );
 
 
+  document.addEventListener(
+    "keydown",
+    event=>{
+
+      if(event.key === "Escape"){
+
+        closeModal();
+
+      }
+
+    }
+  );
+
+
   el("logoutBtn")
     .addEventListener(
       "click",
       ()=>{
 
-        sessionStorage.removeItem(
-          "currentSupervisor"
-        );
+        clearSession();
 
         location.href =
           "supervisor-login.html";
@@ -2271,9 +3254,9 @@
 
 
 
-  /* ===================================
+  /* ============================================
      START
-  ==================================== */
+  ============================================ */
 
   loadAll();
 
