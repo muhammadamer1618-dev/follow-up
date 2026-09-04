@@ -1,442 +1,3304 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>زيارات المعلمين</title>
 
-  <style>
-    body{font-family:Arial,sans-serif;background:#f4f8fc;margin:0;padding:12px;color:#000}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-    .title{margin:0;color:#0d47a1;font-size:22px;font-weight:900}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{border:0;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer;font-weight:900}
-    .btn.back{background:#607d8b;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
-    .btn.search{background:#1976d2;color:#fff}
-    .btn.print{background:#0d47a1;color:#fff}
-    .btn.del{background:#c62828;color:#fff}
+<meta charset="UTF-8">
 
-    .box{background:#fff;border:1px solid #bbdefb;border-radius:12px;padding:12px}
-    label{font-weight:900;display:block}
-    input{width:min(420px,100%);padding:10px;border:1px solid #cfcfcf;border-radius:10px;box-sizing:border-box;margin-top:6px}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1"
+>
 
-    table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
-    th,td{border:1px solid #000;padding:8px;vertical-align:middle}
-    th{background:#e3f2fd;text-align:center;font-weight:900}
+<title>سجل الزيارات - مدارس الفلاح الأهلية</title>
 
-    .muted{color:#607d8b;font-weight:800;margin-top:10px}
-    .err{color:#c62828;font-weight:900;margin-top:10px}
-  </style>
+<link
+  href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+  rel="stylesheet"
+>
+
+<style>
+
+:root{
+
+  --green:#0b4a3f;
+  --green-dark:#07372f;
+  --green-soft:#edf5f1;
+
+  --gold:#c89a3b;
+  --gold-dark:#a87921;
+  --gold-soft:#faf2e3;
+
+  --bg:#f7f8f6;
+  --white:#fff;
+
+  --text:#1f2926;
+  --muted:#737b77;
+
+  --border:#e3e5e2;
+
+  --red:#b42318;
+  --red-soft:#fff1ef;
+
+  --blue:#175cd3;
+  --blue-soft:#eff8ff;
+
+  --shadow:
+    0 15px 45px rgba(20,52,43,.09);
+
+}
+
+
+*{
+  box-sizing:border-box;
+  font-family:"Cairo",sans-serif;
+}
+
+
+body{
+
+  margin:0;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(200,154,59,.08),
+      transparent 28%
+    ),
+    var(--bg);
+
+  color:var(--text);
+
+  min-height:100vh;
+
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+
+  background:#fff;
+
+  border-bottom:
+    1px solid var(--border);
+
+  box-shadow:
+    0 4px 20px rgba(0,0,0,.03);
+
+  position:sticky;
+
+  top:0;
+
+  z-index:100;
+
+}
+
+
+.header-inner{
+
+  max-width:1300px;
+
+  margin:auto;
+
+  padding:10px 18px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:15px;
+
+}
+
+
+.brand{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+}
+
+
+.brand img{
+
+  width:60px;
+
+  height:60px;
+
+  object-fit:contain;
+
+}
+
+
+.brand h1{
+
+  margin:0;
+
+  color:var(--green);
+
+  font-size:18px;
+
+  font-weight:900;
+
+}
+
+
+.brand p{
+
+  margin:2px 0 0;
+
+  color:var(--gold-dark);
+
+  font-size:10px;
+
+  font-weight:800;
+
+}
+
+
+.header-actions{
+
+  display:flex;
+
+  gap:8px;
+
+  flex-wrap:wrap;
+
+}
+
+
+.header-btn{
+
+  text-decoration:none;
+
+  border:0;
+
+  border-radius:10px;
+
+  padding:9px 13px;
+
+  font-size:10px;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+}
+
+
+.back-btn{
+
+  background:var(--green-soft);
+
+  color:var(--green);
+
+}
+
+
+.logout-btn{
+
+  background:var(--red-soft);
+
+  color:var(--red);
+
+}
+
+
+/* =========================
+   PAGE
+========================= */
+
+.page{
+
+  max-width:1300px;
+
+  margin:auto;
+
+  padding:28px 18px 50px;
+
+}
+
+
+.hero{
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--green-dark)
+    );
+
+  border-radius:22px;
+
+  padding:22px;
+
+  color:#fff;
+
+  box-shadow:var(--shadow);
+
+  position:relative;
+
+  overflow:hidden;
+
+  margin-bottom:18px;
+
+}
+
+
+.hero::after{
+
+  content:"";
+
+  position:absolute;
+
+  width:180px;
+
+  height:180px;
+
+  border-radius:50%;
+
+  background:
+    rgba(200,154,59,.12);
+
+  left:-60px;
+
+  bottom:-100px;
+
+}
+
+
+.hero small{
+
+  color:#f2d79e;
+
+  font-size:10px;
+
+  font-weight:800;
+
+}
+
+
+.hero h2{
+
+  margin:4px 0 0;
+
+  font-size:23px;
+
+  font-weight:900;
+
+}
+
+
+.hero p{
+
+  margin:4px 0 0;
+
+  color:rgba(255,255,255,.78);
+
+  font-size:10px;
+
+}
+
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:12px;
+
+  margin-bottom:18px;
+
+}
+
+
+.stat{
+
+  background:#fff;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:16px;
+
+  padding:15px;
+
+  box-shadow:var(--shadow);
+
+}
+
+
+.stat span{
+
+  display:block;
+
+  color:var(--muted);
+
+  font-size:10px;
+
+  font-weight:800;
+
+}
+
+
+.stat strong{
+
+  display:block;
+
+  margin-top:3px;
+
+  color:var(--green);
+
+  font-size:25px;
+
+  font-weight:900;
+
+}
+
+
+.stat.gold strong{
+  color:var(--gold-dark);
+}
+
+
+.stat.red strong{
+  color:var(--red);
+}
+
+
+/* =========================
+   FILTER
+========================= */
+
+.panel{
+
+  background:#fff;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:18px;
+
+  padding:16px;
+
+  box-shadow:var(--shadow);
+
+}
+
+
+.toolbar{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+
+  margin-bottom:13px;
+
+}
+
+
+.search-input{
+
+  flex:1;
+
+  min-width:260px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:11px;
+
+  padding:11px 13px;
+
+  outline:none;
+
+  font-size:11px;
+
+}
+
+
+.search-input:focus{
+
+  border-color:var(--green);
+
+  box-shadow:
+    0 0 0 4px rgba(11,74,63,.07);
+
+}
+
+
+.filter-select{
+
+  min-width:170px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:11px;
+
+  padding:10px;
+
+  background:#fff;
+
+  color:var(--text);
+
+  font-size:10px;
+
+  font-weight:700;
+
+}
+
+
+.result-info{
+
+  color:var(--muted);
+
+  font-size:10px;
+
+  font-weight:800;
+
+  margin-bottom:8px;
+
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+
+  overflow:auto;
+
+}
+
+
+table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+  min-width:1050px;
+
+}
+
+
+th,
+td{
+
+  border-bottom:
+    1px solid #edf0ee;
+
+  padding:10px 8px;
+
+  text-align:center;
+
+  vertical-align:middle;
+
+  font-size:10px;
+
+}
+
+
+th{
+
+  background:#f3f7f5;
+
+  color:var(--green);
+
+  font-weight:900;
+
+}
+
+
+tbody tr:hover{
+
+  background:#fbfcfb;
+
+}
+
+
+.teacher-name{
+
+  text-align:right;
+
+  font-weight:900;
+
+  color:#28342f;
+
+}
+
+
+.score{
+
+  font-weight:900;
+
+  color:var(--green);
+
+}
+
+
+.status{
+
+  display:inline-block;
+
+  border-radius:20px;
+
+  padding:5px 9px;
+
+  font-size:9px;
+
+  font-weight:900;
+
+}
+
+
+.status.viewed{
+
+  background:var(--green-soft);
+
+  color:var(--green);
+
+}
+
+
+.status.pending{
+
+  background:#fff4e5;
+
+  color:#b54708;
+
+}
+
+
+.view-date{
+
+  display:block;
+
+  margin-top:4px;
+
+  color:#838a86;
+
+  font-size:8px;
+
+  font-weight:700;
+
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.actions{
+
+  display:flex;
+
+  justify-content:center;
+
+  gap:5px;
+
+  flex-wrap:wrap;
+
+}
+
+
+.action-btn{
+
+  border:0;
+
+  border-radius:8px;
+
+  padding:6px 8px;
+
+  cursor:pointer;
+
+  font-size:9px;
+
+  font-weight:900;
+
+  text-decoration:none;
+
+}
+
+
+.open-btn{
+
+  background:var(--green-soft);
+
+  color:var(--green);
+
+}
+
+
+.print-btn{
+
+  background:var(--gold-soft);
+
+  color:var(--gold-dark);
+
+}
+
+
+.delete-btn{
+
+  background:var(--red-soft);
+
+  color:var(--red);
+
+}
+
+
+.empty{
+
+  padding:35px !important;
+
+  color:var(--muted);
+
+  text-align:center;
+
+}
+
+
+.error{
+
+  color:var(--red);
+
+  font-size:10px;
+
+  font-weight:800;
+
+  margin-top:8px;
+
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+
+  text-align:center;
+
+  margin-top:25px;
+
+  color:#8e9491;
+
+  font-size:9px;
+
+}
+
+
+@media(max-width:800px){
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .header-inner{
+    align-items:flex-start;
+  }
+
+  .brand img{
+    width:52px;
+    height:52px;
+  }
+
+}
+
+</style>
+
 </head>
 
+
 <body>
-  <div class="top">
-    <h1 class="title">زيارات المعلمين</h1>
-    <div class="actions">
-      <a class="btn back" href="index.html">الرجوع للرئيسية</a>
-      <a class="btn back" href="evaluation-form.html">استمارة التقييم</a>
-    </div>
-  </div>
 
-  <div class="box">
-    <div class="row">
+
+<header class="header">
+
+  <div class="header-inner">
+
+    <div class="brand">
+
+      <img
+        src="logo.jpeg"
+        alt="شعار مدارس الفلاح"
+      >
+
       <div>
-        <label>كود المعلم</label>
-        <input id="teacherCode" placeholder="مثال: 12345" />
+
+        <h1>
+          مدارس الفلاح الأهلية
+        </h1>
+
+        <p>
+          نظام الإشراف التربوي
+        </p>
+
       </div>
-      <button class="btn search" id="btnSearch">عرض زيارات المعلم</button>
+
     </div>
 
-    <div class="muted" id="resultInfo"></div>
-    <div class="err" id="errorInfo"></div>
 
-    <table id="visitsTable" style="display:none;">
-      <thead>
-        <tr>
-          <th>اسم المعلم</th>
-          <th>التاريخ</th>
-          <th>رقم الزيارة</th>
-          <th>الصف</th>
-          <th>المادة</th>
-          <th>الدرجة</th>
-          <th>إجراءات</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div class="header-actions">
+
+      <a
+        href="#"
+        id="backBtn"
+        class="header-btn back-btn"
+      >
+        لوحة التحكم
+      </a>
+
+      <button
+        id="logoutBtn"
+        class="header-btn logout-btn"
+      >
+        تسجيل الخروج
+      </button>
+
+    </div>
+
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-    import {
-      getFirestore, collection, query, where, getDocs, doc, getDoc, deleteDoc
-    } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+</header>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
-      authDomain: "follow-up-2026.firebaseapp.com",
-      projectId: "follow-up-2026",
-      storageBucket: "follow-up-2026.firebasestorage.app",
-      messagingSenderId: "1077131515114",
-      appId: "1:1077131515114:web:d10d9c5228382d7cfdb393"
-    };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
 
-    const el = (id) => document.getElementById(id);
+<main class="page">
 
-    function esc(s){
-      return (s || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+
+  <section class="hero">
+
+    <small>
+      سجل الزيارات التربوية
+    </small>
+
+    <h2 id="pageTitle">
+      زيارات المعلمين
+    </h2>
+
+    <p id="pageSubtitle">
+      متابعة تقارير الزيارات وحالة اطلاع المعلمين عليها.
+    </p>
+
+  </section>
+
+
+
+  <section class="stats">
+
+    <div class="stat">
+
+      <span>
+        إجمالي الزيارات
+      </span>
+
+      <strong id="totalCount">
+        0
+      </strong>
+
+    </div>
+
+
+    <div class="stat gold">
+
+      <span>
+        تم اطلاع المعلم
+      </span>
+
+      <strong id="viewedCount">
+        0
+      </strong>
+
+    </div>
+
+
+    <div class="stat red">
+
+      <span>
+        بانتظار اطلاع المعلم
+      </span>
+
+      <strong id="pendingCount">
+        0
+      </strong>
+
+    </div>
+
+  </section>
+
+
+
+  <section class="panel">
+
+
+    <div class="toolbar">
+
+      <input
+        type="search"
+        id="searchInput"
+        class="search-input"
+        placeholder="ابحث باسم المعلم أو الكود أو المادة أو الصف..."
+      >
+
+
+      <select
+        id="statusFilter"
+        class="filter-select"
+      >
+
+        <option value="all">
+          جميع حالات الاطلاع
+        </option>
+
+        <option value="viewed">
+          تم الاطلاع
+        </option>
+
+        <option value="pending">
+          بانتظار الاطلاع
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div
+      id="resultInfo"
+      class="result-info"
+    >
+      جاري تحميل الزيارات...
+    </div>
+
+
+    <div
+      id="errorInfo"
+      class="error"
+    ></div>
+
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              المعلم
+            </th>
+
+            <th>
+              التاريخ
+            </th>
+
+            <th>
+              رقم الزيارة
+            </th>
+
+            <th>
+              الصف
+            </th>
+
+            <th>
+              المادة
+            </th>
+
+            <th>
+              الدرجة
+            </th>
+
+            <th>
+              حالة اطلاع المعلم
+            </th>
+
+            <th>
+              الإجراءات
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody id="visitsBody">
+
+          <tr>
+
+            <td
+              colspan="8"
+              class="empty"
+            >
+              جاري تحميل البيانات...
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+
+  <div class="footer">
+    تصميم محمد عامر أحمد
+  </div>
+
+
+</main>
+
+
+
+<script type="module">
+
+
+import { db } from "./firebase.js";
+
+
+import {
+
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  deleteDoc
+
+}
+from
+"https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+
+const el =
+  id =>
+    document.getElementById(id);
+
+
+/* =====================================
+   SESSION
+===================================== */
+
+const rawSession =
+
+  localStorage.getItem(
+    "currentSupervisor"
+  )
+
+  ||
+
+  sessionStorage.getItem(
+    "currentSupervisor"
+  );
+
+
+if(!rawSession){
+
+  location.href =
+    "supervisor-login.html";
+
+  throw new Error(
+    "No session"
+  );
+
+}
+
+
+let currentUser;
+
+
+try{
+
+  currentUser =
+    JSON.parse(
+      rawSession
+    );
+
+}catch(error){
+
+  localStorage.removeItem(
+    "currentSupervisor"
+  );
+
+  sessionStorage.removeItem(
+    "currentSupervisor"
+  );
+
+  location.href =
+    "supervisor-login.html";
+
+  throw error;
+
+}
+
+
+const isAdmin =
+  currentUser.role === "admin";
+
+
+if(isAdmin){
+
+  el("backBtn").href =
+    "admin-dashboard.html";
+
+  el("pageTitle")
+    .textContent =
+    "جميع الزيارات التربوية";
+
+  el("pageSubtitle")
+    .textContent =
+    "متابعة جميع زيارات النظام وحالة اطلاع المعلمين عليها.";
+
+}else{
+
+  el("backBtn").href =
+    "supervisor-dashboard.html";
+
+  el("pageTitle")
+    .textContent =
+    "سجل زياراتي";
+
+  el("pageSubtitle")
+    .textContent =
+    "متابعة زيارات المعلمين التابعين لك وحالة اطلاعهم على كل زيارة.";
+
+}
+
+
+/* =====================================
+   DATA
+===================================== */
+
+let allTeachers = [];
+
+let visibleTeachers = [];
+
+let allVisits = [];
+
+let visibleVisits = [];
+
+
+/* =====================================
+   HELPERS
+===================================== */
+
+function esc(value){
+
+  return String(
+    value ?? ""
+  )
+  .replaceAll(
+    "&",
+    "&amp;"
+  )
+  .replaceAll(
+    "<",
+    "&lt;"
+  )
+  .replaceAll(
+    ">",
+    "&gt;"
+  )
+  .replaceAll(
+    '"',
+    "&quot;"
+  )
+  .replaceAll(
+    "'",
+    "&#039;"
+  );
+
+}
+
+
+function circle(on){
+
+  return on
+    ? "◉"
+    : "○";
+
+}
+
+
+function toSortableDate(value){
+
+  if(!value)
+    return 0;
+
+
+  const t =
+    Date.parse(value);
+
+
+  return Number.isFinite(t)
+    ? t
+    : 0;
+
+}
+
+
+function formatViewedDate(value){
+
+  if(!value)
+    return "";
+
+
+  try{
+
+    let date;
+
+
+    if(
+      typeof value.toDate ===
+      "function"
+    ){
+
+      date =
+        value.toDate();
+
+    }else if(
+      value.seconds
+    ){
+
+      date =
+        new Date(
+          value.seconds *
+          1000
+        );
+
+    }else{
+
+      date =
+        new Date(value);
+
     }
 
-    function circle(on){
-      return on ? "◉" : "○";
+
+    if(
+      Number.isNaN(
+        date.getTime()
+      )
+    ){
+
+      return "";
+
     }
 
-    function toSortableDate(s){
-      if (!s) return 0;
-      const t = Date.parse(s);
-      return Number.isFinite(t) ? t : 0;
-    }
 
-    async function loadVisits(){
-      const code = el("teacherCode").value.trim();
-      el("errorInfo").textContent = "";
-      if (!code){
-        alert("اكتب كود المعلم");
-        return;
+    return date.toLocaleString(
+      "ar-SA",
+      {
+        dateStyle:"short",
+        timeStyle:"short"
       }
+    );
 
-      try{
-        const qy = query(collection(db, "visits"), where("teacherCode", "==", code));
-        const snap = await getDocs(qy);
 
-        const tbody = document.querySelector("#visitsTable tbody");
-        tbody.innerHTML = "";
+  }catch(error){
 
-        if (snap.empty){
-          el("resultInfo").textContent = "لا توجد زيارات لهذا المعلم";
-          el("visitsTable").style.display = "none";
-          return;
+    return "";
+
+  }
+
+}
+
+
+/* =====================================
+   LOAD
+===================================== */
+
+async function loadData(){
+
+  el("errorInfo").textContent =
+    "";
+
+
+  try{
+
+    const [
+      teachersSnap,
+      visitsSnap
+    ] =
+    await Promise.all([
+
+      getDocs(
+        collection(
+          db,
+          "teachers"
+        )
+      ),
+
+      getDocs(
+        collection(
+          db,
+          "visits"
+        )
+      )
+
+    ]);
+
+
+    allTeachers =
+      teachersSnap.docs.map(
+        d=>({
+          id:d.id,
+          ...d.data()
+        })
+      );
+
+
+    allVisits =
+      visitsSnap.docs.map(
+        d=>({
+          id:d.id,
+          ...d.data()
+        })
+      );
+
+
+    /*
+      الأدمن يرى الجميع.
+
+      المشرف يرى المعلمين
+      المسندين له فقط.
+    */
+
+    if(isAdmin){
+
+      visibleTeachers =
+        [...allTeachers];
+
+    }else{
+
+      visibleTeachers =
+        allTeachers.filter(
+          teacher=>
+            teacher.supervisorId ===
+            currentUser.id
+        );
+
+    }
+
+
+    const teacherCodes =
+      new Set(
+
+        visibleTeachers.map(
+          teacher=>
+            String(
+              teacher.code ||
+              teacher.id ||
+              ""
+            )
+        )
+
+      );
+
+
+    /*
+      الزيارات الجديدة:
+      supervisorId = حساب المشرف
+
+      الزيارات القديمة:
+      لو لم يكن فيها supervisorId
+      نربطها بالمعلم المسند للمشرف.
+    */
+
+    if(isAdmin){
+
+      visibleVisits =
+        [...allVisits];
+
+    }else{
+
+      visibleVisits =
+        allVisits.filter(
+          visit=>{
+
+            const teacherCode =
+              String(
+                visit.teacherCode ||
+                ""
+              );
+
+
+            return (
+
+              visit.supervisorId ===
+              currentUser.id
+
+              ||
+
+              (
+                !visit.supervisorId
+                &&
+                teacherCodes.has(
+                  teacherCode
+                )
+              )
+
+            );
+
+          }
+        );
+
+    }
+
+
+    visibleVisits.sort(
+      (a,b)=>{
+
+        const da =
+          toSortableDate(
+            a.visitDate
+          );
+
+        const db =
+          toSortableDate(
+            b.visitDate
+          );
+
+
+        if(db !== da)
+          return db - da;
+
+
+        return (
+          Number(
+            b.visitNumber ||
+            0
+          )
+          -
+          Number(
+            a.visitNumber ||
+            0
+          )
+        );
+
+      }
+    );
+
+
+    renderStats();
+
+    renderVisits();
+
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+
+    el("visitsBody").innerHTML = `
+
+      <tr>
+
+        <td
+          colspan="8"
+          class="empty"
+        >
+          تعذر تحميل الزيارات.
+        </td>
+
+      </tr>
+
+    `;
+
+
+    el("resultInfo").textContent =
+      "";
+
+
+    el("errorInfo").textContent =
+      "حدث خطأ أثناء تحميل البيانات.";
+
+  }
+
+}
+
+
+/* =====================================
+   STATS
+===================================== */
+
+function renderStats(){
+
+  const viewed =
+    visibleVisits.filter(
+      v=>
+        v.teacherViewed ===
+        true
+    ).length;
+
+
+  const pending =
+    visibleVisits.length -
+    viewed;
+
+
+  el("totalCount")
+    .textContent =
+    visibleVisits.length;
+
+
+  el("viewedCount")
+    .textContent =
+    viewed;
+
+
+  el("pendingCount")
+    .textContent =
+    pending;
+
+}
+
+
+/* =====================================
+   RENDER
+===================================== */
+
+function renderVisits(){
+
+  const term =
+    el("searchInput")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const status =
+    el("statusFilter")
+      .value;
+
+
+  /*
+    لو جاي من صفحة معلم
+    ?code=12345
+  */
+
+  const params =
+    new URLSearchParams(
+      location.search
+    );
+
+
+  const requestedCode =
+    params.get("code") ||
+    "";
+
+
+  let list =
+    visibleVisits.filter(
+      visit=>{
+
+        if(
+          requestedCode
+          &&
+          String(
+            visit.teacherCode ||
+            ""
+          )
+          !==
+          String(
+            requestedCode
+          )
+        ){
+
+          return false;
+
         }
 
-        const list = [];
-        snap.forEach(d => list.push({ id: d.id, ...d.data() }));
 
-        list.sort((a,b) => {
-          const da = toSortableDate(a.visitDate);
-          const dbb = toSortableDate(b.visitDate);
-          if (dbb !== da) return dbb - da;
-          const va = Number(a.visitNumber || 0);
-          const vb = Number(b.visitNumber || 0);
-          return vb - va;
-        });
+        if(
+          status ===
+          "viewed"
+          &&
+          visit.teacherViewed !==
+          true
+        ){
 
-        el("resultInfo").textContent = `عدد الزيارات: ${list.length}`;
-        el("visitsTable").style.display = "table";
+          return false;
 
-        list.forEach(v => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${esc(v.teacherName || "")}</td>
-            <td>${esc(v.visitDate || "")}</td>
-            <td style="text-align:center;">${esc(String(v.visitNumber || ""))}</td>
-            <td>${esc(v.grade || "")}</td>
-            <td>${esc(v.subject || "")}</td>
-            <td style="text-align:center;font-weight:900;">${esc(String(v.finalScore || 0))} / 100</td>
-            <td style="text-align:center;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-              <button class="btn print" data-print="${esc(v.id)}">طباعة</button>
-              <button class="btn del" data-del="${esc(v.id)}">مسح</button>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
+        }
 
-        tbody.querySelectorAll("button[data-print]").forEach(btn => {
-          btn.addEventListener("click", async () => {
-            const id = btn.getAttribute("data-print");
-            await printVisit(id);
-          });
-        });
 
-        tbody.querySelectorAll("button[data-del]").forEach(btn => {
-          btn.addEventListener("click", async () => {
-            const id = btn.getAttribute("data-del");
-            const ok = confirm("تأكيد مسح هذه الزيارة نهائياً؟");
-            if (!ok) return;
-            await deleteDoc(doc(db, "visits", id));
-            await loadVisits();
-          });
-        });
+        if(
+          status ===
+          "pending"
+          &&
+          visit.teacherViewed ===
+          true
+        ){
 
-      }catch(err){
-        el("visitsTable").style.display = "none";
-        el("resultInfo").textContent = "";
-        el("errorInfo").textContent = "حصل خطأ في جلب الزيارات.";
-        console.error(err);
+          return false;
+
+        }
+
+
+        const text = (
+
+          String(
+            visit.teacherName ||
+            ""
+          )
+
+          +
+          " "
+
+          +
+          String(
+            visit.teacherCode ||
+            ""
+          )
+
+          +
+          " "
+
+          +
+          String(
+            visit.subject ||
+            ""
+          )
+
+          +
+          " "
+
+          +
+          String(
+            visit.grade ||
+            ""
+          )
+
+          +
+          " "
+
+          +
+          String(
+            visit.lessonTitle ||
+            ""
+          )
+
+        ).toLowerCase();
+
+
+        return text.includes(
+          term
+        );
+
       }
-    }
+    );
 
-    function buildHeaderBlock(v){
-      return `
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-          <div style="font-weight:900;font-size:12px;">مدارس الفلاح الأهلية</div>
-          <div style="font-weight:900;font-size:12px;">تصميم محمد عامر أحمد</div>
-        </div>
-        <h1 style="text-align:center;color:#0d47a1;margin:0 0 6px;font-size:16px;">استمارة متابعة معلم</h1>
 
-        <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:14%;">كود المعلم</th>
-            <td style="border:1px solid #000;padding:4px;width:16%;">${esc(v.teacherCode || "")}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:14%;">اسم المعلم</th>
-            <td style="border:1px solid #000;padding:4px;width:56%;">${esc(v.teacherName || "")}</td>
-          </tr>
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">الصف</th>
-            <td style="border:1px solid #000;padding:4px;">${esc(v.grade || "")}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">المادة</th>
-            <td style="border:1px solid #000;padding:4px;">${esc(v.subject || "")}</td>
-          </tr>
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">عنوان الدرس</th>
-            <td style="border:1px solid #000;padding:4px;" colspan="3">${esc(v.lessonTitle || "")}</td>
-          </tr>
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">رقم الزيارة</th>
-            <td style="border:1px solid #000;padding:4px;">${esc(String(v.visitNumber || ""))}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">اسم المشرف</th>
-            <td style="border:1px solid #000;padding:4px;">${esc(v.supervisorName || "")}</td>
-          </tr>
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">التاريخ</th>
-            <td style="border:1px solid #000;padding:4px;">${esc(v.visitDate || "")}</td>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">الدرجة النهائية</th>
-            <td style="border:1px solid #000;padding:4px;font-weight:900;">${esc(String(v.finalScore || 0))} / 100</td>
-          </tr>
-        </table>
-      `;
-    }
+  el("resultInfo").textContent =
+    `عدد الزيارات: ${list.length}`;
 
-    const domainOrder = [
-      { no: 1, name: "الرؤية" },
-      { no: 2, name: "التخطيط للدرس" },
-      { no: 3, name: "إدارة الصف" },
-      { no: 4, name: "دعم السلوك" },
-      { no: 5, name: "استراتيجيات التدريس" },
-      { no: 6, name: "أدوات مساندة للتعلم" },
-      { no: 7, name: "التقويم الصفي" }
-    ];
 
-    function rowsPerDomain(){
-      return new Map([
-        [1, 1],
-        [2, 6],
-        [3, 6],
-        [4, 4],
-        [5, 4],
-        [6, 3],
-        [7, 1]
-      ]);
-    }
+  const tbody =
+    el("visitsBody");
 
-    function buildPaperRubricTable(v){
-      const answers = Array.isArray(v.answers) ? v.answers : [];
-      if (!answers.length){
-        return `<div style="border:1px solid #c62828;padding:10px;border-radius:8px;font-weight:900;font-size:12px;">هذه الزيارة لا تحتوي على بنود محفوظة. اعمل زيارة جديدة بعد تحديث الاستمارة.</div>`;
-      }
 
-      const grouped = new Map();
-      answers.forEach(a => {
-        const key = String(a.domainNo || "");
-        if (!grouped.has(key)) grouped.set(key, []);
-        grouped.get(key).push(a);
-      });
+  tbody.innerHTML =
+    "";
 
-      const rowsp = rowsPerDomain();
-      let htmlRows = "";
 
-      domainOrder.forEach(d => {
-        const key = String(d.no);
-        const list = grouped.get(key) || [];
-        const rowspan = rowsp.get(d.no) || list.length || 1;
+  if(!list.length){
 
-        list.forEach((a, i) => {
-          const sel = Number(a.selected || 0);
+    tbody.innerHTML = `
 
-          let cells = "";
+      <tr>
 
-          if (i === 0){
-            cells += `
-              <td rowspan="${rowspan}" style="border:1px solid #000;text-align:center;font-weight:900;width:26px;padding:4px;">${d.no}</td>
-              <td rowspan="${rowspan}" style="border:1px solid #000;text-align:center;font-weight:900;width:92px;padding:4px;">${esc(d.name)}</td>
-            `;
+        <td
+          colspan="8"
+          class="empty"
+        >
+          لا توجد زيارات مطابقة.
+        </td>
+
+      </tr>
+
+    `;
+
+    return;
+
+  }
+
+
+  list.forEach(
+    visit=>{
+
+
+      const viewed =
+        visit.teacherViewed ===
+        true;
+
+
+      const viewedDate =
+        formatViewedDate(
+          visit.teacherViewedAt
+        );
+
+
+      const tr =
+        document.createElement(
+          "tr"
+        );
+
+
+      tr.innerHTML = `
+
+        <td class="teacher-name">
+
+          ${esc(
+            visit.teacherName ||
+            "-"
+          )}
+
+        </td>
+
+
+        <td>
+
+          ${esc(
+            visit.visitDate ||
+            "-"
+          )}
+
+        </td>
+
+
+        <td>
+
+          ${esc(
+            String(
+              visit.visitNumber ||
+              "-"
+            )
+          )}
+
+        </td>
+
+
+        <td>
+
+          ${esc(
+            visit.grade ||
+            "-"
+          )}
+
+        </td>
+
+
+        <td>
+
+          ${esc(
+            visit.subject ||
+            "-"
+          )}
+
+        </td>
+
+
+        <td class="score">
+
+          ${esc(
+            String(
+              visit.finalScore ||
+              0
+            )
+          )}
+          / 100
+
+        </td>
+
+
+        <td>
+
+          ${
+            viewed
+            ?
+            `
+
+              <span class="status viewed">
+                تم الاطلاع ✓
+              </span>
+
+              ${
+                viewedDate
+                ?
+                `
+
+                  <span class="view-date">
+                    ${esc(
+                      viewedDate
+                    )}
+                  </span>
+
+                `
+                :
+                ""
+              }
+
+            `
+            :
+            `
+
+              <span class="status pending">
+                بانتظار الاطلاع
+              </span>
+
+            `
           }
 
+        </td>
+
+
+        <td>
+
+          <div class="actions">
+
+
+            <a
+              class="action-btn open-btn"
+              href="visit-view.html?id=${encodeURIComponent(visit.id)}"
+            >
+              عرض
+            </a>
+
+
+            <button
+              class="action-btn print-btn"
+              data-print="${esc(visit.id)}"
+            >
+              طباعة
+            </button>
+
+
+            <button
+              class="action-btn delete-btn"
+              data-delete="${esc(visit.id)}"
+            >
+              حذف
+            </button>
+
+
+          </div>
+
+        </td>
+
+      `;
+
+
+      tbody.appendChild(
+        tr
+      );
+
+    }
+  );
+
+
+  /*
+    PRINT
+  */
+
+  tbody
+    .querySelectorAll(
+      "[data-print]"
+    )
+    .forEach(
+      button=>{
+
+        button.addEventListener(
+          "click",
+          ()=>{
+
+            printVisit(
+              button.dataset.print
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+  /*
+    DELETE
+  */
+
+  tbody
+    .querySelectorAll(
+      "[data-delete]"
+    )
+    .forEach(
+      button=>{
+
+        button.addEventListener(
+          "click",
+          ()=>{
+
+            deleteVisit(
+              button.dataset.delete
+            );
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+/* =====================================
+   DELETE
+===================================== */
+
+async function deleteVisit(id){
+
+  const visit =
+    visibleVisits.find(
+      v=>v.id === id
+    );
+
+
+  if(!visit){
+
+    alert(
+      "الزيارة غير موجودة أو لا تملك صلاحية الوصول إليها."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    حماية إضافية للمشرف
+  */
+
+  if(
+    !isAdmin
+    &&
+    visit.supervisorId
+    &&
+    visit.supervisorId !==
+    currentUser.id
+  ){
+
+    alert(
+      "ليس لديك صلاحية حذف هذه الزيارة."
+    );
+
+    return;
+
+  }
+
+
+  const ok =
+    confirm(
+      `هل تريد حذف زيارة المعلم "${visit.teacherName || ""}" نهائيًا؟`
+    );
+
+
+  if(!ok)
+    return;
+
+
+  try{
+
+    await deleteDoc(
+      doc(
+        db,
+        "visits",
+        id
+      )
+    );
+
+
+    await loadData();
+
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+
+    alert(
+      "تعذر حذف الزيارة."
+    );
+
+  }
+
+}
+
+
+/* =====================================
+   PRINT — نفس نظام الطباعة القديم
+===================================== */
+
+function buildHeaderBlock(v){
+
+  return `
+
+    <div
+      style="
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        margin-bottom:6px;
+      "
+    >
+
+      <div
+        style="
+          font-weight:900;
+          font-size:12px;
+        "
+      >
+        مدارس الفلاح الأهلية
+      </div>
+
+      <div
+        style="
+          font-weight:900;
+          font-size:12px;
+        "
+      >
+        تصميم محمد عامر أحمد
+      </div>
+
+    </div>
+
+
+    <h1
+      style="
+        text-align:center;
+        color:#0b4a3f;
+        margin:0 0 6px;
+        font-size:16px;
+      "
+    >
+      استمارة متابعة معلم
+    </h1>
+
+
+    <table
+      style="
+        width:100%;
+        border-collapse:collapse;
+        font-size:11px;
+        table-layout:fixed;
+      "
+    >
+
+      <tr>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+            width:14%;
+          "
+        >
+          كود المعلم
+        </th>
+
+        <td
+          style="
+            border:1px solid #000;
+            padding:4px;
+            width:16%;
+          "
+        >
+          ${esc(
+            v.teacherCode ||
+            ""
+          )}
+        </td>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+            width:14%;
+          "
+        >
+          اسم المعلم
+        </th>
+
+        <td
+          style="
+            border:1px solid #000;
+            padding:4px;
+            width:56%;
+          "
+        >
+          ${esc(
+            v.teacherName ||
+            ""
+          )}
+        </td>
+
+      </tr>
+
+
+      <tr>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+          "
+        >
+          الصف
+        </th>
+
+        <td
+          style="
+            border:1px solid #000;
+            padding:4px;
+          "
+        >
+          ${esc(
+            v.grade ||
+            ""
+          )}
+        </td>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+          "
+        >
+          المادة
+        </th>
+
+        <td
+          style="
+            border:1px solid #000;
+            padding:4px;
+          "
+        >
+          ${esc(
+            v.subject ||
+            ""
+          )}
+        </td>
+
+      </tr>
+
+
+      <tr>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+          "
+        >
+          عنوان الدرس
+        </th>
+
+        <td
+          colspan="3"
+          style="
+            border:1px solid #000;
+            padding:4px;
+          "
+        >
+          ${esc(
+            v.lessonTitle ||
+            ""
+          )}
+        </td>
+
+      </tr>
+
+
+      <tr>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+          "
+        >
+          رقم الزيارة
+        </th>
+
+        <td
+          style="
+            border:1px solid #000;
+            padding:4px;
+          "
+        >
+          ${esc(
+            String(
+              v.visitNumber ||
+              ""
+            )
+          )}
+        </td>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+          "
+        >
+          اسم المشرف
+        </th>
+
+        <td
+          style="
+            border:1px solid #000;
+            padding:4px;
+          "
+        >
+          ${esc(
+            v.supervisorName ||
+            ""
+          )}
+        </td>
+
+      </tr>
+
+
+      <tr>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+          "
+        >
+          التاريخ
+        </th>
+
+        <td
+          style="
+            border:1px solid #000;
+            padding:4px;
+          "
+        >
+          ${esc(
+            v.visitDate ||
+            ""
+          )}
+        </td>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+          "
+        >
+          الدرجة النهائية
+        </th>
+
+        <td
+          style="
+            border:1px solid #000;
+            padding:4px;
+            font-weight:900;
+          "
+        >
+          ${esc(
+            String(
+              v.finalScore ||
+              0
+            )
+          )}
+          / 100
+        </td>
+
+      </tr>
+
+
+      <tr>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+          "
+        >
+          حالة الاطلاع
+        </th>
+
+        <td
+          colspan="3"
+          style="
+            border:1px solid #000;
+            padding:4px;
+            font-weight:900;
+          "
+        >
+
+          ${
+            v.teacherViewed === true
+            ?
+            "تم اطلاع المعلم على الزيارة"
+            :
+            "بانتظار اطلاع المعلم"
+          }
+
+        </td>
+
+      </tr>
+
+    </table>
+
+  `;
+
+}
+
+
+const domainOrder = [
+
+  {
+    no:1,
+    name:"الرؤية"
+  },
+
+  {
+    no:2,
+    name:"التخطيط للدرس"
+  },
+
+  {
+    no:3,
+    name:"إدارة الصف"
+  },
+
+  {
+    no:4,
+    name:"دعم السلوك"
+  },
+
+  {
+    no:5,
+    name:"استراتيجيات التدريس"
+  },
+
+  {
+    no:6,
+    name:"أدوات مساندة للتعلم"
+  },
+
+  {
+    no:7,
+    name:"التقويم الصفي"
+  }
+
+];
+
+
+function rowsPerDomain(){
+
+  return new Map([
+
+    [1,1],
+    [2,6],
+    [3,6],
+    [4,4],
+    [5,4],
+    [6,3],
+    [7,1]
+
+  ]);
+
+}
+
+
+function buildPaperRubricTable(v){
+
+  const answers =
+    Array.isArray(
+      v.answers
+    )
+    ?
+    v.answers
+    :
+    [];
+
+
+  if(!answers.length){
+
+    return `
+
+      <div
+        style="
+          border:1px solid #c62828;
+          padding:10px;
+          border-radius:8px;
+          font-weight:900;
+          font-size:12px;
+        "
+      >
+        هذه الزيارة لا تحتوي على بنود تقييم محفوظة.
+      </div>
+
+    `;
+
+  }
+
+
+  const grouped =
+    new Map();
+
+
+  answers.forEach(
+    answer=>{
+
+      const key =
+        String(
+          answer.domainNo ||
+          ""
+        );
+
+
+      if(!grouped.has(key)){
+
+        grouped.set(
+          key,
+          []
+        );
+
+      }
+
+
+      grouped
+        .get(key)
+        .push(answer);
+
+    }
+  );
+
+
+  const rowsp =
+    rowsPerDomain();
+
+
+  let htmlRows =
+    "";
+
+
+  domainOrder.forEach(
+    domain=>{
+
+      const key =
+        String(
+          domain.no
+        );
+
+
+      const list =
+        grouped.get(key) ||
+        [];
+
+
+      const rowspan =
+        rowsp.get(
+          domain.no
+        )
+        ||
+        list.length
+        ||
+        1;
+
+
+      list.forEach(
+        (answer,index)=>{
+
+          const selected =
+            Number(
+              answer.selected ||
+              0
+            );
+
+
+          let cells =
+            "";
+
+
+          if(index === 0){
+
+            cells += `
+
+              <td
+                rowspan="${rowspan}"
+                style="
+                  border:1px solid #000;
+                  text-align:center;
+                  font-weight:900;
+                  width:26px;
+                  padding:4px;
+                "
+              >
+                ${domain.no}
+              </td>
+
+
+              <td
+                rowspan="${rowspan}"
+                style="
+                  border:1px solid #000;
+                  text-align:center;
+                  font-weight:900;
+                  width:92px;
+                  padding:4px;
+                "
+              >
+                ${esc(
+                  domain.name
+                )}
+              </td>
+
+            `;
+
+          }
+
+
           cells += `
-            <td style="border:1px solid #000;padding:4px;width:220px;">${esc(a.itemLabel || "")}</td>
-            <td style="border:1px solid #000;padding:0;">
-              <table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:11px;">
-                <colgroup>
-                  <col style="width:34%">
-                  <col style="width:33%">
-                  <col style="width:33%">
-                </colgroup>
-                <tr>
-                  <td style="border-left:1px solid #000;padding:4px;">${circle(sel===4)} ${esc(a.optTop || "")}</td>
-                  <td style="border-left:1px solid #000;padding:4px;">${circle(sel===3)} ${esc(a.optMid || "")}</td>
-                  <td style="padding:4px;">${circle(sel===1)} ${esc(a.optLow || "")}</td>
-                </tr>
-              </table>
+
+            <td
+              style="
+                border:1px solid #000;
+                padding:4px;
+                width:220px;
+              "
+            >
+              ${esc(
+                answer.itemLabel ||
+                ""
+              )}
             </td>
+
+
+            <td
+              style="
+                border:1px solid #000;
+                padding:0;
+              "
+            >
+
+              <table
+                style="
+                  width:100%;
+                  border-collapse:collapse;
+                  table-layout:fixed;
+                  font-size:11px;
+                "
+              >
+
+                <colgroup>
+
+                  <col style="width:34%">
+
+                  <col style="width:33%">
+
+                  <col style="width:33%">
+
+                </colgroup>
+
+
+                <tr>
+
+                  <td
+                    style="
+                      border-left:1px solid #000;
+                      padding:4px;
+                    "
+                  >
+                    ${circle(
+                      selected === 4
+                    )}
+
+                    ${esc(
+                      answer.optTop ||
+                      ""
+                    )}
+                  </td>
+
+
+                  <td
+                    style="
+                      border-left:1px solid #000;
+                      padding:4px;
+                    "
+                  >
+                    ${circle(
+                      selected === 3
+                    )}
+
+                    ${esc(
+                      answer.optMid ||
+                      ""
+                    )}
+                  </td>
+
+
+                  <td
+                    style="
+                      padding:4px;
+                    "
+                  >
+                    ${circle(
+                      selected === 1
+                    )}
+
+                    ${esc(
+                      answer.optLow ||
+                      ""
+                    )}
+                  </td>
+
+                </tr>
+
+              </table>
+
+            </td>
+
           `;
 
-          htmlRows += `<tr>${cells}</tr>`;
-        });
-      });
 
-      return `
-        <table style="width:100%;border-collapse:collapse;font-size:11px;margin-top:6px;table-layout:fixed;">
-          <thead>
-            <tr>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:26px;">م</th>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:92px;">المجال</th>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:220px;">العنصر</th>
-              <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">التقييم</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${htmlRows}
-          </tbody>
-        </table>
-      `;
+          htmlRows +=
+            `<tr>${cells}</tr>`;
+
+        }
+      );
+
     }
+  );
 
-    function buildNotesAndSigns(v){
-      return `
-        <div style="margin-top:6px;border:1px solid #000;border-radius:8px;padding:8px;">
-          <div style="font-weight:900;margin-bottom:4px;font-size:11px;">إيجابيات الحصة</div>
-          <div style="min-height:38px;border:1px solid #000;padding:6px;font-size:11px;">${esc(v.positives || "").replaceAll("\n","<br>")}</div>
 
-          <div style="font-weight:900;margin:6px 0 4px;font-size:11px;">توصيات وتوجيهات</div>
-          <div style="min-height:38px;border:1px solid #000;padding:6px;font-size:11px;">${esc(v.recommendations || "").replaceAll("\n","<br>")}</div>
-        </div>
+  return `
 
-        <table style="width:100%;border-collapse:collapse;margin-top:6px;font-size:11px;">
-          <tr>
-            <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المعلم</td>
-            <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المشرف</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid #000;height:28px;"></td>
-            <td style="border:1px solid #000;height:28px;"></td>
-          </tr>
-        </table>
-      `;
+    <table
+      style="
+        width:100%;
+        border-collapse:collapse;
+        font-size:11px;
+        margin-top:6px;
+        table-layout:fixed;
+      "
+    >
+
+      <thead>
+
+        <tr>
+
+          <th
+            style="
+              border:1px solid #000;
+              background:#edf5f1;
+              padding:4px;
+              width:26px;
+            "
+          >
+            م
+          </th>
+
+          <th
+            style="
+              border:1px solid #000;
+              background:#edf5f1;
+              padding:4px;
+              width:92px;
+            "
+          >
+            المجال
+          </th>
+
+          <th
+            style="
+              border:1px solid #000;
+              background:#edf5f1;
+              padding:4px;
+              width:220px;
+            "
+          >
+            العنصر
+          </th>
+
+          <th
+            style="
+              border:1px solid #000;
+              background:#edf5f1;
+              padding:4px;
+            "
+          >
+            التقييم
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        ${htmlRows}
+
+      </tbody>
+
+    </table>
+
+  `;
+
+}
+
+
+function buildNotesAndSigns(v){
+
+  return `
+
+    <div
+      style="
+        margin-top:6px;
+        border:1px solid #000;
+        border-radius:8px;
+        padding:8px;
+      "
+    >
+
+      <div
+        style="
+          font-weight:900;
+          margin-bottom:4px;
+          font-size:11px;
+        "
+      >
+        إيجابيات الحصة
+      </div>
+
+
+      <div
+        style="
+          min-height:38px;
+          border:1px solid #000;
+          padding:6px;
+          font-size:11px;
+        "
+      >
+        ${esc(
+          v.positives ||
+          ""
+        ).replaceAll(
+          "\n",
+          "<br>"
+        )}
+      </div>
+
+
+      <div
+        style="
+          font-weight:900;
+          margin:6px 0 4px;
+          font-size:11px;
+        "
+      >
+        توصيات وتوجيهات
+      </div>
+
+
+      <div
+        style="
+          min-height:38px;
+          border:1px solid #000;
+          padding:6px;
+          font-size:11px;
+        "
+      >
+        ${esc(
+          v.recommendations ||
+          ""
+        ).replaceAll(
+          "\n",
+          "<br>"
+        )}
+      </div>
+
+    </div>
+
+
+    <table
+      style="
+        width:100%;
+        border-collapse:collapse;
+        margin-top:6px;
+        font-size:11px;
+      "
+    >
+
+      <tr>
+
+        <td
+          style="
+            border:1px solid #000;
+            padding:6px;
+            text-align:center;
+            font-weight:900;
+          "
+        >
+          توقيع المعلم
+        </td>
+
+        <td
+          style="
+            border:1px solid #000;
+            padding:6px;
+            text-align:center;
+            font-weight:900;
+          "
+        >
+          توقيع المشرف
+        </td>
+
+      </tr>
+
+
+      <tr>
+
+        <td
+          style="
+            border:1px solid #000;
+            height:28px;
+          "
+        ></td>
+
+        <td
+          style="
+            border:1px solid #000;
+            height:28px;
+          "
+        ></td>
+
+      </tr>
+
+    </table>
+
+  `;
+
+}
+
+
+function buildWorkPrint(v){
+
+  const rows =
+    (
+      v.writtenWork ||
+      []
+    )
+    .slice(
+      0,
+      8
+    );
+
+
+  let body =
+    "";
+
+
+  for(
+    let i = 0;
+    i < 8;
+    i++
+  ){
+
+    const row =
+      rows[i]
+      ||
+      {
+        name:"",
+        status:""
+      };
+
+
+    body += `
+
+      <tr>
+
+        <td
+          style="
+            border:1px solid #000;
+            height:26px;
+            padding:5px;
+            font-size:11px;
+          "
+        >
+          ${esc(
+            row.name ||
+            ""
+          )}
+        </td>
+
+        <td
+          style="
+            border:1px solid #000;
+            text-align:center;
+            font-size:11px;
+          "
+        >
+          ${
+            row.status ===
+            "correct"
+            ?
+            "✓"
+            :
+            ""
+          }
+        </td>
+
+        <td
+          style="
+            border:1px solid #000;
+            text-align:center;
+            font-size:11px;
+          "
+        >
+          ${
+            row.status ===
+            "partial"
+            ?
+            "✓"
+            :
+            ""
+          }
+        </td>
+
+        <td
+          style="
+            border:1px solid #000;
+            text-align:center;
+            font-size:11px;
+          "
+        >
+          ${
+            row.status ===
+            "not"
+            ?
+            "✓"
+            :
+            ""
+          }
+        </td>
+
+      </tr>
+
+    `;
+
+  }
+
+
+  return `
+
+    <div
+      style="
+        page-break-before:always;
+      "
+    ></div>
+
+
+    <div
+      style="
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        margin-bottom:6px;
+      "
+    >
+
+      <div
+        style="
+          font-weight:900;
+          font-size:12px;
+        "
+      >
+        مدارس الفلاح الأهلية
+      </div>
+
+      <div
+        style="
+          font-weight:900;
+          font-size:12px;
+        "
+      >
+        تصميم محمد عامر أحمد
+      </div>
+
+    </div>
+
+
+    <h2
+      style="
+        margin:0 0 6px;
+        color:#0b4a3f;
+        text-align:center;
+        font-size:15px;
+      "
+    >
+      متابعة الأعمال التحريرية للطلاب
+    </h2>
+
+
+    <table
+      style="
+        width:100%;
+        border-collapse:collapse;
+        font-size:11px;
+        table-layout:fixed;
+      "
+    >
+
+      <tr>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+          "
+        >
+          اسم الطالب
+        </th>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+            width:90px;
+          "
+        >
+          مصحح
+        </th>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+            width:90px;
+          "
+        >
+          غير مكتمل
+        </th>
+
+        <th
+          style="
+            border:1px solid #000;
+            background:#edf5f1;
+            padding:4px;
+            width:90px;
+          "
+        >
+          غير مصحح
+        </th>
+
+      </tr>
+
+      ${body}
+
+    </table>
+
+
+    <table
+      style="
+        width:100%;
+        border-collapse:collapse;
+        margin-top:6px;
+        font-size:11px;
+      "
+    >
+
+      <tr>
+
+        <td
+          style="
+            border:1px solid #000;
+            padding:6px;
+            text-align:center;
+            font-weight:900;
+          "
+        >
+          توقيع المعلم
+        </td>
+
+        <td
+          style="
+            border:1px solid #000;
+            padding:6px;
+            text-align:center;
+            font-weight:900;
+          "
+        >
+          توقيع المشرف
+        </td>
+
+      </tr>
+
+      <tr>
+
+        <td
+          style="
+            border:1px solid #000;
+            height:28px;
+          "
+        ></td>
+
+        <td
+          style="
+            border:1px solid #000;
+            height:28px;
+          "
+        ></td>
+
+      </tr>
+
+    </table>
+
+  `;
+
+}
+
+
+async function printVisit(id){
+
+  const visit =
+    visibleVisits.find(
+      v=>v.id === id
+    );
+
+
+  if(!visit){
+
+    alert(
+      "ليس لديك صلاحية الوصول إلى هذه الزيارة."
+    );
+
+    return;
+
+  }
+
+
+  const snap =
+    await getDoc(
+      doc(
+        db,
+        "visits",
+        id
+      )
+    );
+
+
+  if(!snap.exists()){
+
+    alert(
+      "الزيارة غير موجودة."
+    );
+
+    return;
+
+  }
+
+
+  const v =
+    snap.data();
+
+
+  const header =
+    buildHeaderBlock(v);
+
+
+  const rubric =
+    buildPaperRubricTable(v);
+
+
+  const notes =
+    buildNotesAndSigns(v);
+
+
+  const work =
+    buildWorkPrint(v);
+
+
+  const html = `
+
+    <!DOCTYPE html>
+
+    <html
+      lang="ar"
+      dir="rtl"
+    >
+
+    <head>
+
+      <meta charset="UTF-8">
+
+      <title>
+        طباعة الزيارة
+      </title>
+
+      <style>
+
+        @page{
+          size:A4;
+          margin:10mm;
+        }
+
+        body{
+          font-family:Arial,sans-serif;
+          margin:0;
+          color:#000;
+        }
+
+        table{
+          width:100%;
+          border-collapse:collapse;
+        }
+
+        th,
+        td{
+          vertical-align:middle;
+        }
+
+      </style>
+
+    </head>
+
+
+    <body>
+
+      ${header}
+
+      ${rubric}
+
+      ${notes}
+
+      ${work}
+
+    </body>
+
+    </html>
+
+  `;
+
+
+  const win =
+    window.open(
+      "",
+      "_blank"
+    );
+
+
+  win.document.open();
+
+  win.document.write(
+    html
+  );
+
+  win.document.close();
+
+  win.focus();
+
+
+  setTimeout(
+    ()=>win.print(),
+    350
+  );
+
+}
+
+
+/* =====================================
+   EVENTS
+===================================== */
+
+el("searchInput")
+  .addEventListener(
+    "input",
+    renderVisits
+  );
+
+
+el("statusFilter")
+  .addEventListener(
+    "change",
+    renderVisits
+  );
+
+
+el("logoutBtn")
+  .addEventListener(
+    "click",
+    ()=>{
+
+      localStorage.removeItem(
+        "currentSupervisor"
+      );
+
+      sessionStorage.removeItem(
+        "currentSupervisor"
+      );
+
+      location.href =
+        "supervisor-login.html";
+
     }
+  );
 
-    function buildWorkPrint(v){
-      const rows = (v.writtenWork || []).slice(0,8);
-      let body = "";
 
-      for (let i = 0; i < 8; i++){
-        const r = rows[i] || { name:"", status:"" };
-        body += `
-          <tr>
-            <td style="border:1px solid #000;height:26px;padding:5px;font-size:11px;">${esc(r.name || "")}</td>
-            <td style="border:1px solid #000;text-align:center;font-size:11px;">${r.status==="correct" ? "✓" : ""}</td>
-            <td style="border:1px solid #000;text-align:center;font-size:11px;">${r.status==="partial" ? "✓" : ""}</td>
-            <td style="border:1px solid #000;text-align:center;font-size:11px;">${r.status==="not" ? "✓" : ""}</td>
-          </tr>
-        `;
-      }
+/* =====================================
+   START
+===================================== */
 
-      return `
-        <div style="page-break-before:always;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-          <div style="font-weight:900;font-size:12px;">مدارس الفلاح الأهلية</div>
-          <div style="font-weight:900;font-size:12px;">تصميم محمد عامر أحمد</div>
-        </div>
-        <h2 style="margin:0 0 6px;color:#0d47a1;text-align:center;font-size:15px;">متابعة الأعمال التحريرية للطلاب</h2>
+loadData();
 
-        <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;">
-          <tr>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;">اسم الطالب</th>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:90px;">مصحح</th>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:90px;">غير مكتمل</th>
-            <th style="border:1px solid #000;background:#e3f2fd;padding:4px;width:90px;">غير مصحح</th>
-          </tr>
-          ${body}
-        </table>
 
-        <table style="width:100%;border-collapse:collapse;margin-top:6px;font-size:11px;">
-          <tr>
-            <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المعلم</td>
-            <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:900;">توقيع المشرف</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid #000;height:28px;"></td>
-            <td style="border:1px solid #000;height:28px;"></td>
-          </tr>
-        </table>
-      `;
-    }
+</script>
 
-    async function printVisit(id){
-      const snap = await getDoc(doc(db, "visits", id));
-      if (!snap.exists()){
-        alert("الزيارة غير موجودة");
-        return;
-      }
-
-      const v = snap.data();
-
-      const header = buildHeaderBlock(v);
-      const rubricTable = buildPaperRubricTable(v);
-      const notes = buildNotesAndSigns(v);
-      const work = buildWorkPrint(v);
-
-      const html = `
-        <!DOCTYPE html>
-        <html lang="ar" dir="rtl">
-        <head>
-          <meta charset="UTF-8" />
-          <title>طباعة</title>
-          <style>
-            @page { size: A4; margin: 10mm; }
-            body{font-family:Arial,sans-serif;margin:0;color:#000}
-            table{width:100%;border-collapse:collapse}
-            th,td{border:1px solid #000;vertical-align:middle}
-            th{background:#e3f2fd;text-align:center;font-weight:900}
-          </style>
-        </head>
-        <body>
-          ${header}
-          ${rubricTable}
-          ${notes}
-          ${work}
-        </body>
-        </html>
-      `;
-
-      const w = window.open("", "_blank");
-      w.document.open();
-      w.document.write(html);
-      w.document.close();
-      w.focus();
-      setTimeout(() => w.print(), 350);
-    }
-
-    el("btnSearch").addEventListener("click", loadVisits);
-
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    if (code){
-      el("teacherCode").value = code;
-      await loadVisits();
-    }
-  </script>
 </body>
+
 </html>
