@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>لوحة المشرف - مدارس الفلاح الأهلية</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+
+    :root{
+
+      --green:#0b4a3f;
+      --green-dark:#07372f;
+      --green-soft:#edf5f1;
+
+      --gold:#c89a3b;
+      --gold-dark:#a87921;
+      --gold-soft:#faf2e3;
+
+      --bg:#f6f8f6;
+      --white:#fff;
+
+      --text:#1f2926;
+      --muted:#737b77;
+
+      --border:#e2e6e3;
+
+      --shadow:
+        0 14px 40px rgba(20,55,45,.08);
+
+    }
+
+
+    *{
+      box-sizing:border-box;
+      font-family:"Cairo",sans-serif;
+    }
+
+
+    body{
+
+      margin:0;
+
+      background:
+        radial-gradient(
+          circle at top right,
+          rgba(200,154,59,.08),
+          transparent 30%
+        ),
+        var(--bg);
+
+      color:var(--text);
+
+      min-height:100vh;
+
+    }
+
+
+    /* HEADER */
+
+    .header{
+
+      background:#fff;
+
+      border-bottom:
+        1px solid var(--border);
+
+      box-shadow:
+        0 4px 20px rgba(0,0,0,.03);
+
+    }
+
+
+    .header-inner{
+
+      max-width:1250px;
+
+      margin:auto;
+
+      padding:11px 18px;
+
+      display:flex;
+
+      justify-content:space-between;
+
+      align-items:center;
+
+      gap:15px;
+
+    }
+
+
+    .brand{
+
+      display:flex;
+
+      align-items:center;
+
+      gap:12px;
+
+    }
+
+
+    .brand img{
+
+      width:58px;
+
+      height:58px;
+
+      object-fit:contain;
+
+    }
+
+
+    .brand h1{
+
+      margin:0;
+
+      color:var(--green);
+
+      font-size:17px;
+
+      font-weight:900;
+
+    }
+
+
+    .brand p{
+
+      margin:2px 0 0;
+
+      color:var(--gold-dark);
+
+      font-size:10px;
+
+      font-weight:700;
+
+    }
+
+
+    .logout{
+
+      border:1px solid #e1e5e2;
+
+      background:#f4f6f5;
+
+      color:#555f5a;
+
+      border-radius:10px;
+
+      padding:8px 13px;
+
+      font-size:11px;
+
+      font-weight:800;
+
+      cursor:pointer;
+
+    }
+
+
+
+    /* PAGE */
+
+    .page{
+
+      max-width:1250px;
+
+      margin:auto;
+
+      padding:28px 18px 45px;
+
+    }
+
+
+
+    /* WELCOME */
+
+    .welcome{
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--green),
+          var(--green-dark)
+        );
+
+      color:#fff;
+
+      border-radius:22px;
+
+      padding:25px;
+
+      box-shadow:var(--shadow);
+
+      position:relative;
+
+      overflow:hidden;
+
+      margin-bottom:20px;
+
+    }
+
+
+    .welcome::after{
+
+      content:"";
+
+      position:absolute;
+
+      width:190px;
+
+      height:190px;
+
+      border-radius:50%;
+
+      background:
+        rgba(200,154,59,.11);
+
+      left:-60px;
+
+      bottom:-90px;
+
+    }
+
+
+    .welcome small{
+
+      color:#f2d79e;
+
+      font-size:10px;
+
+      font-weight:800;
+
+    }
+
+
+    .welcome h2{
+
+      margin:4px 0 0;
+
+      font-size:24px;
+
+      font-weight:900;
+
+    }
+
+
+    .welcome p{
+
+      margin:5px 0 0;
+
+      color:rgba(255,255,255,.78);
+
+      font-size:11px;
+
+    }
+
+
+
+    /* STATS */
+
+    .stats{
+
+      display:grid;
+
+      grid-template-columns:
+        repeat(3,1fr);
+
+      gap:12px;
+
+      margin-bottom:22px;
+
+    }
+
+
+    .stat{
+
+      background:#fff;
+
+      border:
+        1px solid var(--border);
+
+      border-radius:16px;
+
+      padding:15px;
+
+      box-shadow:var(--shadow);
+
+    }
+
+
+    .stat span{
+
+      display:block;
+
+      color:var(--muted);
+
+      font-size:10px;
+
+      font-weight:700;
+
+    }
+
+
+    .stat strong{
+
+      display:block;
+
+      margin-top:3px;
+
+      color:var(--green);
+
+      font-size:25px;
+
+      font-weight:900;
+
+    }
+
+
+
+    .section-title{
+
+      margin-bottom:12px;
+
+    }
+
+
+    .section-title h3{
+
+      margin:0;
+
+      color:var(--green);
+
+      font-size:18px;
+
+      font-weight:900;
+
+    }
+
+
+    .section-title p{
+
+      margin:3px 0 0;
+
+      color:var(--muted);
+
+      font-size:10px;
+
+    }
+
+
+
+    /* ACTIONS */
+
+    .cards{
+
+      display:grid;
+
+      grid-template-columns:
+        repeat(3,1fr);
+
+      gap:14px;
+
+    }
+
+
+    .card{
+
+      background:#fff;
+
+      border:
+        1px solid var(--border);
+
+      border-radius:18px;
+
+      min-height:170px;
+
+      padding:18px;
+
+      text-decoration:none;
+
+      color:inherit;
+
+      box-shadow:var(--shadow);
+
+      position:relative;
+
+      overflow:hidden;
+
+      transition:.25s;
+
+    }
+
+
+    .card:hover{
+
+      transform:
+        translateY(-4px);
+
+      border-color:
+        rgba(200,154,59,.45);
+
+    }
+
+
+    .card::before{
+
+      content:"";
+
+      position:absolute;
+
+      top:0;
+
+      right:0;
+
+      width:100%;
+
+      height:4px;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--green),
+          var(--gold)
+        );
+
+    }
+
+
+    .icon{
+
+      width:45px;
+
+      height:45px;
+
+      border-radius:13px;
+
+      background:
+        var(--green-soft);
+
+      color:var(--green);
+
+      display:flex;
+
+      justify-content:center;
+
+      align-items:center;
+
+      font-size:20px;
+
+      margin-bottom:13px;
+
+    }
+
+
+    .card.gold .icon{
+
+      background:
+        var(--gold-soft);
+
+      color:
+        var(--gold-dark);
+
+    }
+
+
+    .card h4{
+
+      margin:0;
+
+      color:var(--green);
+
+      font-size:15px;
+
+      font-weight:900;
+
+    }
+
+
+    .card p{
+
+      margin:6px 0 0;
+
+      color:var(--muted);
+
+      font-size:10px;
+
+      line-height:1.8;
+
+    }
+
+
+    .go{
+
+      position:absolute;
+
+      bottom:14px;
+
+      left:16px;
+
+      color:var(--gold-dark);
+
+      font-size:17px;
+
+      font-weight:900;
+
+    }
+
+
+
+    .admin-card{
+
+      display:none;
+
+    }
+
+
+
+    .footer{
+
+      text-align:center;
+
+      padding:25px 10px 5px;
+
+      color:#929895;
+
+      font-size:9px;
+
+    }
+
+
+    @media(max-width:850px){
+
+      .cards{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .stats{
+        grid-template-columns:1fr 1fr 1fr;
+      }
+
+    }
+
+
+    @media(max-width:600px){
+
+      .stats{
+        grid-template-columns:1fr;
+      }
+
+      .cards{
+        grid-template-columns:1fr;
+      }
+
+      .welcome h2{
+        font-size:20px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+  <div class="header-inner">
+
+    <div class="brand">
+
+      <img
+        src="logo.jpeg"
+        alt="شعار مدارس الفلاح"
+      >
+
+      <div>
+
+        <h1>
+          مدارس الفلاح الأهلية
+        </h1>
+
+        <p>
+          نظام الإشراف التربوي
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="logout"
+      id="logoutBtn"
+    >
+      تسجيل الخروج
+    </button>
+
+  </div>
+
+</header>
+
+
+
+<main class="page">
+
+
+  <section class="welcome">
+
+    <small>
+      لوحة المشرف التربوي
+    </small>
+
+    <h2 id="welcomeName">
+      مرحبًا
+    </h2>
+
+    <p>
+      يمكنك إدارة معلميك وتنفيذ ومتابعة
+      الزيارات التربوية من هنا.
+    </p>
+
+  </section>
+
+
+
+  <section class="stats">
+
+    <div class="stat">
+
+      <span>
+        المعلمون التابعون لك
+      </span>
+
+      <strong id="teachersCount">
+        0
+      </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+      <span>
+        إجمالي الزيارات
+      </span>
+
+      <strong id="visitsCount">
+        0
+      </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+      <span>
+        بانتظار اطلاع المعلم
+      </span>
+
+      <strong id="pendingCount">
+        0
+      </strong>
+
+    </div>
+
+  </section>
+
+
+
+  <div class="section-title">
+
+    <h3>
+      الخدمات
+    </h3>
+
+    <p>
+      جميع البيانات المعروضة مرتبطة
+      بحساب المشرف الحالي.
+    </p>
+
+  </div>
+
+
+
+  <section class="cards">
+
+
+    <a
+      href="teachers.html"
+      class="card"
+    >
+
+      <div class="icon">
+        👥
+      </div>
+
+      <h4>
+        إدارة المعلمين
+      </h4>
+
+      <p>
+        إضافة وتعديل المعلمين
+        التابعين لك ومتابعة بياناتهم.
+      </p>
+
+      <span class="go">
+        ←
+      </span>
+
+    </a>
+
+
+
+    <a
+      href="evaluation-form.html"
+      class="card gold"
+    >
+
+      <div class="icon">
+        ✓
+      </div>
+
+      <h4>
+        زيارة جديدة
+      </h4>
+
+      <p>
+        تنفيذ زيارة صفية جديدة لأحد
+        المعلمين التابعين لك.
+      </p>
+
+      <span class="go">
+        ←
+      </span>
+
+    </a>
+
+
+
+    <a
+      href="teacher-visits.html"
+      class="card"
+    >
+
+      <div class="icon">
+        ▤
+      </div>
+
+      <h4>
+        سجل الزيارات
+      </h4>
+
+      <p>
+        متابعة زيارات معلميك وتقارير
+        الأداء وحالة الاطلاع.
+      </p>
+
+      <span class="go">
+        ←
+      </span>
+
+    </a>
+
+
+
+    <a
+      href="supervisors.html"
+      class="card gold admin-card"
+      id="adminCard"
+    >
+
+      <div class="icon">
+        ⚙
+      </div>
+
+      <h4>
+        إدارة المشرفين
+      </h4>
+
+      <p>
+        إضافة حسابات المشرفين
+        وإدارة صلاحيات النظام.
+      </p>
+
+      <span class="go">
+        ←
+      </span>
+
+    </a>
+
+
+  </section>
+
+
+  <div class="footer">
+    تصميم محمد عامر أحمد
+  </div>
+
+
+</main>
+
+
+
+<script type="module">
+
+  import { db } from "./firebase.js";
+
+  import {
+    collection,
+    getDocs,
+    query,
+    where
+  }
+  from
+  "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+
+  const el =
+    id => document.getElementById(id);
+
+
+  /* =================================
+     SESSION
+  ================================= */
+
+  const raw =
+    sessionStorage.getItem(
+      "currentSupervisor"
+    );
+
+
+  if(!raw){
+
+    location.href =
+      "supervisor-login.html";
+
+    throw new Error(
+      "No supervisor session"
+    );
+
+  }
+
+
+  let supervisor;
+
+
+  try{
+
+    supervisor =
+      JSON.parse(raw);
+
+  }catch{
+
+    sessionStorage.removeItem(
+      "currentSupervisor"
+    );
+
+    location.href =
+      "supervisor-login.html";
+
+  }
+
+
+
+  el("welcomeName").textContent =
+    "مرحبًا، " +
+    (supervisor.name || "المشرف");
+
+
+  if(
+    supervisor.role === "admin"
+  ){
+
+    el("adminCard")
+      .style
+      .display =
+      "block";
+
+  }
+
+
+
+  /* =================================
+     إحصائيات المشرف
+  ================================= */
+
+  async function loadStats(){
+
+    try{
+
+      const teachersSnap =
+        await getDocs(
+          query(
+            collection(db,"teachers"),
+            where(
+              "supervisorId",
+              "==",
+              supervisor.id
+            )
+          )
+        );
+
+
+      el("teachersCount")
+        .textContent =
+        teachersSnap.size;
+
+
+
+      const visitsSnap =
+        await getDocs(
+          query(
+            collection(db,"visits"),
+            where(
+              "supervisorId",
+              "==",
+              supervisor.id
+            )
+          )
+        );
+
+
+      el("visitsCount")
+        .textContent =
+        visitsSnap.size;
+
+
+
+      let pending = 0;
+
+
+      visitsSnap.forEach(docSnap=>{
+
+        const v =
+          docSnap.data() || {};
+
+
+        if(v.teacherViewed !== true){
+
+          pending++;
+
+        }
+
+      });
+
+
+      el("pendingCount")
+        .textContent =
+        pending;
+
+
+    }catch(error){
+
+      console.error(error);
+
+    }
+
+  }
+
+
+
+  /* =================================
+     LOGOUT
+  ================================= */
+
+  el("logoutBtn")
+    .addEventListener(
+      "click",
+      ()=>{
+
+        sessionStorage.removeItem(
+          "currentSupervisor"
+        );
+
+        location.href =
+          "supervisor-login.html";
+
+      }
+    );
+
+
+  loadStats();
+
+</script>
+
+</body>
+</html>
