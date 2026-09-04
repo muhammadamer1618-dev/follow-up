@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>إدارة المعلمين - مدارس الفلاح الأهلية</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --green:#0b4a3f;
+  --green-dark:#07372f;
+  --green-soft:#edf5f1;
+
+  --gold:#c89a3b;
+  --gold-dark:#a87921;
+  --gold-soft:#faf2e3;
+
+  --bg:#f7f8f6;
+  --white:#fff;
+
+  --text:#1f2926;
+  --muted:#737b77;
+  --border:#e3e5e2;
+
+  --red:#c43c3c;
+  --red-dark:#9f2e2e;
+
+  --shadow:0 15px 45px rgba(20,52,43,.10);
+}
+
+*{
+  box-sizing:border-box;
+  font-family:'Cairo',sans-serif;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top right,rgba(200,154,59,.08),transparent 28%),
+    linear-gradient(135deg,#f6f7f5,#fbfaf7);
+  color:var(--text);
+}
+
+/* ================= HEADER ================= */
+
+.header{
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 4px 20px rgba(0,0,0,.04);
+}
+
+.header-inner{
+  max-width:1250px;
+  margin:auto;
+  padding:12px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.logo{
+  width:64px;
+  height:64px;
+  object-fit:contain;
+}
+
+.brand-text h1{
+  margin:0;
+  color:var(--green);
+  font-size:19px;
+  line-height:1.4;
+  font-weight:800;
+}
+
+.brand-text div{
+  color:var(--gold-dark);
+  font-size:13px;
+  font-weight:700;
+}
+
+.header-actions{
+  display:flex;
+  gap:8px;
+}
+
+.nav-btn{
+  text-decoration:none;
+  border:none;
+  cursor:pointer;
+  padding:10px 15px;
+  border-radius:11px;
+  font-size:13px;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.nav-btn.home{
+  background:var(--green-soft);
+  color:var(--green);
+}
+
+/* ================= PAGE ================= */
+
+.page{
+  max-width:1250px;
+  margin:auto;
+  padding:28px 20px 50px;
+}
+
+.page-title{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:center;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+
+.title-area h2{
+  margin:0;
+  color:var(--green);
+  font-size:27px;
+  font-weight:800;
+}
+
+.title-area p{
+  margin:5px 0 0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.add-btn{
+  border:none;
+  cursor:pointer;
+  padding:12px 20px;
+  border-radius:13px;
+  background:linear-gradient(135deg,var(--green),var(--green-dark));
+  color:#fff;
+  font-weight:800;
+  font-size:14px;
+  box-shadow:0 8px 20px rgba(11,74,63,.18);
+}
+
+.add-btn:hover{
+  transform:translateY(-1px);
+}
+
+/* ================= STATS ================= */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.stat{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:17px;
+  box-shadow:var(--shadow);
+}
+
+.stat .label{
+  font-size:13px;
+  color:var(--muted);
+  font-weight:700;
+}
+
+.stat .value{
+  margin-top:4px;
+  font-size:26px;
+  color:var(--green);
+  font-weight:800;
+}
+
+.stat.gold .value{
+  color:var(--gold-dark);
+}
+
+/* ================= CONTENT ================= */
+
+.panel{
+  background:#fff;
+  border-radius:19px;
+  border:1px solid var(--border);
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+
+.toolbar{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+
+.search-wrap{
+  flex:1;
+  min-width:240px;
+  max-width:520px;
+  position:relative;
+}
+
+.search-wrap input{
+  width:100%;
+  border:1px solid var(--border);
+  background:#fafafa;
+  border-radius:13px;
+  padding:12px 14px;
+  font-size:14px;
+  outline:none;
+}
+
+.search-wrap input:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(200,154,59,.12);
+  background:#fff;
+}
+
+.result-count{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+}
+
+/* ================= TABLE ================= */
+
+.table-wrap{
+  width:100%;
+  overflow:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:780px;
+}
+
+th{
+  background:#f6f8f6;
+  color:var(--green);
+  font-size:13px;
+  font-weight:800;
+  padding:12px 10px;
+  border-bottom:2px solid #e4e7e4;
+  text-align:center;
+}
+
+td{
+  padding:12px 10px;
+  border-bottom:1px solid #eceeec;
+  font-size:13px;
+  text-align:center;
+}
+
+tbody tr:hover{
+  background:#fbfcfb;
+}
+
+.teacher-name{
+  text-align:right;
+  font-weight:800;
+}
+
+.code-badge{
+  background:var(--green-soft);
+  color:var(--green);
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:50px;
+  font-weight:800;
+  letter-spacing:.5px;
+}
+
+.visit-badge{
+  background:var(--gold-soft);
+  color:var(--gold-dark);
+  padding:4px 10px;
+  border-radius:50px;
+  display:inline-block;
+  min-width:42px;
+  font-weight:800;
+}
+
+.action-group{
+  display:flex;
+  gap:6px;
+  justify-content:center;
+}
+
+.table-btn{
+  border:none;
+  cursor:pointer;
+  padding:7px 11px;
+  border-radius:9px;
+  font-weight:700;
+  font-size:12px;
+}
+
+.edit-btn{
+  background:var(--green-soft);
+  color:var(--green);
+}
+
+.visits-btn{
+  background:var(--gold-soft);
+  color:var(--gold-dark);
+}
+
+.delete-btn{
+  background:#fdecec;
+  color:var(--red);
+}
+
+.empty{
+  padding:50px 15px!important;
+  color:var(--muted);
+  text-align:center!important;
+  font-weight:700;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(5,31,26,.56);
+  backdrop-filter:blur(5px);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  padding:16px;
+  z-index:1000;
+}
+
+.modal-card{
+  width:100%;
+  max-width:510px;
+  background:#fff;
+  border-radius:20px;
+  padding:23px;
+  position:relative;
+  box-shadow:0 25px 80px rgba(0,0,0,.28);
+}
+
+.modal-card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:5px;
+  border-radius:20px 20px 0 0;
+  background:linear-gradient(90deg,var(--green),var(--gold));
+}
+
+.modal-title{
+  font-size:20px;
+  font-weight:800;
+  color:var(--green);
+  margin-bottom:18px;
+}
+
+.field{
+  margin-bottom:13px;
+}
+
+.field label{
+  display:block;
+  margin-bottom:6px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.field input{
+  width:100%;
+  border:1px solid #dcdedb;
+  padding:11px 12px;
+  border-radius:11px;
+  font-size:14px;
+  outline:none;
+}
+
+.field input:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(200,154,59,.12);
+}
+
+.code-row{
+  display:flex;
+  gap:8px;
+}
+
+.code-row input{
+  flex:1;
+}
+
+.generate-btn{
+  border:none;
+  border-radius:11px;
+  padding:0 13px;
+  cursor:pointer;
+  background:var(--gold-soft);
+  color:var(--gold-dark);
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.modal-actions{
+  display:flex;
+  gap:9px;
+  margin-top:19px;
+}
+
+.modal-actions button{
+  flex:1;
+  border:none;
+  cursor:pointer;
+  border-radius:11px;
+  padding:11px;
+  font-weight:800;
+}
+
+.save-modal{
+  background:var(--green);
+  color:#fff;
+}
+
+.cancel-modal{
+  background:#f0f1ef;
+  color:#444;
+}
+
+.msg{
+  min-height:20px;
+  text-align:center;
+  margin-top:10px;
+  font-size:13px;
+  color:var(--red);
+  font-weight:700;
+}
+
+/* ================= TOAST ================= */
+
+.toast{
+  position:fixed;
+  bottom:24px;
+  left:24px;
+  background:var(--green);
+  color:#fff;
+  border-radius:12px;
+  padding:12px 18px;
+  font-size:13px;
+  font-weight:700;
+  box-shadow:0 10px 30px rgba(0,0,0,.20);
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(15px);
+  transition:.25s;
+  z-index:2000;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ================= FOOTER ================= */
+
+.footer{
+  text-align:center;
+  margin-top:26px;
+  color:#858b88;
+  font-size:12px;
+  font-weight:600;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:760px){
+
+  .header-inner{
+    padding:10px 13px;
+  }
+
+  .logo{
+    width:52px;
+    height:52px;
+  }
+
+  .brand-text h1{
+    font-size:16px;
+  }
+
+  .brand-text div{
+    font-size:11px;
+  }
+
+  .page{
+    padding:20px 12px 40px;
+  }
+
+  .title-area h2{
+    font-size:22px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .panel{
+    padding:12px;
+  }
+
+  .modal-card{
+    padding:20px 15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+  <div class="header-inner">
+
+    <div class="brand">
+
+      <img src="logo.jpeg"
+           class="logo"
+           alt="شعار مدارس الفلاح الأهلية">
+
+      <div class="brand-text">
+        <h1>مدارس الفلاح الأهلية</h1>
+        <div>نظام الإشراف التربوي</div>
+      </div>
+
+    </div>
+
+    <div class="header-actions">
+      <a href="index.html" class="nav-btn home">
+        الرئيسية
+      </a>
+    </div>
+
+  </div>
+
+</header>
+
+
+<main class="page">
+
+  <div class="page-title">
+
+    <div class="title-area">
+      <h2>إدارة المعلمين</h2>
+      <p>إضافة المعلمين وتحديث بياناتهم ومتابعة سجل الزيارات.</p>
+    </div>
+
+    <button class="add-btn" id="btnAddTeacher">
+      + إضافة معلم
+    </button>
+
+  </div>
+
+
+  <div class="stats">
+
+    <div class="stat">
+      <div class="label">إجمالي المعلمين</div>
+      <div class="value" id="teachersCount">0</div>
+    </div>
+
+    <div class="stat gold">
+      <div class="label">إجمالي الزيارات</div>
+      <div class="value" id="visitsCount">0</div>
+    </div>
+
+    <div class="stat">
+      <div class="label">المعلمون الذين لديهم زيارات</div>
+      <div class="value" id="teachersWithVisits">0</div>
+    </div>
+
+  </div>
+
+
+  <section class="panel">
+
+    <div class="toolbar">
+
+      <div class="search-wrap">
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="ابحث باسم المعلم أو الكود أو رقم الجوال..."
+        >
+      </div>
+
+      <div class="result-count" id="resultCount">
+        جاري التحميل...
+      </div>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>المعلم</th>
+            <th>رقم الجوال</th>
+            <th>رمز المعلم</th>
+            <th>عدد الزيارات</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+
+        <tbody id="teachersBody">
+
+          <tr>
+            <td colspan="5" class="empty">
+              جاري تحميل البيانات...
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+
+  <div class="footer">
+    تصميم محمد عامر أحمد
+  </div>
+
+</main>
+
+
+<!-- ================= MODAL ================= -->
+
+<div class="modal" id="teacherModal">
+
+  <div class="modal-card">
+
+    <div class="modal-title" id="modalTitle">
+      إضافة معلم جديد
+    </div>
+
+    <div class="field">
+      <label>اسم المعلم</label>
+      <input id="teacherName" placeholder="اكتب اسم المعلم">
+    </div>
+
+    <div class="field">
+      <label>رقم الجوال</label>
+      <input
+        id="teacherPhone"
+        inputmode="tel"
+        placeholder="مثال: 05xxxxxxxx"
+      >
+    </div>
+
+    <div class="field">
+
+      <label>رمز المعلم</label>
+
+      <div class="code-row">
+
+        <input
+          id="teacherCode"
+          inputmode="numeric"
+          placeholder="رمز المعلم"
+        >
+
+        <button
+          type="button"
+          class="generate-btn"
+          id="generateCode">
+          إنشاء رمز
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-actions">
+
+      <button
+        class="cancel-modal"
+        type="button"
+        id="cancelModal">
+        إلغاء
+      </button>
+
+      <button
+        class="save-modal"
+        type="button"
+        id="saveTeacher">
+        حفظ المعلم
+      </button>
+
+    </div>
+
+    <div class="msg" id="modalMsg"></div>
+
+  </div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+
+/* ================= FIREBASE ================= */
+
+const firebaseConfig = {
+
+  apiKey:
+  "AIzaSyBNFrPNCuQefOXHTCmiiKSBjgPLUy5Ug4U",
+
+  authDomain:
+  "follow-up-2026.firebaseapp.com",
+
+  projectId:
+  "follow-up-2026",
+
+  storageBucket:
+  "follow-up-2026.firebasestorage.app",
+
+  messagingSenderId:
+  "1077131515114",
+
+  appId:
+  "1:1077131515114:web:d10d9c5228382d7cfdb393"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+/* ================= ELEMENTS ================= */
+
+const teachersBody =
+document.getElementById("teachersBody");
+
+const searchInput =
+document.getElementById("searchInput");
+
+const resultCount =
+document.getElementById("resultCount");
+
+const teachersCount =
+document.getElementById("teachersCount");
+
+const visitsCount =
+document.getElementById("visitsCount");
+
+const teachersWithVisits =
+document.getElementById("teachersWithVisits");
+
+
+const teacherModal =
+document.getElementById("teacherModal");
+
+const modalTitle =
+document.getElementById("modalTitle");
+
+const teacherName =
+document.getElementById("teacherName");
+
+const teacherPhone =
+document.getElementById("teacherPhone");
+
+const teacherCode =
+document.getElementById("teacherCode");
+
+const modalMsg =
+document.getElementById("modalMsg");
+
+const toast =
+document.getElementById("toast");
+
+
+/* ================= DATA ================= */
+
+let teachers = [];
+
+let visitCounts = {};
+
+let editCode = null;
+
+
+/* ================= HELPERS ================= */
+
+function esc(value){
+
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+
+}
+
+
+function showToast(text){
+
+  toast.textContent = text;
+
+  toast.classList.add("show");
+
+  setTimeout(()=>{
+
+    toast.classList.remove("show");
+
+  },2500);
+
+}
+
+
+function generateRandomCode(){
+
+  return String(
+    Math.floor(
+      10000 +
+      Math.random() * 90000
+    )
+  );
+
+}
+
+
+async function generateUniqueCode(){
+
+  let code = "";
+
+  let exists = true;
+
+  while(exists){
+
+    code = generateRandomCode();
+
+    const snap =
+    await getDoc(
+      doc(db,"teachers",code)
+    );
+
+    exists = snap.exists();
+
+  }
+
+  return code;
+
+}
+
+
+/* ================= LOAD DATA ================= */
+
+async function loadData(){
+
+  try{
+
+    teachersBody.innerHTML = `
+      <tr>
+        <td colspan="5" class="empty">
+          جاري تحميل البيانات...
+        </td>
+      </tr>
+    `;
+
+
+    const [
+      teachersSnap,
+      visitsSnap
+    ] = await Promise.all([
+
+      getDocs(
+        collection(db,"teachers")
+      ),
+
+      getDocs(
+        collection(db,"visits")
+      )
+
+    ]);
+
+
+    visitCounts = {};
+
+    let totalVisits = 0;
+
+
+    visitsSnap.forEach(d=>{
+
+      const v = d.data();
+
+      const code =
+      String(v.teacherCode || "");
+
+      if(code){
+
+        visitCounts[code] =
+        (visitCounts[code] || 0) + 1;
+
+      }
+
+      totalVisits++;
+
+    });
+
+
+    teachers = [];
+
+    teachersSnap.forEach(d=>{
+
+      const data = d.data();
+
+      teachers.push({
+
+        id:d.id,
+
+        code:
+        data.code || d.id,
+
+        name:
+        data.name || "",
+
+        phone:
+        data.phone || ""
+
+      });
+
+    });
+
+
+    teachers.sort(
+      (a,b)=>
+      a.name.localeCompare(
+        b.name,
+        "ar"
+      )
+    );
+
+
+    teachersCount.textContent =
+    teachers.length;
+
+
+    visitsCount.textContent =
+    totalVisits;
+
+
+    teachersWithVisits.textContent =
+    Object.values(visitCounts)
+      .filter(n=>n>0)
+      .length;
+
+
+    renderTeachers();
+
+  }
+
+  catch(e){
+
+    console.error(e);
+
+    teachersBody.innerHTML = `
+      <tr>
+        <td colspan="5" class="empty">
+          حدث خطأ أثناء تحميل البيانات
+        </td>
+      </tr>
+    `;
+
+    resultCount.textContent =
+    "تعذر تحميل البيانات";
+
+  }
+
+}
+
+
+/* ================= RENDER ================= */
+
+function renderTeachers(){
+
+  const search =
+  searchInput.value
+    .trim()
+    .toLowerCase();
+
+
+  const list =
+  teachers.filter(t=>{
+
+    return (
+
+      t.name
+        .toLowerCase()
+        .includes(search)
+
+      ||
+
+      String(t.code)
+        .toLowerCase()
+        .includes(search)
+
+      ||
+
+      String(t.phone)
+        .toLowerCase()
+        .includes(search)
+
+    );
+
+  });
+
+
+  resultCount.textContent =
+  `عدد النتائج: ${list.length}`;
+
+
+  teachersBody.innerHTML = "";
+
+
+  if(list.length === 0){
+
+    teachersBody.innerHTML = `
+      <tr>
+        <td colspan="5" class="empty">
+          لا توجد بيانات مطابقة
+        </td>
+      </tr>
+    `;
+
+    return;
+
+  }
+
+
+  list.forEach(t=>{
+
+    const tr =
+    document.createElement("tr");
+
+
+    const count =
+    visitCounts[t.code] || 0;
+
+
+    tr.innerHTML = `
+
+      <td class="teacher-name">
+        ${esc(t.name)}
+      </td>
+
+      <td>
+        ${esc(t.phone)}
+      </td>
+
+      <td>
+        <span class="code-badge">
+          ${esc(t.code)}
+        </span>
+      </td>
+
+      <td>
+        <span class="visit-badge">
+          ${count}
+        </span>
+      </td>
+
+      <td>
+
+        <div class="action-group">
+
+          <button
+            class="table-btn visits-btn"
+            data-visits="${esc(t.code)}">
+            الزيارات
+          </button>
+
+          <button
+            class="table-btn edit-btn"
+            data-edit="${esc(t.code)}">
+            تعديل
+          </button>
+
+          <button
+            class="table-btn delete-btn"
+            data-delete="${esc(t.code)}">
+            حذف
+          </button>
+
+        </div>
+
+      </td>
+
+    `;
+
+
+    teachersBody.appendChild(tr);
+
+  });
+
+
+  document
+  .querySelectorAll("[data-edit]")
+  .forEach(btn=>{
+
+    btn.onclick = ()=>{
+
+      openEdit(
+        btn.dataset.edit
+      );
+
+    };
+
+  });
+
+
+  document
+  .querySelectorAll("[data-delete]")
+  .forEach(btn=>{
+
+    btn.onclick = ()=>{
+
+      deleteTeacher(
+        btn.dataset.delete
+      );
+
+    };
+
+  });
+
+
+  document
+  .querySelectorAll("[data-visits]")
+  .forEach(btn=>{
+
+    btn.onclick = ()=>{
+
+      const code =
+      btn.dataset.visits;
+
+      window.location.href =
+      "teacher-visits.html?code="
+      +
+      encodeURIComponent(code);
+
+    };
+
+  });
+
+}
+
+
+/* ================= ADD ================= */
+
+async function openAdd(){
+
+  editCode = null;
+
+  modalTitle.textContent =
+  "إضافة معلم جديد";
+
+  teacherName.value = "";
+
+  teacherPhone.value = "";
+
+  teacherCode.value =
+  await generateUniqueCode();
+
+  teacherCode.readOnly = false;
+
+  document.getElementById(
+    "generateCode"
+  ).style.display =
+  "inline-block";
+
+  modalMsg.textContent = "";
+
+  teacherModal.style.display =
+  "flex";
+
+  setTimeout(()=>{
+
+    teacherName.focus();
+
+  },100);
+
+}
+
+
+/* ================= EDIT ================= */
+
+function openEdit(code){
+
+  const t =
+  teachers.find(
+    x=>String(x.code)===String(code)
+  );
+
+  if(!t) return;
+
+
+  editCode = t.code;
+
+
+  modalTitle.textContent =
+  "تعديل بيانات المعلم";
+
+
+  teacherName.value =
+  t.name;
+
+
+  teacherPhone.value =
+  t.phone;
+
+
+  teacherCode.value =
+  t.code;
+
+
+  /*
+    الكود لا يتغير أثناء التعديل
+    لأنه Document ID
+  */
+
+  teacherCode.readOnly =
+  true;
+
+
+  document.getElementById(
+    "generateCode"
+  ).style.display =
+  "none";
+
+
+  modalMsg.textContent = "";
+
+
+  teacherModal.style.display =
+  "flex";
+
+}
+
+
+/* ================= SAVE ================= */
+
+async function saveTeacher(){
+
+  modalMsg.textContent = "";
+
+
+  const code =
+  teacherCode.value.trim();
+
+
+  const name =
+  teacherName.value.trim();
+
+
+  const phone =
+  teacherPhone.value.trim();
+
+
+  if(!name){
+
+    modalMsg.textContent =
+    "اكتب اسم المعلم";
+
+    teacherName.focus();
+
+    return;
+
+  }
+
+
+  if(!phone){
+
+    modalMsg.textContent =
+    "اكتب رقم الجوال";
+
+    teacherPhone.focus();
+
+    return;
+
+  }
+
+
+  if(!code){
+
+    modalMsg.textContent =
+    "رمز المعلم غير موجود";
+
+    return;
+
+  }
+
+
+  try{
+
+    /*
+      عند إضافة معلم جديد
+      نتأكد أن الرمز غير مستخدم
+    */
+
+    if(!editCode){
+
+      const existing =
+      await getDoc(
+        doc(db,"teachers",code)
+      );
+
+
+      if(existing.exists()){
+
+        modalMsg.textContent =
+        "هذا الرمز مستخدم بالفعل";
+
+        return;
+
+      }
+
+    }
+
+
+    await setDoc(
+
+      doc(
+        db,
+        "teachers",
+        code
+      ),
+
+      {
+
+        code,
+
+        name,
+
+        phone,
+
+        updatedAt:
+        serverTimestamp()
+
+      },
+
+      {
+        merge:true
+      }
+
+    );
+
+
+    closeModal();
+
+
+    showToast(
+      editCode
+      ?
+      "تم تحديث بيانات المعلم"
+      :
+      "تم إضافة المعلم بنجاح"
+    );
+
+
+    await loadData();
+
+  }
+
+  catch(e){
+
+    console.error(e);
+
+    modalMsg.textContent =
+    "حدث خطأ أثناء الحفظ";
+
+  }
+
+}
+
+
+/* ================= DELETE ================= */
+
+async function deleteTeacher(code){
+
+  const t =
+  teachers.find(
+    x=>String(x.code)===String(code)
+  );
+
+
+  if(!t) return;
+
+
+  const count =
+  visitCounts[code] || 0;
+
+
+  let message =
+  `هل تريد حذف المعلم "${t.name}"؟`;
+
+
+  if(count > 0){
+
+    message +=
+    `\n\nيوجد لهذا المعلم ${count} زيارة محفوظة.\nلن يتم حذف الزيارات، وإنما بيانات المعلم فقط.`;
+
+  }
+
+
+  const ok =
+  confirm(message);
+
+
+  if(!ok) return;
+
+
+  try{
+
+    await deleteDoc(
+      doc(
+        db,
+        "teachers",
+        code
+      )
+    );
+
+
+    showToast(
+      "تم حذف المعلم"
+    );
+
+
+    await loadData();
+
+  }
+
+  catch(e){
+
+    console.error(e);
+
+    alert(
+      "حدث خطأ أثناء حذف المعلم"
+    );
+
+  }
+
+}
+
+
+/* ================= MODAL ================= */
+
+function closeModal(){
+
+  teacherModal.style.display =
+  "none";
+
+  modalMsg.textContent = "";
+
+}
+
+
+document
+.getElementById("btnAddTeacher")
+.onclick = openAdd;
+
+
+document
+.getElementById("cancelModal")
+.onclick = closeModal;
+
+
+document
+.getElementById("saveTeacher")
+.onclick = saveTeacher;
+
+
+document
+.getElementById("generateCode")
+.onclick =
+async ()=>{
+
+  teacherCode.value =
+  await generateUniqueCode();
+
+};
+
+
+teacherModal.addEventListener(
+  "click",
+  e=>{
+
+    if(e.target === teacherModal){
+
+      closeModal();
+
+    }
+
+  }
+);
+
+
+document.addEventListener(
+  "keydown",
+  e=>{
+
+    if(e.key === "Escape"){
+
+      closeModal();
+
+    }
+
+  }
+);
+
+
+/* ================= SEARCH ================= */
+
+searchInput.addEventListener(
+  "input",
+  renderTeachers
+);
+
+
+/* ================= START ================= */
+
+loadData();
+
+</script>
+
+</body>
+</html>
