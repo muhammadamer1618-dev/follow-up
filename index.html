@@ -3,21 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>مدارس الفلاح الأهلية</title>
+  <title>نظام الإشراف التربوي - مدارس الفلاح الأهلية</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
       --green:#0b4a3f;
       --green-dark:#07372f;
+      --green-soft:#edf5f1;
+
       --gold:#c89a3b;
       --gold-dark:#a87921;
+      --gold-soft:#faf1df;
+
       --cream:#faf8f3;
       --white:#ffffff;
       --text:#1f2926;
       --muted:#6f7773;
-      --border:#e7e1d5;
+      --border:#e5e4df;
+
+      --shadow:0 22px 65px rgba(21,51,43,.14);
     }
 
     *{
@@ -25,153 +31,380 @@
       font-family:'Cairo',sans-serif;
     }
 
-    body{
+    html,body{
       margin:0;
+      min-height:100%;
+    }
+
+    body{
       min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
       background:
-        radial-gradient(circle at top right, rgba(200,154,59,.14), transparent 35%),
-        radial-gradient(circle at bottom left, rgba(11,74,63,.12), transparent 35%),
-        linear-gradient(135deg,#f8f5ee,#ffffff 52%,#f2f7f4);
+        radial-gradient(circle at top right, rgba(200,154,59,.13), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(11,74,63,.11), transparent 30%),
+        linear-gradient(135deg,#f7f4ec,#ffffff 52%,#f2f7f4);
       color:var(--text);
     }
 
-    .card{
-      width:min(760px,100%);
-      background:rgba(255,255,255,.97);
-      border:1px solid rgba(200,154,59,.24);
+    .page{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* ================= HEADER ================= */
+
+    .header{
+      background:rgba(255,255,255,.96);
+      border-bottom:1px solid var(--border);
+      box-shadow:0 4px 20px rgba(0,0,0,.04);
+    }
+
+    .header-inner{
+      max-width:1250px;
+      margin:auto;
+      padding:12px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .logo{
+      width:70px;
+      height:70px;
+      object-fit:contain;
+      display:block;
+    }
+
+    .brand-text h1{
+      margin:0;
+      font-size:20px;
+      line-height:1.4;
+      color:var(--green);
+      font-weight:800;
+    }
+
+    .brand-text p{
+      margin:3px 0 0;
+      font-size:12px;
+      color:var(--gold-dark);
+      font-weight:700;
+    }
+
+    /* ================= HERO ================= */
+
+    .main{
+      flex:1;
+      width:100%;
+      max-width:1250px;
+      margin:auto;
+      padding:42px 20px 50px;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:35px;
+      align-items:center;
+      margin-bottom:38px;
+    }
+
+    .hero-content{
+      padding:10px 0;
+    }
+
+    .eyebrow{
+      display:inline-block;
+      background:var(--gold-soft);
+      color:var(--gold-dark);
+      border:1px solid rgba(200,154,59,.22);
+      padding:6px 12px;
+      border-radius:50px;
+      font-size:12px;
+      font-weight:800;
+      margin-bottom:14px;
+    }
+
+    .hero h2{
+      margin:0;
+      color:var(--green);
+      font-size:38px;
+      line-height:1.45;
+      font-weight:800;
+    }
+
+    .hero h2 span{
+      color:var(--gold-dark);
+    }
+
+    .hero p{
+      margin:15px 0 0;
+      color:var(--muted);
+      line-height:1.9;
+      font-size:15px;
+      max-width:650px;
+    }
+
+    .hero-visual{
+      background:#fff;
+      border:1px solid rgba(200,154,59,.22);
       border-radius:28px;
-      padding:34px 28px 28px;
-      text-align:center;
-      box-shadow:0 24px 70px rgba(31,52,46,.16);
+      padding:28px;
+      box-shadow:var(--shadow);
       position:relative;
       overflow:hidden;
+      min-height:280px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .hero-visual::before{
+      content:"";
+      position:absolute;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:rgba(11,74,63,.06);
+      top:-60px;
+      right:-60px;
+    }
+
+    .hero-visual::after{
+      content:"";
+      position:absolute;
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      background:rgba(200,154,59,.08);
+      bottom:-55px;
+      left:-45px;
+    }
+
+    .hero-visual img{
+      width:220px;
+      max-width:75%;
+      object-fit:contain;
+      position:relative;
+      z-index:2;
+    }
+
+    /* ================= SECTION TITLE ================= */
+
+    .section-title{
+      margin-bottom:18px;
+    }
+
+    .section-title h3{
+      margin:0;
+      color:var(--green);
+      font-size:24px;
+      font-weight:800;
+    }
+
+    .section-title p{
+      margin:5px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* ================= CARDS ================= */
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:20px;
+      text-decoration:none;
+      color:inherit;
+      box-shadow:0 12px 35px rgba(25,54,46,.08);
+      transition:.25s ease;
+      position:relative;
+      overflow:hidden;
+      min-height:190px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 18px 45px rgba(25,54,46,.13);
+      border-color:rgba(200,154,59,.38);
     }
 
     .card::before{
       content:"";
       position:absolute;
       top:0;
-      left:0;
       right:0;
-      height:7px;
-      background:linear-gradient(90deg,var(--green),var(--gold),var(--green));
+      width:100%;
+      height:5px;
+      background:linear-gradient(90deg,var(--green),var(--gold));
     }
 
-    .logo{
-      width:165px;
-      height:165px;
-      object-fit:contain;
-      display:block;
-      margin:0 auto 10px;
-    }
-
-    .school{
-      font-size:32px;
-      font-weight:800;
-      color:var(--green);
-      margin:0;
-      line-height:1.5;
-    }
-
-    .gold-line{
-      width:105px;
-      height:3px;
-      border-radius:20px;
-      margin:10px auto 12px;
-      background:linear-gradient(90deg,transparent,var(--gold),transparent);
-    }
-
-    .sub{
-      font-size:21px;
-      font-weight:700;
-      color:var(--gold-dark);
-      margin:0;
-    }
-
-    .desc{
-      margin-top:8px;
-      color:var(--muted);
-      font-size:14px;
-    }
-
-    .btns{
-      margin-top:26px;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-    }
-
-    .btn{
-      border:0;
+    .icon{
+      width:52px;
+      height:52px;
       border-radius:15px;
-      padding:15px 18px;
-      font-size:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:23px;
+      margin-bottom:14px;
+    }
+
+    .icon.green{
+      background:var(--green-soft);
+      color:var(--green);
+    }
+
+    .icon.gold{
+      background:var(--gold-soft);
+      color:var(--gold-dark);
+    }
+
+    .card h4{
+      margin:0;
+      font-size:18px;
+      color:var(--green);
       font-weight:800;
-      cursor:pointer;
-      transition:.25s ease;
-      box-shadow:0 10px 22px rgba(0,0,0,.08);
     }
 
-    .btn:hover{
-      transform:translateY(-2px);
-    }
-
-    .btn.primary{
-      background:linear-gradient(135deg,var(--green),var(--green-dark));
-      color:#fff;
-    }
-
-    .btn.primary:hover{
-      box-shadow:0 12px 26px rgba(11,74,63,.25);
-    }
-
-    .btn.secondary{
-      background:linear-gradient(135deg,var(--gold),var(--gold-dark));
-      color:#fff;
-    }
-
-    .btn.secondary:hover{
-      box-shadow:0 12px 26px rgba(200,154,59,.25);
-    }
-
-    .by{
-      margin-top:24px;
-      padding-top:16px;
-      border-top:1px solid var(--border);
-      color:#737a76;
+    .card p{
+      margin:8px 0 0;
+      color:var(--muted);
       font-size:13px;
+      line-height:1.8;
+    }
+
+    .open{
+      margin-top:18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color:var(--gold-dark);
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .open span{
+      font-size:18px;
+    }
+
+    /* ================= QUICK INFO ================= */
+
+    .bottom-panel{
+      margin-top:20px;
+      background:linear-gradient(135deg,var(--green),var(--green-dark));
+      border-radius:20px;
+      padding:18px 20px;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    .bottom-panel strong{
+      font-size:15px;
+    }
+
+    .bottom-panel p{
+      margin:3px 0 0;
+      font-size:12px;
+      opacity:.85;
+    }
+
+    .bottom-logo{
+      color:#f7dfaa;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    /* ================= FOOTER ================= */
+
+    .footer{
+      text-align:center;
+      padding:18px;
+      color:#777f7b;
+      font-size:12px;
       font-weight:600;
     }
 
-    @media(max-width:620px){
-      .card{
-        padding:28px 18px 22px;
-        border-radius:22px;
-      }
+    /* ================= RESPONSIVE ================= */
 
-      .logo{
-        width:135px;
-        height:135px;
-      }
-
-      .school{
-        font-size:25px;
-      }
-
-      .sub{
-        font-size:18px;
-      }
-
-      .btns{
+    @media(max-width:950px){
+      .hero{
         grid-template-columns:1fr;
       }
 
-      .btn{
-        font-size:15px;
+      .hero-visual{
+        min-height:220px;
+      }
+
+      .hero-visual img{
+        width:180px;
+      }
+
+      .cards{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media(max-width:650px){
+      .header-inner{
+        padding:10px 13px;
+      }
+
+      .logo{
+        width:56px;
+        height:56px;
+      }
+
+      .brand-text h1{
+        font-size:16px;
+      }
+
+      .brand-text p{
+        font-size:10px;
+      }
+
+      .main{
+        padding:28px 13px 40px;
+      }
+
+      .hero{
+        gap:20px;
+      }
+
+      .hero h2{
+        font-size:28px;
+      }
+
+      .hero p{
+        font-size:13px;
+      }
+
+      .hero-visual{
+        padding:20px;
+      }
+
+      .cards{
+        grid-template-columns:1fr;
       }
     }
   </style>
@@ -179,41 +412,154 @@
 
 <body>
 
-  <div class="card">
+<div class="page">
 
-    <img src="logo.jpeg" alt="شعار مدارس الفلاح الأهلية" class="logo">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
 
-    <h1 class="school">مدارس الفلاح الأهلية</h1>
+      <div class="brand">
+        <img src="logo.jpeg" alt="شعار مدارس الفلاح الأهلية" class="logo">
 
-    <div class="gold-line"></div>
-
-    <div class="sub">الإشراف التربوي</div>
-
-    <div class="desc">
-      منصة متابعة الزيارات والتقييم التربوي
-    </div>
-
-    <div class="btns">
-
-      <button
-        class="btn primary"
-        onclick="location.href='evaluation-form.html'">
-        استمارة التقييم
-      </button>
-
-      <button
-        class="btn secondary"
-        onclick="location.href='teacher-visits.html'">
-        زيارات المعلمين
-      </button>
+        <div class="brand-text">
+          <h1>مدارس الفلاح الأهلية</h1>
+          <p>نظام الإشراف التربوي</p>
+        </div>
+      </div>
 
     </div>
+  </header>
 
-    <div class="by">
-      تصميم محمد عامر أحمد
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <section class="hero">
+
+      <div class="hero-content">
+
+        <div class="eyebrow">
+          الإشراف والتطوير المهني
+        </div>
+
+        <h2>
+          منصة متابعة
+          <span>الزيارات التربوية</span>
+        </h2>
+
+        <p>
+          نظام مبسط ومنظم لإدارة بيانات المعلمين،
+          وتنفيذ الزيارات الصفية، ومتابعة التقارير
+          وسجل الزيارات بصورة احترافية وسهلة.
+        </p>
+
+      </div>
+
+
+      <div class="hero-visual">
+        <img src="logo.jpeg" alt="شعار مدارس الفلاح الأهلية">
+      </div>
+
+    </section>
+
+
+    <div class="section-title">
+      <h3>الخدمات الرئيسية</h3>
+      <p>اختر الخدمة التي تريد الوصول إليها.</p>
     </div>
 
-  </div>
+
+    <section class="cards">
+
+      <!-- EVALUATION -->
+      <a href="evaluation-form.html" class="card">
+
+        <div>
+          <div class="icon green">✓</div>
+
+          <h4>زيارة جديدة</h4>
+
+          <p>
+            تنفيذ استمارة تقييم جديدة وتسجيل
+            بيانات الزيارة والدرجة والتوصيات.
+          </p>
+        </div>
+
+        <div class="open">
+          فتح الاستمارة
+          <span>←</span>
+        </div>
+
+      </a>
+
+
+      <!-- TEACHERS -->
+      <a href="teachers.html" class="card">
+
+        <div>
+          <div class="icon gold">♟</div>
+
+          <h4>إدارة المعلمين</h4>
+
+          <p>
+            إضافة المعلمين وتعديل بياناتهم
+            ومتابعة عدد الزيارات الخاصة بكل معلم.
+          </p>
+        </div>
+
+        <div class="open">
+          إدارة البيانات
+          <span>←</span>
+        </div>
+
+      </a>
+
+
+      <!-- VISITS -->
+      <a href="teacher-visits.html" class="card">
+
+        <div>
+          <div class="icon green">▤</div>
+
+          <h4>سجل الزيارات</h4>
+
+          <p>
+            البحث في الزيارات السابقة،
+            وعرض النتائج والطباعة وحفظ السجل.
+          </p>
+        </div>
+
+        <div class="open">
+          عرض الزيارات
+          <span>←</span>
+        </div>
+
+      </a>
+
+    </section>
+
+
+    <div class="bottom-panel">
+
+      <div>
+        <strong>مدارس الفلاح الأهلية</strong>
+        <p>متابعة وتطوير الأداء التربوي</p>
+      </div>
+
+      <div class="bottom-logo">
+        تصميم محمد عامر أحمد
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <footer class="footer">
+    جميع الحقوق محفوظة لمدارس الفلاح الأهلية
+  </footer>
+
+</div>
 
 </body>
 </html>
