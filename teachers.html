@@ -817,17 +817,9 @@ tbody tr:hover{
 
         <input
           id="teacherCode"
-          readonly
-          placeholder="يتم إنشاء الرمز تلقائياً"
+          autocomplete="off"
+          placeholder="اكتب رمز المعلم بنفسك"
         >
-
-        <button
-          type="button"
-          class="generate-btn"
-          id="generateCode"
-        >
-          إنشاء رمز
-        </button>
 
       </div>
 
@@ -1581,57 +1573,11 @@ function renderTeachers(){
    GENERATE CODE
 ===================================== */
 
-async function generateUniqueCode(){
-
-  let tries = 0;
-
-
-  while(tries < 30){
-
-    const code =
-      String(
-        Math.floor(
-          10000 +
-          Math.random() *
-          90000
-        )
-      );
-
-
-    const existing =
-      await getDoc(
-        doc(
-          db,
-          "teachers",
-          code
-        )
-      );
-
-
-    if(!existing.exists()){
-
-      return code;
-
-    }
-
-
-    tries++;
-
-  }
-
-
-  return String(
-    Date.now()
-  ).slice(-5);
-
-}
-
-
 /* =====================================
    OPEN ADD
 ===================================== */
 
-async function openAdd(){
+function openAdd(){
 
   editCode =
     null;
@@ -1655,12 +1601,11 @@ async function openAdd(){
 
 
   teacherCode.readOnly =
-    true;
+    false;
 
 
-  el("generateCode")
-    .style.display =
-    "inline-flex";
+  teacherCode.value =
+    "";
 
 
   modalMsg.textContent =
@@ -1670,14 +1615,6 @@ async function openAdd(){
   teacherModal
     .classList
     .add("show");
-
-
-  teacherCode.value =
-    "جاري الإنشاء...";
-
-
-  teacherCode.value =
-    await generateUniqueCode();
 
 
   teacherName.focus();
@@ -1769,11 +1706,6 @@ function openEdit(code){
     true;
 
 
-  el("generateCode")
-    .style.display =
-    "none";
-
-
   modalMsg.textContent =
     "";
 
@@ -1859,7 +1791,7 @@ async function saveTeacher(){
   if(!code){
 
     modalMsg.textContent =
-      "رمز المعلم غير موجود";
+      "اكتب رمز المعلم";
 
     return;
 
@@ -2265,22 +2197,6 @@ el("btnAddTeacher")
   .addEventListener(
     "click",
     openAdd
-  );
-
-
-el("generateCode")
-  .addEventListener(
-    "click",
-    async ()=>{
-
-      teacherCode.value =
-        "جاري الإنشاء...";
-
-
-      teacherCode.value =
-        await generateUniqueCode();
-
-    }
   );
 
 
