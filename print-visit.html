@@ -1111,6 +1111,105 @@ body{
   }
 }
 
+
+
+/* =====================================
+   PRINT ONLY - BLACK & WHITE
+   الشاشة تبقى بالألوان، والطباعة فقط أبيض وأسود
+===================================== */
+@media print{
+
+  .sheet,
+  .page1,
+  .page2{
+    background:#fff !important;
+    color:#000 !important;
+  }
+
+  .header{
+    border-bottom-color:#000 !important;
+  }
+
+  .school-name,
+  .system-title,
+  .form-title,
+  .header-meta,
+  .header-meta strong,
+  .section-heading,
+  .col-domain,
+  .score-cell,
+  .note-title,
+  .ack,
+  .ack.viewed,
+  .work-info th,
+  .check,
+  .work-stat strong,
+  .footer strong,
+  .page2-main-title{
+    color:#000 !important;
+  }
+
+  .info-table th,
+  .rubric-table th,
+  .students th{
+    background:#fff !important;
+    color:#000 !important;
+    border-color:#000 !important;
+  }
+
+  .info-table td,
+  .rubric-table td,
+  .work-info th,
+  .work-info td,
+  .students td,
+  .note,
+  .ack,
+  .ack.viewed,
+  .work-stat{
+    border-color:#000 !important;
+  }
+
+  .section-heading,
+  .col-domain,
+  .score-cell,
+  .note-title,
+  .ack,
+  .ack.viewed,
+  .work-info th,
+  .rating-option,
+  .rating-option.selected,
+  .work-stat{
+    background:#fff !important;
+  }
+
+  .section-heading{
+    border-right-color:#000 !important;
+  }
+
+  .rating-option.selected{
+    color:#000 !important;
+    font-weight:900 !important;
+    outline:1px solid #000;
+  }
+
+  .footer,
+  .signature,
+  .page2-signature{
+    border-color:#000 !important;
+  }
+
+  .footer,
+  .work-stat span,
+  .page2-subtitle{
+    color:#000 !important;
+  }
+
+  *{
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+}
+
 </style>
 
 </head>
