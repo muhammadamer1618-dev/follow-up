@@ -527,10 +527,8 @@
             <td class="number auto-score" id="auto7">—</td>
             <td>
               <div class="mapping">
-                <select id="map7">
-                  <option value="">التعرف تلقائيًا أو اختر بندًا</option>
-                </select>
-                <span class="hint" id="map7Hint">مصدره: الإدارة الصفية</span>
+                <strong>الإدارة الصفية</strong>
+                <span class="hint" id="map7Hint">مصدره المباشر من استمارة الزيارة: الإدارة الصفية.</span>
               </div>
             </td>
           </tr>
@@ -542,10 +540,8 @@
             <td class="number auto-score" id="auto8">—</td>
             <td>
               <div class="mapping">
-                <select id="map8">
-                  <option value="">التعرف تلقائيًا أو اختر بندًا</option>
-                </select>
-                <span class="hint" id="map8Hint">مصدره: استراتيجيات التعلم واستخدامها</span>
+                <strong>تنفيذ استراتيجية التدريس</strong>
+                <span class="hint" id="map8Hint">مصدره المباشر من استمارة الزيارة: تنفيذ استراتيجية التدريس.</span>
               </div>
             </td>
           </tr>
@@ -640,11 +636,12 @@
 
   const criterionConfig = {
     7: {
-      keywords: ["الإدارة الصفية", "ادارة الصف", "النظام والبيئة الصفية", "البيئة الصفية"],
+      keywords: ["الإدارة الصفية", "ادارة الصف"],
       max: 4
     },
     8: {
-      keywords: ["استراتيجيات التعلم واستخدامها", "استراتيجيات التعلم", "استراتيجيات التدريس", "استراتيجيات"],
+      // في استمارة الزيارة المرفقة الاسم الفعلي للبند هو «تنفيذ استراتيجية التدريس».
+      keywords: ["تنفيذ استراتيجية التدريس", "استراتيجيات التعلم واستخدامها", "استراتيجيات التدريس"],
       max: 4
     },
     9: {
@@ -731,8 +728,8 @@
 
     const keys = [
       "question","questionText","label","title","text",
-      "name","criterion","criterionName","item","description",
-      "domain","domainName","id"
+      "name","criterion","criterionName","item","itemLabel","description",
+      "domain","domainName","selectedText","id"
     ];
 
     const direct = keys
@@ -875,25 +872,10 @@
     return [...map.values()];
   }
 
-  function findAnswerByLabel(visit, label){
-    const target = normalize(label);
-
-    return answerObjects(visit).find(answer => {
-      const text = normalize(extractText(answer));
-      return text === target || text.includes(target) || target.includes(text);
-    }) || null;
-  }
-
-  function getSelectedMapping(criterionNumber){
-    const select = el(`map${criterionNumber}`);
-    return select.value || "";
-  }
-
   function calculateCriterion(criterionNumber){
     if(!filteredVisits.length) return null;
 
     const config = criterionConfig[criterionNumber];
-    const selectValue = getSelectedMapping(criterionNumber);
 
     let total = 0;
     let count = 0;
@@ -904,22 +886,20 @@
 
       if(criterionNumber === 9){
         // البند التاسع = البند رقم 16 في استمارة الزيارة.
-        // في الاستمارة الحالية item 16 هو «تفاعل الطلاب»،
-        // ويتم تخزين الإجابات بنفس ترتيب البنود داخل answers.
+        // item 16 = «تفاعل الطلاب».
         const orderedAnswers = answerObjects(visit);
         const item16 = orderedAnswers[15] || null;
 
-        if(item16 && normalize(extractText(item16)).includes(normalize("تفاعل الطلاب"))){
+        if(item16 && normalize(extractText(item16)) === normalize("تفاعل الطلاب")){
           answer = item16;
         }else{
-          // حماية إضافية إذا تغيّر ترتيب التخزين مستقبلًا.
+          // حماية إضافية بالاسم الفعلي المخزن في itemLabel.
           answer = orderedAnswers.find(a =>
-            normalize(extractText(a)) === normalize("تفاعل الطلاب")
+            normalize(String(a.itemLabel || "")) === normalize("تفاعل الطلاب")
           ) || findAnswerByKeywords(visit, ["تفاعل الطلاب"]);
         }
-      }else if(selectValue){
-        answer = findAnswerByLabel(visit, selectValue);
       }else{
+        // البنود 7 و8 تُحسب تلقائيًا من اسم البند المخزن في itemLabel.
         answer = findAnswerByKeywords(visit, config.keywords);
       }
 
@@ -947,31 +927,9 @@
   }
 
   function fillMappingOptions(){
-    const options = allAnswerOptions();
-
-    for(const number of [7,8]){
-      const select = el(`map${number}`);
-      const current = select.value;
-
-      select.innerHTML =
-        `<option value="">التعرف تلقائيًا أو اختر بندًا</option>`;
-
-      for(const item of options){
-        const option = document.createElement("option");
-        option.value = item.label;
-        option.textContent = item.label;
-        select.appendChild(option);
-      }
-
-      if(current && options.some(x => x.label === current)){
-        select.value = current;
-      }
-    }
-
-    // البند التاسع ثابت على «تفاعل الطلاب» ولا يحتاج اختيارًا يدويًا.
-    el("map9").innerHTML =
-      `<option value="__AUTO_TAFA3OL__">تفاعل الطلاب</option>`;
-    el("map9").value = "__AUTO_TAFA3OL__";
+    // البنود 7 و8 و9 مرتبطة بمصادر ثابتة من استمارة الزيارة
+    // ولا يوجد لها اختيار أو تعديل يدوي من المشرف.
+    return;
   }
 
   function loadTeachers(){
@@ -1142,10 +1100,10 @@
         result
           ? `الحساب التلقائي: متوسط ${result.average.toFixed(2)} / ${result.sourceMax} — عدد الزيارات المحتسبة: ${result.count}`
           : number === 7
-            ? "مصدره: الإدارة الصفية — لم يتم العثور على درجات."
+            ? "مصدره المباشر: الإدارة الصفية — لم يتم العثور على درجات في بيانات الزيارة."
             : number === 8
-              ? "مصدره: استراتيجيات التعلم واستخدامها — لم يتم العثور على درجات."
-              : "مصدره: تفاعل الطلاب — لم يتم العثور على درجات في بيانات الزيارة.";
+              ? "مصدره المباشر: تنفيذ استراتيجية التدريس — لم يتم العثور على درجات في بيانات الزيارة."
+              : "مصدره المباشر: البند رقم 16 «تفاعل الطلاب» — لم يتم العثور على درجات في بيانات الزيارة.";
     }
 
     autoValues[10] = visitCriterion;
