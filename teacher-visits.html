@@ -1131,6 +1131,15 @@ tbody tr:hover{
 }
 
 
+.edit-btn{
+
+  background:#eaf1ff;
+
+  color:#2458a6;
+
+}
+
+
 .delete-btn{
 
   background:var(--red-soft);
@@ -2758,6 +2767,14 @@ function renderVisits(){
               target="_blank"
             >
               طباعة
+            </a>
+
+
+            <a
+              class="action-btn edit-btn"
+              href="visit-form.html?id=${encodeURIComponent(visit.id)}"
+            >
+              تعديل
             </a>
 
 
