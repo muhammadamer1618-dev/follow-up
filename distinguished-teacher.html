@@ -117,7 +117,7 @@
 
     .filters{
       display:grid;
-      grid-template-columns:1.3fr 1fr 1fr auto;
+      grid-template-columns:1.2fr 1fr 1fr 1fr auto;
       gap:12px;
       align-items:end;
     }
@@ -381,7 +381,19 @@
 
     <div id="errorBox" class="error hidden"></div>
 
+    <div class="section-title" style="margin-top:12px">
+      <h3 id="monthlyTitle">التقييم الشهري عن شهر سبتمبر</h3>
+    </div>
     <div class="filters">
+      <div>
+        <label for="monthSelect">الشهر</label>
+        <select id="monthSelect">
+          <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
+          <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
+          <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
+          <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+        </select>
+      </div>
       <div>
         <label for="teacherSelect">المعلم</label>
         <select id="teacherSelect">
@@ -399,9 +411,11 @@
         <input id="toDate" type="date">
       </div>
 
-      <button class="btn primary" id="calculateBtn" type="button">
-        حساب التقييم
-      </button>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button class="btn primary" id="calculateBtn" type="button">حساب التقييم</button>
+        <button class="btn gold" id="saveEvaluationBtn" type="button">حفظ التقييم الشهري</button>
+        <span class="hint" id="saveStatus"></span>
+      </div>
     </div>
   </section>
 
@@ -596,11 +610,43 @@
   import {
     collection,
     getDocs,
+    getDoc,
+    setDoc,
+    doc,
+    serverTimestamp,
     query,
     where
   } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
   const el = id => document.getElementById(id);
+
+  const monthNames = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+
+  function setMonthPeriod(monthValue){
+    const month = Number(monthValue);
+    if(!month) return;
+    const year = new Date().getFullYear();
+    const start = new Date(year,month-1,1);
+    const end = new Date(year,month,0);
+    const iso = date => `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+    el("fromDate").value = iso(start);
+    el("toDate").value = iso(end);
+    el("monthlyTitle").textContent = `التقييم الشهري عن شهر ${monthNames[month-1]}`;
+  }
+
+  function syncMonthFromDates(){
+    const from = el("fromDate").value;
+    const to = el("toDate").value;
+    if(from && to && from.slice(0,7) === to.slice(0,7)){
+      const month = Number(from.slice(5,7));
+      el("monthSelect").value = String(month);
+      el("monthlyTitle").textContent = `التقييم الشهري عن شهر ${monthNames[month-1]}`;
+    }else{
+      el("monthSelect").value = "";
+      el("monthlyTitle").textContent = "التقييم الشهري عن الفترة المحددة";
+    }
+  }
+
 
   const raw =
     localStorage.getItem("currentSupervisor") ||
@@ -630,6 +676,7 @@
   let teachers = [];
   let visits = [];
   let filteredVisits = [];
+  let activeEvaluationKey = "";
 
   const criterionConfig = {
     7: {
@@ -872,7 +919,7 @@
 
     for(const number of [7,8,9]){
       const select = el(`map${number}`);
-      const current = select.value;
+      const current = select.value || select.dataset.savedMapping || "";
 
       select.innerHTML =
         `<option value="">التعرف تلقائيًا أو اختر بندًا</option>`;
@@ -967,7 +1014,45 @@
       });
   }
 
-  function calculate(){
+  function evaluationStorageKey(teacherId,from,to){
+    return "al-falah-evaluation:" + encodeURIComponent(`${teacherId}|${from}|${to}`);
+  }
+
+  function saveCurrentEvaluation(){
+    if(!activeEvaluationKey) return;
+    const record = {
+      manual: Object.fromEntries([1,2,3,4,5,6].map(n => [n, el(`manual${n}`).value])),
+      mappings: Object.fromEntries([7,8,9].map(n => [n, el(`map${n}`).value])),
+      savedAt: new Date().toISOString()
+    };
+    try{ localStorage.setItem(activeEvaluationKey, JSON.stringify(record)); }
+    catch(error){ console.warn("تعذر حفظ التقييم محليًا", error); }
+  }
+
+  function evaluationDocId(teacherId,from,to){
+    return "monthly_eval_" + encodeURIComponent(`${supervisor.id}_${teacherId}_${from || "start"}_${to || "end"}`);
+  }
+
+  async function loadEvaluation(key,teacherId,from,to){
+    let record = null;
+    try{
+      const snap = await getDoc(doc(db,"visits",evaluationDocId(teacherId,from,to)));
+      if(snap.exists() && snap.data().recordType === "monthly_evaluation") record = snap.data();
+    }catch(error){ console.warn("تعذر تحميل التقييم الشهري",error); }
+    if(!record){
+      try{ record = JSON.parse(localStorage.getItem(key) || "null"); }
+      catch(error){ record = null; }
+    }
+    [1,2,3,4,5,6].forEach(n => {
+      const input = el(`manual${n}`);
+      input.value = record?.manualScores?.[n] ?? record?.manual?.[n] ?? "0";
+    });
+    [7,8,9].forEach(n => {
+      el(`map${n}`).dataset.savedMapping = record?.mappings?.[n] || "";
+    });
+  }
+
+  async function calculate(){
     clearError();
 
     const teacher = getSelectedTeacher();
@@ -987,6 +1072,13 @@
 
     const teacherId =
       String(teacher.code || teacher.id || "");
+
+    const nextEvaluationKey = evaluationStorageKey(teacherId,from,to);
+    if(nextEvaluationKey !== activeEvaluationKey){
+      saveCurrentEvaluation();
+      activeEvaluationKey = nextEvaluationKey;
+      await loadEvaluation(activeEvaluationKey,teacherId,from,to);
+    }
 
     filteredVisits = visits.filter(visit => {
       const visitTeacher =
@@ -1109,6 +1201,43 @@
       `${total.toFixed(2)} / 100`;
   }
 
+  async function saveMonthlyEvaluation(){
+    const teacher = getSelectedTeacher();
+    const status = el("saveStatus");
+    if(!teacher || !el("fromDate").value || !el("toDate").value){
+      status.textContent = "اختر المعلم وحدد بداية ونهاية الفترة أولًا.";
+      return;
+    }
+    if(el("fromDate").value > el("toDate").value){
+      status.textContent = "تحقق من تواريخ الفترة.";
+      return;
+    }
+    calculateGrandTotal();
+    const teacherId = String(teacher.code || teacher.id || "");
+    const payload = {
+      recordType: "monthly_evaluation",
+      teacherCode: teacherId,
+      teacherName: teacher.name || "",
+      supervisorId: String(supervisor.id || ""),
+      supervisorName: supervisor.name || "",
+      periodFrom: el("fromDate").value,
+      periodTo: el("toDate").value,
+      manualScores: Object.fromEntries([1,2,3,4,5,6].map(n => [n, Number(el(`manual${n}`).value || 0)])),
+      mappings: Object.fromEntries([7,8,9].map(n => [n, el(`map${n}`).value || ""])),
+      total: Number(el("grandTotal").textContent.split("/")[0].trim()),
+      visitCount: filteredVisits.length,
+      updatedAt: serverTimestamp()
+    };
+    status.textContent = "جارٍ الحفظ...";
+    try{
+      await setDoc(doc(db,"visits",evaluationDocId(teacherId,payload.periodFrom,payload.periodTo)),payload,{merge:true});
+      status.textContent = "تم حفظ التقييم الشهري مع سجلات الزيارات.";
+      saveCurrentEvaluation();
+    }catch(error){
+      console.error(error);
+      status.textContent = "تعذر الحفظ في قاعدة البيانات. تحقق من الاتصال والصلاحيات.";
+    }
+  }
   async function loadData(){
     try{
       const teachersSnap = await getDocs(
@@ -1132,10 +1261,9 @@
         )
       );
 
-      visits = visitsSnap.docs.map(docSnap => ({
-        id:docSnap.id,
-        ...docSnap.data()
-      }));
+      visits = visitsSnap.docs
+        .map(docSnap => ({ id:docSnap.id, ...docSnap.data() }))
+        .filter(visit => visit.recordType !== "monthly_evaluation");
 
     }catch(error){
       console.error(error);
@@ -1144,16 +1272,18 @@
   }
 
   el("calculateBtn").addEventListener("click",calculate);
+  el("saveEvaluationBtn").addEventListener("click",saveMonthlyEvaluation);
 
   el("teacherSelect").addEventListener("change",calculate);
 
-  el("fromDate").addEventListener("change",calculate);
-  el("toDate").addEventListener("change",calculate);
+  el("monthSelect").addEventListener("change",()=>{ setMonthPeriod(el("monthSelect").value); calculate(); });
+  el("fromDate").addEventListener("change",()=>{ syncMonthFromDates(); calculate(); });
+  el("toDate").addEventListener("change",()=>{ syncMonthFromDates(); calculate(); });
 
   [1,2,3,4,5,6].forEach(number => {
     el(`manual${number}`).addEventListener(
       "input",
-      calculateGrandTotal
+      () => { calculateGrandTotal(); saveCurrentEvaluation(); }
     );
   });
 
@@ -1161,6 +1291,7 @@
     el(`map${number}`).addEventListener(
       "change",
       () => {
+        saveCurrentEvaluation();
         for(const n of [7,8,9]){
           const result = calculateCriterion(n);
 
@@ -1180,9 +1311,18 @@
     window.print();
   });
 
+  const currentMonth = String(new Date().getMonth()+1);
+  el("monthSelect").value = currentMonth;
+  setMonthPeriod(currentMonth);
   loadData();
 </script>
 
 </body>
 </html>
+
+
+
+
+
+
 
