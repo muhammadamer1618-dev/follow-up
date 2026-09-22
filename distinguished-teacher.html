@@ -596,6 +596,13 @@
     </div>
   </section>
 
+  <section class="panel no-print">
+    <div class="section-title"><h3>التقييمات الشهرية المحفوظة</h3><p>سجلات التقييم التي حفظها هذا المشرف.</p></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>الشهر والفترة</th><th>المعلم</th><th>الدرجة</th><th>الإجراءات</th></tr></thead>
+      <tbody id="savedEvaluationsBody"><tr><td colspan="4" class="hint">جاري تحميل التقييمات...</td></tr></tbody>
+    </table></div>
+  </section>
   <div class="print-only">
     <p><strong>مدارس الفلاح الأهلية — تقييم المعلم المتميز</strong></p>
     <p id="printInfo"></p>
@@ -612,6 +619,7 @@
     getDocs,
     getDoc,
     setDoc,
+    deleteDoc,
     doc,
     serverTimestamp,
     query,
@@ -675,6 +683,7 @@
 
   let teachers = [];
   let visits = [];
+  let monthlyEvaluations = [];
   let filteredVisits = [];
   let activeEvaluationKey = "";
 
@@ -1014,6 +1023,47 @@
       });
   }
 
+  function escapeHtml(value){
+    return String(value ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+  }
+
+  function renderSavedEvaluations(){
+    const body = el("savedEvaluationsBody");
+    const records = monthlyEvaluations.slice().sort((a,b)=>String(b.periodFrom||"").localeCompare(String(a.periodFrom||"")));
+    if(!records.length){ body.innerHTML = '<tr><td colspan="4" class="hint">لا توجد تقييمات شهرية محفوظة.</td></tr>'; return; }
+    body.innerHTML = records.map(item=>{
+      const month = item.periodFrom ? new Date(Number(item.periodFrom.slice(0,4)),Number(item.periodFrom.slice(5,7))-1,1).toLocaleDateString("ar-SA",{month:"long",year:"numeric"}) : "—";
+      const details = [1,2,3,4,5,6].map(n=>`البند ${n}: ${escapeHtml(item.manualScores?.[n] ?? "—")}`).concat([7,8,9,10].map(n=>`البند ${n}: ${escapeHtml(item.automaticScores?.[n] ?? "—")}`)).join(" | ");
+      return `<tr><td>${escapeHtml(month)}<br><span class="hint">${escapeHtml(item.periodFrom||"—")} إلى ${escapeHtml(item.periodTo||"—")}</span></td><td>${escapeHtml(item.teacherName||item.teacherCode||"—")}</td><td><strong>${Number(item.total).toFixed(2)} / 100</strong></td><td><button class="btn" data-eval-action="view" data-eval-id="${escapeHtml(item.id)}">عرض</button> <button class="btn gold" data-eval-action="print" data-eval-id="${escapeHtml(item.id)}">طباعة</button> <button class="btn" style="color:#a33b3b" data-eval-action="delete" data-eval-id="${escapeHtml(item.id)}">حذف</button></td></tr><tr id="savedEvalDetails_${escapeHtml(item.id)}" hidden><td colspan="4"><div class="hint">${details}</div></td></tr>`;
+    }).join("");
+  }
+
+  async function handleSavedEvaluationAction(event){
+    const button = event.target.closest("[data-eval-action]");
+    if(!button) return;
+    const item = monthlyEvaluations.find(x=>x.id===button.dataset.evalId);
+    if(!item) return;
+    if(button.dataset.evalAction === "view"){
+      const row=el(`savedEvalDetails_${item.id}`); row.hidden=!row.hidden; button.textContent=row.hidden?"عرض":"إخفاء"; return;
+    }
+    if(button.dataset.evalAction === "delete"){
+      if(!confirm(`هل تريد حذف تقييم ${item.teacherName||"المعلم"} عن الفترة ${item.periodFrom||""}؟`)) return;
+      try{ await deleteDoc(doc(db,"monthlyEvaluations",item.id)); monthlyEvaluations=monthlyEvaluations.filter(x=>x.id!==item.id); renderSavedEvaluations(); el("saveStatus").textContent="تم حذف التقييم الشهري."; }
+      catch(error){ console.error(error); el("saveStatus").textContent="تعذر حذف التقييم. تحقق من الصلاحيات."; }
+      return;
+    }
+    if(button.dataset.evalAction === "print"){
+      el("teacherSelect").value=String(item.teacherCode||"");
+      el("fromDate").value=item.periodFrom||""; el("toDate").value=item.periodTo||"";
+      syncMonthFromDates(); await calculate();
+      [1,2,3,4,5,6].forEach(n=>el(`manual${n}`).value=item.manualScores?.[n]??0);
+      [7,8,9,10].forEach(n=>el(`auto${n}`).textContent=`${Number(item.automaticScores?.[n]||0).toFixed(2)} / 10`);
+      el("summaryTeacher").textContent=item.teacherName||"—";
+      el("grandTotal").textContent=`${Number(item.total||0).toFixed(2)} / 100`;
+      el("printInfo").textContent=`المعلم: ${item.teacherName||"—"} | الفترة: ${item.periodFrom||"—"} إلى ${item.periodTo||"—"} | عدد الزيارات: ${item.visitCount||0}`;
+      window.print();
+    }
+  }
   function evaluationStorageKey(teacherId,from,to){
     return "al-falah-evaluation:" + encodeURIComponent(`${teacherId}|${from}|${to}`);
   }
@@ -1036,7 +1086,7 @@
   async function loadEvaluation(key,teacherId,from,to){
     let record = null;
     try{
-      const snap = await getDoc(doc(db,"visits",evaluationDocId(teacherId,from,to)));
+      const snap = await getDoc(doc(db,"monthlyEvaluations",evaluationDocId(teacherId,from,to)));
       if(snap.exists() && snap.data().recordType === "monthly_evaluation") record = snap.data();
     }catch(error){ console.warn("تعذر تحميل التقييم الشهري",error); }
     if(!record){
@@ -1231,8 +1281,12 @@
     };
     status.textContent = "جارٍ الحفظ...";
     try{
-      await setDoc(doc(db,"visits",evaluationDocId(teacherId,payload.periodFrom,payload.periodTo)),payload,{merge:true});
-      status.textContent = "تم حفظ التقييم الشهري مع سجلات الزيارات.";
+      const savedId = evaluationDocId(teacherId,payload.periodFrom,payload.periodTo);
+      await setDoc(doc(db,"monthlyEvaluations",savedId),payload,{merge:true});
+      monthlyEvaluations = monthlyEvaluations.filter(x=>x.id!==savedId);
+      monthlyEvaluations.push({id:savedId,...payload});
+      renderSavedEvaluations();
+      status.textContent = "تم حفظ التقييم الشهري وظهر في القائمة.";
       saveCurrentEvaluation();
     }catch(error){
       console.error(error);
@@ -1255,16 +1309,11 @@
 
       loadTeachers();
 
-      const visitsSnap = await getDocs(
-        query(
-          collection(db,"visits"),
-          where("supervisorId","==",supervisor.id)
-        )
-      );
-
-      visits = visitsSnap.docs
-        .map(docSnap => ({ id:docSnap.id, ...docSnap.data() }))
-        .filter(visit => visit.recordType !== "monthly_evaluation");
+      const visitsSnap = await getDocs(query(collection(db,"visits"),where("supervisorId","==",supervisor.id)));
+      visits = visitsSnap.docs.map(docSnap=>({id:docSnap.id,...docSnap.data()})).filter(visit=>visit.recordType !== "monthly_evaluation");
+      const evaluationsSnap = await getDocs(query(collection(db,"monthlyEvaluations"),where("supervisorId","==",supervisor.id)));
+      monthlyEvaluations = evaluationsSnap.docs.map(docSnap=>({id:docSnap.id,...docSnap.data()}));
+      renderSavedEvaluations();
 
     }catch(error){
       console.error(error);
@@ -1274,6 +1323,7 @@
 
   el("calculateBtn").addEventListener("click",calculate);
   el("saveEvaluationBtn").addEventListener("click",saveMonthlyEvaluation);
+  el("savedEvaluationsBody").addEventListener("click",handleSavedEvaluationAction);
 
   el("teacherSelect").addEventListener("change",calculate);
 
@@ -1320,6 +1370,10 @@
 
 </body>
 </html>
+
+
+
+
 
 
 
