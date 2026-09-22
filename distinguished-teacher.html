@@ -38,7 +38,7 @@
       min-height:100vh;
     }
 
-    .header{
+    .creator-badge{      display:flex;      align-items:center;      gap:8px;      margin-top:4px;      color:var(--gold-dark);      font-size:10px;      font-weight:900;    }    .creator-badge span:first-child{      color:var(--green);    }    .page-footer{      max-width:1180px;      margin:24px auto 35px;      padding:12px 16px;      border-top:1px solid var(--border);      text-align:center;      color:var(--muted);      font-size:10px;      font-weight:800;    }    .page-footer strong{      color:var(--green);      font-weight:900;    }    .print-identity{      display:none;    }    @media print{      .print-identity{        display:block;        text-align:center;        color:#0b4a3f;        font-size:11px;        font-weight:900;        margin:0 0 10px;      }    }    .header{
       background:#fff;
       border-bottom:1px solid var(--border);
       box-shadow:0 4px 20px rgba(0,0,0,.03);
@@ -249,6 +249,17 @@
       line-height:1.6;
     }
 
+.auto-score{
+      color:var(--green);
+      font-size:15px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .auto-row .mapping strong{
+      color:var(--green);
+      font-size:11px;
+    }
     .total-box{
       display:flex;
       justify-content:space-between;
@@ -354,7 +365,7 @@
       <img src="logo.jpeg" alt="شعار مدارس الفلاح">
       <div>
         <h1>مدارس الفلاح الأهلية</h1>
-        <p>نظام الإشراف التربوي</p>
+        <p>نظام الإشراف التربوي</p>        <div class="creator-badge">          <span>تصميم وتطوير</span>          <span>محمد عامر أحمد</span>        </div>
       </div>
     </div>
 
@@ -365,7 +376,7 @@
   </div>
 </header>
 
-<main class="page">
+<main class="page">  <div class="print-identity">تصميم وتطوير محمد عامر أحمد</div>
 
   <section class="hero">
     <small>نظام الإشراف التربوي</small>
@@ -513,7 +524,7 @@
             <td class="number">7</td>
             <td>المحافظة على النظام والبيئة الصفية</td>
             <td class="number">10</td>
-            <td class="number" id="auto7">—</td>
+            <td class="number auto-score" id="auto7">—</td>
             <td>
               <div class="mapping">
                 <select id="map7">
@@ -528,7 +539,7 @@
             <td class="number">8</td>
             <td>تنوع أساليب واستراتيجيات التدريس</td>
             <td class="number">10</td>
-            <td class="number" id="auto8">—</td>
+            <td class="number auto-score" id="auto8">—</td>
             <td>
               <div class="mapping">
                 <select id="map8">
@@ -543,14 +554,9 @@
             <td class="number">9</td>
             <td>تفاعل الطلاب ومشاركتهم أثناء الحصة</td>
             <td class="number">10</td>
-            <td class="number" id="auto9">—</td>
+            <td class="number auto-score" id="auto9">—</td>
             <td>
-              <div class="mapping">
-                <select id="map9">
-                  <option value="">التعرف تلقائيًا أو اختر بندًا</option>
-                </select>
-                <span class="hint" id="map9Hint">مصدره: تفاعل الطلاب</span>
-              </div>
+              <div class="mapping"><strong>تفاعل الطلاب</strong><span class="hint" id="map9Hint">مصدره المباشر: البند رقم 16 «تفاعل الطلاب» في استمارة الزيارة.</span></div>
             </td>
           </tr>
 
@@ -558,7 +564,7 @@
             <td class="number">10</td>
             <td>الزيارات الصفية</td>
             <td class="number">10</td>
-            <td class="number" id="auto10">—</td>
+            <td class="number auto-score" id="auto10">—</td>
             <td class="hint">متوسط مجموع درجات الزيارات خلال الفترة المحددة، محول إلى 10 درجات.</td>
           </tr>
         </tbody>
@@ -629,6 +635,8 @@
   let teachers = [];
   let visits = [];
   let filteredVisits = [];
+  const autoValues = {7:null,8:null,9:null,10:null};
+
 
   const criterionConfig = {
     7: {
@@ -640,7 +648,15 @@
       max: 4
     },
     9: {
-      keywords: ["تفاعل الطلاب", "تفاعل الطلاب ومشاركتهم", "مشاركة الطلاب", "مشاركتهم أثناء الحصة"],
+      keywords: [
+        "تفاعل الطلاب",
+        "تفاعل الطلاب ومشاركتهم",
+        "تفاعل الطلاب ومشاركة الطلاب",
+        "مشاركة الطلاب",
+        "مشاركتهم أثناء الحصة",
+        "الطلاب أثناء الحصة",
+        "تفاعل"
+      ],
       max: 4
     }
   };
@@ -701,36 +717,71 @@
     return Math.min(max, Math.max(min, value));
   }
 
-  function extractText(obj){
-    if(!obj || typeof obj !== "object") return "";
+  function extractText(obj, depth=0){
+    if(obj == null || depth > 4) return "";
+
+    if(typeof obj === "string") return obj;
+    if(typeof obj === "number") return "";
+
+    if(Array.isArray(obj)){
+      return obj.map(v => extractText(v, depth + 1)).filter(Boolean).join(" ");
+    }
+
+    if(typeof obj !== "object") return "";
 
     const keys = [
       "question","questionText","label","title","text",
       "name","criterion","criterionName","item","description",
-      "domain","domainName"
+      "domain","domainName","id"
     ];
 
-    return keys
+    const direct = keys
       .map(k => obj[k])
       .filter(v => typeof v === "string")
       .join(" ");
+
+    if(direct) return direct;
+
+    return Object.entries(obj)
+      .filter(([key]) => !["score","points","value","selected","max","maxScore"].includes(key))
+      .map(([,value]) => extractText(value, depth + 1))
+      .filter(Boolean)
+      .join(" ");
   }
 
-  function extractScore(obj){
-    if(!obj || typeof obj !== "object") return null;
+  function extractScore(obj, depth=0){
+    if(obj == null || depth > 4) return null;
+
+    if(typeof obj === "number" && Number.isFinite(obj)) return obj;
+
+    if(typeof obj === "string"){
+      const n = toNumber(obj);
+      return n;
+    }
+
+    if(typeof obj !== "object") return null;
 
     const keys = [
       "score","points","value","selectedScore",
-      "numericValue","mark","grade"
+      "numericValue","mark","grade","selected"
     ];
 
     for(const key of keys){
       const n = toNumber(obj[key]);
       if(n !== null) return n;
+
+      if(obj[key] && typeof obj[key] === "object"){
+        const nested = extractScore(obj[key], depth + 1);
+        if(nested !== null) return nested;
+      }
     }
 
-    const selected = toNumber(obj.selected);
-    if(selected !== null) return selected;
+    for(const value of Object.values(obj)){
+      if(value && typeof value === "object"){
+        const nested = extractScore(value, depth + 1);
+        if(nested !== null) return nested;
+      }
+    }
 
     return null;
   }
@@ -752,28 +803,42 @@
   }
 
   function answerObjects(visit){
-    if(!Array.isArray(visit?.answers)) return [];
+    if(!visit) return [];
 
-    return visit.answers
-      .filter(item => item && typeof item === "object");
+    if(Array.isArray(visit.answers)){
+      return visit.answers.filter(item => item && typeof item === "object");
+    }
+
+    if(visit.answers && typeof visit.answers === "object"){
+      return Object.values(visit.answers)
+        .filter(item => item && typeof item === "object");
+    }
+
+    return [];
   }
 
   function findAnswerByKeywords(visit, keywords){
     const answers = answerObjects(visit);
-    const normalizedKeywords = keywords.map(normalize);
+    const normalizedKeywords = keywords.map(normalize).filter(Boolean);
 
     let best = null;
     let bestScore = 0;
 
     for(const answer of answers){
       const text = normalize(extractText(answer));
-
       if(!text) continue;
 
       let score = 0;
 
       for(const keyword of normalizedKeywords){
-        if(text.includes(keyword)) score += keyword.length;
+        if(text === keyword) score += 10000 + keyword.length;
+        else if(text.includes(keyword)) score += 1000 + keyword.length;
+      }
+
+      // «تفاعل الطلاب» هو المصدر المباشر للبند التاسع.
+      if(normalizedKeywords.includes(normalize("تفاعل الطلاب")) &&
+         text.includes(normalize("تفاعل الطلاب"))){
+        score += 50000;
       }
 
       if(score > bestScore){
@@ -837,7 +902,22 @@
     for(const visit of filteredVisits){
       let answer = null;
 
-      if(selectValue){
+      if(criterionNumber === 9){
+        // البند التاسع = البند رقم 16 في استمارة الزيارة.
+        // في الاستمارة الحالية item 16 هو «تفاعل الطلاب»،
+        // ويتم تخزين الإجابات بنفس ترتيب البنود داخل answers.
+        const orderedAnswers = answerObjects(visit);
+        const item16 = orderedAnswers[15] || null;
+
+        if(item16 && normalize(extractText(item16)).includes(normalize("تفاعل الطلاب"))){
+          answer = item16;
+        }else{
+          // حماية إضافية إذا تغيّر ترتيب التخزين مستقبلًا.
+          answer = orderedAnswers.find(a =>
+            normalize(extractText(a)) === normalize("تفاعل الطلاب")
+          ) || findAnswerByKeywords(visit, ["تفاعل الطلاب"]);
+        }
+      }else if(selectValue){
         answer = findAnswerByLabel(visit, selectValue);
       }else{
         answer = findAnswerByKeywords(visit, config.keywords);
@@ -869,7 +949,7 @@
   function fillMappingOptions(){
     const options = allAnswerOptions();
 
-    for(const number of [7,8,9]){
+    for(const number of [7,8]){
       const select = el(`map${number}`);
       const current = select.value;
 
@@ -887,6 +967,11 @@
         select.value = current;
       }
     }
+
+    // البند التاسع ثابت على «تفاعل الطلاب» ولا يحتاج اختيارًا يدويًا.
+    el("map9").innerHTML =
+      `<option value="__AUTO_TAFA3OL__">تفاعل الطلاب</option>`;
+    el("map9").value = "__AUTO_TAFA3OL__";
   }
 
   function loadTeachers(){
@@ -1048,21 +1133,25 @@
 
     for(const number of [7,8,9]){
       const result = calculateCriterion(number);
+      autoValues[number] = result ? result.converted : null;
 
       el(`auto${number}`).textContent =
-        result
-          ? `${result.converted.toFixed(2)} / 10`
-          : "—";
+        result ? `${result.converted.toFixed(2)} / 10` : "—";
 
       el(`map${number}Hint`).textContent =
         result
-          ? `متوسط المصدر: ${result.average.toFixed(2)} / ${result.sourceMax} — عدد الزيارات المحتسبة: ${result.count}`
+          ? `الحساب التلقائي: متوسط ${result.average.toFixed(2)} / ${result.sourceMax} — عدد الزيارات المحتسبة: ${result.count}`
           : number === 7
             ? "مصدره: الإدارة الصفية — لم يتم العثور على درجات."
             : number === 8
               ? "مصدره: استراتيجيات التعلم واستخدامها — لم يتم العثور على درجات."
-              : "مصدره: تفاعل الطلاب — لم يتم العثور على درجات.";
+              : "مصدره: تفاعل الطلاب — لم يتم العثور على درجات في بيانات الزيارة.";
     }
+
+    autoValues[10] = visitCriterion;
+
+    el("auto10").textContent =
+      visitCriterion === null ? "—" : `${visitCriterion.toFixed(2)} / 10`;
 
     calculateGrandTotal();
     renderVisits();
@@ -1076,11 +1165,9 @@
 
     for(let i=1;i<=6;i++){
       const input = el(`manual${i}`);
-      const max =
-        [10,15,10,10,5,10][i-1];
+      const max = [10,15,10,10,5,10][i-1];
 
       let value = toNumber(input.value);
-
       if(value === null) value = 0;
 
       value = clamp(value,0,max);
@@ -1088,20 +1175,12 @@
       total += value;
     }
 
-    for(const number of [7,8,9]){
-      const text = el(`auto${number}`).textContent;
-      const match = text.match(/([0-9]+(?:\.[0-9]+)?)/);
+    for(const number of [7,8,9,10]){
+      const value = autoValues[number];
 
-      if(match){
-        total += Number(match[1]);
+      if(value !== null){
+        total += clamp(value,0,10);
       }
-    }
-
-    const text10 = el("auto10").textContent;
-    const match10 = text10.match(/([0-9]+(?:\.[0-9]+)?)/);
-
-    if(match10){
-      total += Number(match10[1]);
     }
 
     el("grandTotal").textContent =
@@ -1156,24 +1235,6 @@
     );
   });
 
-  [7,8,9].forEach(number => {
-    el(`map${number}`).addEventListener(
-      "change",
-      () => {
-        for(const n of [7,8,9]){
-          const result = calculateCriterion(n);
-
-          el(`auto${n}`).textContent =
-            result
-              ? `${result.converted.toFixed(2)} / 10`
-              : "—";
-        }
-
-        calculateGrandTotal();
-      }
-    );
-  });
-
   el("printBtn").addEventListener("click",() => {
     calculateGrandTotal();
     window.print();
@@ -1182,5 +1243,5 @@
   loadData();
 </script>
 
-</body>
+<footer class="page-footer">  <strong>مدارس الفلاح الأهلية</strong> · نظام الإشراف التربوي · تصميم وتطوير <strong>محمد عامر أحمد</strong></footer></body>
 </html>
