@@ -552,7 +552,20 @@
 
     }
 
-  </style>
+    .saved-evaluations{margin-top:22px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+    .saved-evaluations table{width:100%;border-collapse:collapse;font-size:11px}
+    .saved-evaluations th,.saved-evaluations td{border:1px solid var(--border);padding:10px;text-align:right;vertical-align:middle}
+    .saved-evaluations th{background:var(--green-soft);color:var(--green)}
+    .saved-actions{display:flex;gap:6px;flex-wrap:wrap}
+    .saved-actions button{border:1px solid var(--border);background:#fff;color:var(--green);border-radius:8px;padding:6px 10px;font-weight:800;cursor:pointer}
+    .saved-actions .delete{color:#a33b3b}
+    .saved-detail{background:#fafcfb;line-height:2}
+    #savedEvaluationPrint{display:none}
+    @media print{
+      body.printing-saved-evaluation *{visibility:hidden!important}
+      body.printing-saved-evaluation #savedEvaluationPrint,body.printing-saved-evaluation #savedEvaluationPrint *{visibility:visible!important}
+      body.printing-saved-evaluation #savedEvaluationPrint{display:block!important;position:absolute;inset:0;padding:24px;background:#fff;color:#111;font-family:Arial,sans-serif;direction:rtl}
+    }  </style>
 
 </head>
 
@@ -788,6 +801,17 @@
   </section>
 
 
+  <section class="saved-evaluations" id="savedEvaluationsSection">
+    <div class="section-title">
+      <h3>التقييمات الشهرية المحفوظة</h3>
+      <p>التقييمات المسجلة من حسابك، مع إمكانية عرضها أو حذفها أو طباعتها.</p>
+    </div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th>الشهر والفترة</th><th>المعلم</th><th>النتيجة</th><th>الإجراءات</th></tr></thead>
+      <tbody id="savedEvaluationsBody"><tr><td colspan="4">جاري تحميل التقييمات...</td></tr></tbody>
+    </table></div>
+  </section>
+  <div id="savedEvaluationPrint"></div>
   <div class="footer">
     تصميم محمد عامر أحمد
   </div>
@@ -804,6 +828,8 @@
   import {
     collection,
     getDocs,
+    deleteDoc,
+    doc,
     query,
     where
   }
@@ -812,6 +838,8 @@
 
   const el =
     id => document.getElementById(id);
+
+  let monthlyEvaluations = [];
 
 
   /* =================================
@@ -960,15 +988,17 @@
         );
 
 
-      el("visitsCount")
-        .textContent =
-        visitsSnap.size;
+      const allRecords = visitsSnap.docs.map(d=>({id:d.id,...d.data()}));
+      monthlyEvaluations = allRecords.filter(item=>item.recordType === "monthly_evaluation");
+      const realVisits = allRecords.filter(item=>item.recordType !== "monthly_evaluation");
+      el("visitsCount").textContent = realVisits.length;
+      renderSavedEvaluations();
 
 
       let pending = 0;
 
 
-      visitsSnap.forEach(
+      realVisits.forEach(
         docSnap=>{
 
           const visit =
@@ -1011,6 +1041,42 @@
   }
 
 
+  function escapeHtml(value){
+    return String(value ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+  }
+
+  function renderSavedEvaluations(){
+    const body=el("savedEvaluationsBody");
+    const records=monthlyEvaluations.slice().sort((a,b)=>String(b.periodFrom||"").localeCompare(String(a.periodFrom||"")));
+    if(!records.length){body.innerHTML='<tr><td colspan="4">لا توجد تقييمات شهرية محفوظة.</td></tr>';return;}
+    body.innerHTML=records.map(item=>{
+      const month=item.periodFrom?new Date(Number(item.periodFrom.slice(0,4)),Number(item.periodFrom.slice(5,7))-1,1).toLocaleDateString("ar-SA",{month:"long",year:"numeric"}):"—";
+      const details=[1,2,3,4,5,6].map(n=>`البند ${n}: ${escapeHtml(item.manualScores?.[n]??"—")}`).concat([7,8,9,10].map(n=>`البند ${n}: ${escapeHtml(item.automaticScores?.[n]??"—")}`)).join(" | ");
+      return `<tr><td>${escapeHtml(month)}<br><small>${escapeHtml(item.periodFrom||"—")} إلى ${escapeHtml(item.periodTo||"—")}</small></td><td>${escapeHtml(item.teacherName||item.teacherCode||"—")}</td><td><strong>${Number(item.total||0).toFixed(2)} / 100</strong></td><td><div class="saved-actions"><button data-saved-action="view" data-id="${escapeHtml(item.id)}">عرض</button><button data-saved-action="print" data-id="${escapeHtml(item.id)}">طباعة</button><button class="delete" data-saved-action="delete" data-id="${escapeHtml(item.id)}">حذف</button></div></td></tr><tr id="savedDetail_${escapeHtml(item.id)}" hidden><td colspan="4" class="saved-detail">${details}</td></tr>`;
+    }).join("");
+  }
+
+  async function handleSavedEvaluation(event){
+    const button=event.target.closest("[data-saved-action]");
+    if(!button)return;
+    const item=monthlyEvaluations.find(x=>x.id===button.dataset.id);
+    if(!item)return;
+    if(button.dataset.savedAction==="view"){
+      const row=el(`savedDetail_${item.id}`);row.hidden=!row.hidden;button.textContent=row.hidden?"عرض":"إخفاء";return;
+    }
+    if(button.dataset.savedAction==="delete"){
+      if(!confirm(`هل تريد حذف تقييم ${item.teacherName||"المعلم"} عن الفترة ${item.periodFrom||""}؟`))return;
+      try{await deleteDoc(doc(db,"visits",item.id));monthlyEvaluations=monthlyEvaluations.filter(x=>x.id!==item.id);renderSavedEvaluations();}
+      catch(error){console.error(error);alert("تعذر حذف التقييم. تحقق من الصلاحيات.");}
+      return;
+    }
+    const month=item.periodFrom?new Date(Number(item.periodFrom.slice(0,4)),Number(item.periodFrom.slice(5,7))-1,1).toLocaleDateString("ar-SA",{month:"long",year:"numeric"}):"";
+    const scores=[1,2,3,4,5,6].map(n=>`<tr><td>البند ${n}</td><td>${escapeHtml(item.manualScores?.[n]??"—")}</td></tr>`).concat([7,8,9,10].map(n=>`<tr><td>البند ${n}</td><td>${escapeHtml(item.automaticScores?.[n]??"—")}</td></tr>`)).join("");
+    el("savedEvaluationPrint").innerHTML=`<h2>تقييم المعلم المتميز</h2><p>المعلم: ${escapeHtml(item.teacherName||"—")}</p><p>المشرف: ${escapeHtml(item.supervisorName||supervisor.name||"—")}</p><p>الشهر: ${escapeHtml(month)} | الفترة: ${escapeHtml(item.periodFrom||"—")} إلى ${escapeHtml(item.periodTo||"—")}</p><h3>النتيجة: ${Number(item.total||0).toFixed(2)} / 100</h3><table style="width:100%;border-collapse:collapse" border="1" cellpadding="8"><thead><tr><th>البند</th><th>الدرجة</th></tr></thead><tbody>${scores}</tbody></table><p>عدد الزيارات: ${Number(item.visitCount||0)}</p>`;
+    document.body.classList.add("printing-saved-evaluation");
+    window.onafterprint=()=>{document.body.classList.remove("printing-saved-evaluation");window.onafterprint=null;};
+    window.print();
+  }
   /* =================================
      LOGOUT
   ================================= */
@@ -1035,9 +1101,12 @@
     );
 
 
+  el("savedEvaluationsBody").addEventListener("click",handleSavedEvaluation);
+
   loadStats();
 
 </script>
 
 </body>
 </html>
+
