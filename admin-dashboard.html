@@ -1002,6 +1002,14 @@
 
     <a
       class="quick-card"
+      href="#monthlyEvaluationsSection"
+    >
+      <strong>التقييم الشهري</strong>
+      <span>عرض تقييمات المعلمين حسب الشهر والمشرف.</span>
+    </a>
+
+    <a
+      class="quick-card"
       href="index.html"
     >
 
@@ -1217,6 +1225,26 @@
   </section>
 
 
+  <section class="section" id="monthlyEvaluationsSection">
+    <div class="section-header">
+      <div class="section-title">
+        <h3>التقييمات الشهرية للمعلمين</h3>
+        <p>عرض تقييمات جميع المعلمين المسجلة من حسابات المشرفين.</p>
+      </div>
+      <div class="tools">
+        <select id="evaluationMonthFilter" class="search"><option value="">كل الشهور</option></select>
+        <select id="evaluationSupervisorFilter" class="search"><option value="">كل المشرفين</option></select>
+        <select id="evaluationTeacherFilter" class="search"><option value="">كل المعلمين</option></select>
+      </div>
+    </div>
+    <div id="topTeachersBoard" class="stats" style="padding:14px;margin:0"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>الشهر والفترة</th><th>المعلم</th><th>المشرف</th><th>الإجمالي</th><th>عدد الزيارات</th><th>التفاصيل</th></tr></thead>
+        <tbody id="monthlyEvaluationsBody"><tr><td colspan="6"><div class="empty">جاري تحميل التقييمات الشهرية...</div></td></tr></tbody>
+      </table>
+    </div>
+  </section>
   <div class="footer">
     تصميم محمد عامر أحمد
   </div>
@@ -1504,6 +1532,7 @@
   let supervisors = [];
   let teachers = [];
   let visits = [];
+  let monthlyEvaluations = [];
 
   let editingSupervisorId =
     null;
@@ -1616,13 +1645,9 @@
         );
 
 
-      visits =
-        visitSnap.docs.map(
-          d=>({
-            id:d.id,
-            ...d.data()
-          })
-        );
+      const visitRecords = visitSnap.docs.map(d=>({ id:d.id, ...d.data() }));
+      monthlyEvaluations = visitRecords.filter(v => v.recordType === "monthly_evaluation");
+      visits = visitRecords.filter(v => v.recordType !== "monthly_evaluation");
 
 
       supervisors.sort(
@@ -3145,6 +3170,62 @@
 
 
 
+  function renderMonthlyEvaluations(){
+    const monthFilter = el("evaluationMonthFilter");
+    const supervisorFilter = el("evaluationSupervisorFilter");
+    const teacherFilter = el("evaluationTeacherFilter");
+    const monthValue = monthFilter.value;
+    const supervisorValue = supervisorFilter.value;
+    const teacherValue = teacherFilter.value;
+    const months = [...new Set(monthlyEvaluations.map(x => String(x.periodFrom || "").slice(0,7)).filter(Boolean))].sort().reverse();
+    monthFilter.innerHTML = '<option value="">كل الشهور</option>' + months.map(key=>{
+      const [year,month] = key.split("-").map(Number);
+      const label = new Date(year,month-1,1).toLocaleDateString("ar-SA",{month:"long",year:"numeric"});
+      return `<option value="${key}">${escapeHtml(label)}</option>`;
+    }).join("");
+    if(months.includes(monthValue)) monthFilter.value = monthValue;
+    supervisorFilter.innerHTML = '<option value="">كل المشرفين</option>' + supervisors.filter(s=>s.role === "supervisor").map(s=>`<option value="${escapeHtml(s.id)}">${escapeHtml(s.name || s.username || s.id)}</option>`).join("");
+    if(supervisors.some(s=>s.id === supervisorValue)) supervisorFilter.value = supervisorValue;
+    teacherFilter.innerHTML = '<option value="">كل المعلمين</option>' + teachers.map(t=>`<option value="${escapeHtml(String(t.code || t.id || ""))}">${escapeHtml(t.name || t.fullName || t.code || t.id || "")}</option>`).join("");
+    if(teachers.some(t=>String(t.code || t.id || "") === teacherValue)) teacherFilter.value = teacherValue;
+
+    const rankingMonth = monthFilter.value || months[0] || "";
+    const rankingRecords = monthlyEvaluations.filter(item=>String(item.periodFrom || "").slice(0,7) === rankingMonth);
+    const rankingMonthLabel = rankingMonth ? new Date(Number(rankingMonth.slice(0,4)),Number(rankingMonth.slice(5,7))-1,1).toLocaleDateString("ar-SA",{month:"long",year:"numeric"}) : "لا توجد تقييمات بعد";
+    const scoreOf = item => Number(item.total);
+    const eligible = rankingRecords.filter(item=>Number.isFinite(scoreOf(item)));
+    const overallBest = eligible.slice().sort((a,b)=>scoreOf(b)-scoreOf(a))[0];
+    const bestBySupervisor = supervisors.filter(s=>s.role === "supervisor").map(s=>({
+      supervisor:s,
+      item:eligible.filter(item=>String(item.supervisorId || "") === String(s.id)).sort((a,b)=>scoreOf(b)-scoreOf(a))[0]
+    })).filter(x=>x.item);
+    const board = el("topTeachersBoard");
+    const overallCard = overallBest
+      ? `<div class="stat gold"><span>أفضل معلم بين جميع المعلمين — ${escapeHtml(rankingMonthLabel)}</span><strong>${escapeHtml(overallBest.teacherName || overallBest.teacherCode || "—")}</strong><span>${escapeHtml(overallBest.supervisorName || supervisors.find(s=>s.id === overallBest.supervisorId)?.name || "—")} · ${scoreOf(overallBest).toFixed(2)} / 100</span></div>`
+      : `<div class="stat gold"><span>أفضل معلم بين جميع المعلمين — ${escapeHtml(rankingMonthLabel)}</span><strong>—</strong><span>لا توجد تقييمات لهذا الشهر.</span></div>`;
+    const supervisorCards = bestBySupervisor.map(x=>`<div class="stat"><span>أفضل معلم لدى ${escapeHtml(x.supervisor.name || x.supervisor.username || "المشرف")}</span><strong>${escapeHtml(x.item.teacherName || x.item.teacherCode || "—")}</strong><span>${scoreOf(x.item).toFixed(2)} / 100 · ${escapeHtml(rankingMonthLabel)}</span></div>`).join("");
+    board.innerHTML = overallCard + supervisorCards;
+    const filtered = monthlyEvaluations.filter(item=>
+      (!monthFilter.value || String(item.periodFrom || "").slice(0,7) === monthFilter.value) &&
+      (!supervisorFilter.value || String(item.supervisorId || "") === supervisorFilter.value) &&
+      (!teacherFilter.value || String(item.teacherCode || "") === teacherFilter.value)
+    ).sort((a,b)=>String(b.periodFrom || "").localeCompare(String(a.periodFrom || "")) || String(a.teacherName || "").localeCompare(String(b.teacherName || ""),"ar"));
+
+    const tbody = el("monthlyEvaluationsBody");
+    if(!filtered.length){
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty">لا توجد تقييمات شهرية مطابقة.</div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = filtered.map(item=>{
+      const monthLabel = item.periodFrom ? new Date(Number(item.periodFrom.slice(0,4)),Number(item.periodFrom.slice(5,7))-1,1).toLocaleDateString("ar-SA",{month:"long",year:"numeric"}) : "—";
+      const total = Number(item.total);
+      const detailsId = `evaluationDetails_${item.id}`;
+      const manual = item.manualScores || {};
+      const automatic = item.automaticScores || {};
+      const rows = [1,2,3,4,5,6].map(n=>`<span>البند ${n}: ${escapeHtml(String(manual[n] ?? "—"))}</span>`).concat([7,8,9,10].map(n=>`<span>البند ${n}: ${escapeHtml(String(automatic[n] ?? "—"))}</span>`)).join("　|　");
+      return `<tr><td>${escapeHtml(monthLabel)}<br><small>${escapeHtml(item.periodFrom || "—")} إلى ${escapeHtml(item.periodTo || "—")}</small></td><td>${escapeHtml(item.teacherName || item.teacherCode || "—")}</td><td>${escapeHtml(item.supervisorName || supervisors.find(s=>s.id === item.supervisorId)?.name || "—")}</td><td><strong>${Number.isFinite(total) ? total.toFixed(2) : "—"} / 100</strong></td><td>${Number(item.visitCount) || 0}</td><td><button class="btn btn-gray" type="button" data-evaluation-details="${escapeHtml(detailsId)}">عرض الدرجات</button></td></tr><tr id="${escapeHtml(detailsId)}" hidden><td colspan="6"><div class="hint">${rows}</div></td></tr>`;
+    }).join("");
+  }
   /* ============================================
      RENDER ALL
   ============================================ */
@@ -3156,6 +3237,7 @@
     renderSupervisors();
 
     renderTeachers();
+    renderMonthlyEvaluations();
 
   }
 
@@ -3218,6 +3300,15 @@
     );
 
 
+  ["evaluationMonthFilter","evaluationSupervisorFilter","evaluationTeacherFilter"].forEach(id=>el(id).addEventListener("change",renderMonthlyEvaluations));
+  el("monthlyEvaluationsBody").addEventListener("click",event=>{
+    const button = event.target.closest("[data-evaluation-details]");
+    if(!button) return;
+    const row = el(button.dataset.evaluationDetails);
+    row.hidden = !row.hidden;
+    button.textContent = row.hidden ? "عرض الدرجات" : "إخفاء الدرجات";
+  });
+
   el("teacherSearch")
     .addEventListener(
       "input",
@@ -3264,3 +3355,7 @@
 
 </body>
 </html>
+
+
+
+
