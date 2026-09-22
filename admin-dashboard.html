@@ -1235,6 +1235,7 @@
         <select id="evaluationMonthFilter" class="search"><option value="">كل الشهور</option></select>
         <select id="evaluationSupervisorFilter" class="search"><option value="">كل المشرفين</option></select>
         <select id="evaluationTeacherFilter" class="search"><option value="">كل المعلمين</option></select>
+        <button class="btn btn-green" id="refreshMonthlyEvaluationsBtn" type="button">تحديث التقييمات</button>
       </div>
     </div>
     <div id="topTeachersBoard" class="stats" style="padding:14px;margin:0"></div>
@@ -1599,7 +1600,8 @@
       const [
         supervisorSnap,
         teacherSnap,
-        visitSnap
+        visitSnap,
+        monthlyEvaluationSnap
       ] =
       await Promise.all([
 
@@ -1622,7 +1624,8 @@
             db,
             "visits"
           )
-        )
+        ),
+        getDocs(collection(db,"monthlyEvaluations"))
 
       ]);
 
@@ -1646,7 +1649,7 @@
 
 
       const visitRecords = visitSnap.docs.map(d=>({ id:d.id, ...d.data() }));
-      monthlyEvaluations = visitRecords.filter(v => v.recordType === "monthly_evaluation");
+      monthlyEvaluations = monthlyEvaluationSnap.docs.map(d=>({id:d.id,...d.data()})).concat(visitRecords.filter(v=>v.recordType === "monthly_evaluation"));
       visits = visitRecords.filter(v => v.recordType !== "monthly_evaluation");
 
 
@@ -3301,6 +3304,7 @@
 
 
   ["evaluationMonthFilter","evaluationSupervisorFilter","evaluationTeacherFilter"].forEach(id=>el(id).addEventListener("change",renderMonthlyEvaluations));
+  el("refreshMonthlyEvaluationsBtn").addEventListener("click",loadAll);
   el("monthlyEvaluationsBody").addEventListener("click",event=>{
     const button = event.target.closest("[data-evaluation-details]");
     if(!button) return;
@@ -3355,6 +3359,8 @@
 
 </body>
 </html>
+
+
 
 
 
