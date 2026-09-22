@@ -871,7 +871,10 @@ import { db } from "./firebase.js";
 import {
   collection,
   getDocs,
+  getDoc,
   addDoc,
+  updateDoc,
+  doc,
   serverTimestamp
 }
 from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
@@ -921,6 +924,8 @@ let selectedTeacher = null;
 
 let lastSavedVisitId = null;
 let lastSavedVisitPayload = null;
+const editVisitId = new URLSearchParams(location.search).get("id") || "";
+let editVisitData = null;
 
 
 async function loadTeachers(){
@@ -1967,10 +1972,18 @@ async function saveVisit(){
       ),
 
     supervisorId:
-      String(currentUser.id || ""),
+      String(
+        editVisitData?.supervisorId ||
+        currentUser.id ||
+        ""
+      ),
 
     supervisorName:
-      String(currentUser.name || ""),
+      String(
+        editVisitData?.supervisorName ||
+        currentUser.name ||
+        ""
+      ),
 
     visitDate,
 
@@ -2009,15 +2022,39 @@ async function saveVisit(){
 
   try{
 
-    const ref =
-      await addDoc(
-        collection(db,"visits"),
-        payload
+    let savedId = editVisitId;
+
+    if(editVisitId){
+
+      const updatePayload = {
+        ...payload,
+        updatedAt: serverTimestamp()
+      };
+
+      delete updatePayload.createdAt;
+      delete updatePayload.teacherViewed;
+      delete updatePayload.teacherViewedAt;
+
+      await updateDoc(
+        doc(db,"visits",editVisitId),
+        updatePayload
       );
+
+    }else{
+
+      const ref =
+        await addDoc(
+          collection(db,"visits"),
+          payload
+        );
+
+      savedId = ref.id;
+
+    }
 
 
     lastSavedVisitId =
-      ref.id;
+      savedId;
 
 
     lastSavedVisitPayload =
@@ -2031,7 +2068,9 @@ async function saveVisit(){
 
     el("formStatus")
       .textContent =
-      "تم الحفظ";
+      editVisitId
+      ? "تم تحديث الزيارة"
+      : "تم الحفظ";
 
 
     showSaveMessage();
@@ -2045,6 +2084,98 @@ async function saveVisit(){
       "حدث خطأ أثناء حفظ الزيارة"
     );
 
+  }
+
+}
+
+
+/* ======================================================
+   LOAD VISIT FOR EDITING
+====================================================== */
+
+async function loadVisitForEditing(){
+
+  if(!editVisitId)
+    return;
+
+  try{
+
+    const snap =
+      await getDoc(
+        doc(db,"visits",editVisitId)
+      );
+
+    if(!snap.exists()){
+      alert("الزيارة المطلوبة غير موجودة");
+      return;
+    }
+
+    editVisitData = {
+      id: snap.id,
+      ...snap.data()
+    };
+
+    if(
+      !isAdmin &&
+      String(editVisitData.supervisorId || "") !==
+      String(currentUser.id || "")
+    ){
+      alert("ليس لديك صلاحية تعديل هذه الزيارة");
+      location.href = "supervisor-dashboard.html";
+      return;
+    }
+
+    const teacher =
+      visibleTeachers.find(t =>
+        String(t.code || t.id || "") ===
+        String(editVisitData.teacherCode || "")
+      ) || {
+        id: editVisitData.teacherCode || "",
+        code: editVisitData.teacherCode || "",
+        name: editVisitData.teacherName || "",
+        phone: editVisitData.teacherPhone || "",
+        supervisorId: editVisitData.supervisorId || ""
+      };
+
+    selectTeacher(teacher);
+
+    el("grade").value = editVisitData.grade || "";
+    el("subject").value = editVisitData.subject || "";
+    el("lessonTitle").value = editVisitData.lessonTitle || "";
+    el("visitNumber").value = editVisitData.visitNumber || "";
+    el("visitDate").value = editVisitData.visitDate || "";
+    el("positives").value = editVisitData.positives || "";
+    el("recommendations").value = editVisitData.recommendations || "";
+
+    (editVisitData.answers || []).forEach((answer, index)=>{
+      const question = qMeta[index];
+      if(!question) return;
+      const input = document.querySelector(
+        `input[name="${question.name}"][value="${Number(answer.selected) || 0}"]`
+      );
+      if(input) input.checked = true;
+    });
+
+    (editVisitData.writtenWork || []).forEach((row, index)=>{
+      const number = index + 1;
+      const nameInput = el("st_name_" + number);
+      if(nameInput) nameInput.value = row.name || "";
+      const statusInput = document.querySelector(
+        `input[name="st_${number}"][value="${row.status || ""}"]`
+      );
+      if(statusInput) statusInput.checked = true;
+    });
+
+    calculateScore();
+    document.querySelector(".page-title h2").textContent = "تعديل الزيارة التربوية";
+    document.querySelector(".page-title p").textContent = "عدّل بيانات الزيارة ثم احفظ التغييرات.";
+    el("formStatus").textContent = "وضع التعديل";
+    el("btnSave").textContent = "حفظ التعديلات";
+    el("btnSendWhats").disabled = false;
+
+  }catch(error){
+    console.error(error);
+    alert("تعذر تحميل بيانات الزيارة للتعديل");
   }
 
 }
@@ -2338,6 +2469,7 @@ buildWorkRows();
 calculateScore();
 
 await loadTeachers();
+await loadVisitForEditing();
 
 </script>
 
