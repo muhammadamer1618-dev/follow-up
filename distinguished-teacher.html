@@ -1223,6 +1223,7 @@
       periodFrom: el("fromDate").value,
       periodTo: el("toDate").value,
       manualScores: Object.fromEntries([1,2,3,4,5,6].map(n => [n, Number(el(`manual${n}`).value || 0)])),
+      automaticScores: Object.fromEntries([7,8,9,10].map(n => { const match = el(`auto${n}`).textContent.match(/([0-9]+(?:\.[0-9]+)?)/); return [n, match ? Number(match[1]) : 0]; })),
       mappings: Object.fromEntries([7,8,9].map(n => [n, el(`map${n}`).value || ""])),
       total: Number(el("grandTotal").textContent.split("/")[0].trim()),
       visitCount: filteredVisits.length,
@@ -1319,6 +1320,8 @@
 
 </body>
 </html>
+
+
 
 
 
